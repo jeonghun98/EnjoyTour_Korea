@@ -1,50 +1,50 @@
 package com.ssafy.member.model.service;
 
-import com.ssafy.member.model.MemberDto;
-import com.ssafy.member.model.dao.MemberDao;
-import com.ssafy.member.model.dao.MemberDaoImpl;
+import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
+import com.ssafy.member.model.MemberDto;
+import com.ssafy.member.model.mapper.MemberMapper;
+
+@Service
 public class MemberServiceImpl implements MemberService {
 	
-	private static MemberService memberService = new MemberServiceImpl();
-	private MemberDao memberDao;
+	private MemberMapper memberMapper;
 	
-	private MemberServiceImpl() {
-		memberDao = MemberDaoImpl.getMemberDao();
-	}
-	
-	public static MemberService getMemberService() {
-		return memberService;
+	public MemberServiceImpl(MemberMapper memberMapper) {
+		super();
+		this.memberMapper = memberMapper;
 	}
 
 	@Override
 	public int idCheck(String userId) throws Exception {
-		return memberDao.idCheck(userId);
+		return memberMapper.idCheck(userId);
 	}
 	
 	@Override
-	public MemberDto pwdFind(String userId, String email) throws Exception {
-		return memberDao.pwdFind(userId, email);
+	public MemberDto pwdFind(Map<String, String> map) throws Exception {
+		return memberMapper.pwdFind(map);
 	}
 	
 	@Override
 	public int joinMember(MemberDto memberDto) throws Exception {
-		return memberDao.joinMember(memberDto);
+		return memberMapper.joinMember(memberDto);
 	}
 
 	@Override
 	public MemberDto loginMember(String userId, String userPwd) throws Exception {
-		return memberDao.loginMember(userId, userPwd);
+		return memberMapper.loginMember(userId, userPwd);
 	}
 
 	@Override
 	public void deleteMember(String userId) throws Exception {
-		memberDao.deleteMember(userId);		
+		memberMapper.deleteMember(userId);		
 	}
 
 	@Override
 	public void updateMember(MemberDto memberDto) throws Exception {
-		memberDao.updateMember(memberDto);
+		memberMapper.updateMember(memberDto);
 		
 	}
 }

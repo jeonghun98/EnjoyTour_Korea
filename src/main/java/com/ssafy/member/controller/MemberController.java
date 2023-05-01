@@ -96,6 +96,13 @@
 //	private String pwdfind(HttpServletRequest request, HttpServletResponse response) {
 //		String userId = request.getParameter("userid");
 //		String email = request.getParameter("email");
+//		// 위에 두개 map으로 해서 map을 넣어주기??
+//		/*
+//		Map<String, String> map = new HashMap<String, String>();
+//		map.put("userId", request.getParameter("userid"));
+//		map.put("email", request.getParameter("email"));
+//		MemberDto memberDto = memberService.pwdFind(map);
+//		*/
 //		try {
 //			MemberDto memberDto = memberService.pwdFind(userId, email);
 //			return memberDto.getUserPwd();
@@ -125,6 +132,12 @@
 //	private String login(HttpServletRequest request, HttpServletResponse response) {
 //		String userId = request.getParameter("login_id");
 //		String userPwd = request.getParameter("login_pwd");
+//		/*
+//		Map<String, String> map = new HashMap<String, String>();
+//		map.put("userId", request.getParameter("login_id"));
+//		map.put("userPwd", request.getParameter("login_pwd"));
+//		MemberDto memberDto = memberService.pwdFind(map);
+//		*/
 //		try {
 //			MemberDto memberDto = memberService.loginMember(userId, userPwd);
 //			if(memberDto != null) {
