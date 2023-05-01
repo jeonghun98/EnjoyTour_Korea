@@ -15,7 +15,7 @@
                 <div
                     class="row bg-image p-1 me-1 ms-1 shadow-1-strong rounded content-title"
                     style="
-                        background-image: url('${root}/assets/img/bg0.jpg');
+                        background-image: url('/assets/img/bg0.jpg');
                         background-size: cover;
                         height: 105px;
                     "
@@ -32,7 +32,7 @@
 			          <div class="col-lg-12 col-md-10 col-sm-12">
 			          <div class="row align-self-center mb-2">
 			            <div class="col-md-2 text-start">
-			            <c:if test="${userinfo.userId eq '관리자'}">
+			            <c:if test="${userinfo.userId eq 'admin'}">
 			              <button type="button" id="btn-mv-register" class="btn btn-outline-primary btn-sm">
 			                글쓰기
 			              </button>
@@ -49,8 +49,8 @@
 			                  aria-label="검색조건"
 			                >
 			                  <option selected>검색조건</option>
-			                  <option value="article_no">글번호</option>
-			                  <option value="subject">제목</option>
+			                  <option value="noticeno">글번호</option>
+			                  <option value="title">제목</option>
 			                  <option value="user_id">작성자</option>
 			                </select>
 			                <div class="input-group input-group-sm">
@@ -88,20 +88,20 @@
 			              </tr>
 			            </thead>
 			            <tbody>    
-							<c:forEach var="article" items="${articles}">    
+							<c:forEach var="notice" items="${notices}">    
 				              <tr class="text-center">
-				                <th scope="row">${article.articleNo}</th>
+				                <th scope="row">${notice.noticeNo}</th>
 				                <td class="text-start">
 				                  <a
 				                    href="#"
 				                    class="article-title link-dark"
-				                    data-no="${article.articleNo}"
+				                    data-no="${notice.noticeNo}"
 				                    style="text-decoration: none"
 				                  >
-				                    ${article.subject}
+				                    ${notice.title}
 				                  </a>
 				                </td>
-				                <td>${article.userId}</td>
+				                <td>${notice.userId}</td>
 				                <td>${article.hit}</td>
 				                <td>${article.registerTime}</td>
 				              </tr>            
@@ -150,7 +150,7 @@
         
         function changeSort(){
         	var value = document.querySelector("#sort-key").value;
-            location.href = "${root}/noticeArticle?action=list&sortvalue=" + value;
+            location.href = "${root}/notice?action=list&sortvalue=" + value;
         }
 
         let pages = document.querySelectorAll(".page-link");

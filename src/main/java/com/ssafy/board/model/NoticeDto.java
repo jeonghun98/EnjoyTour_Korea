@@ -1,68 +1,50 @@
 package com.ssafy.board.model;
 
-public class BoardDto {
+public class NoticeDto {
 
-	private int articleNo;
+	private int noticeNo;
 	private String userId;
-	private String subject;
+	private String title;
 	private String content;
 	private int hit;
 	private String registerTime;
-
-	public int getArticleNo() {
-		return articleNo;
+	
+	public int getNoticeNo() {
+		return noticeNo;
 	}
-
-	public void setArticleNo(int articleNo) {
-		this.articleNo = articleNo;
+	public void setNoticeNo(int noticeNo) {
+		this.noticeNo = noticeNo;
 	}
-
 	public String getUserId() {
 		return userId;
 	}
-
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
-	public String getSubject() {
-		return subject;
+	public String getTitle() {
+		return title;
 	}
-
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setTitle(String title) {
+		this.title = title;
 	}
-
 	public String getContent() {
 		return content;
 	}
-
 	public void setContent(String content) {
 		this.content = content;
 	}
-
 	public int getHit() {
 		return hit;
 	}
-
 	public void setHit(int hit) {
 		this.hit = hit;
 	}
-
 	public String getRegisterTime() {
 		return registerTime;
 	}
-
 	public void setRegisterTime(String registerTime) {
 		this.registerTime = registerTime;
 	}
+
 	
-	@Override
-	public String toString() {
-		return "BoardDto [articleNo=" + articleNo + ", userId=" + userId + ", subject=" + subject + ", content="
-				+ content + ", hit=" + hit + ", registerTime=" + registerTime + "]";
-	}
-
-
-
 }

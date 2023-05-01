@@ -8,37 +8,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.ssafy.board.model.BoardDto;
+import com.ssafy.board.model.NoticeDto;
 import com.ssafy.util.DBUtil;
 
-public class NoticeDaoImpl implements BoardDao {
+public class NoticeDaoImpl implements NoticeDao {
 	
-	private static BoardDao boardDao;
+	private static NoticeDao noticeDao;
 	private DBUtil dbUtil;
 	
 	private NoticeDaoImpl() {
 		dbUtil = DBUtil.getInstance();
 	}
 
-	public static BoardDao getBoardDao() {
-		if(boardDao == null)
-			boardDao = new NoticeDaoImpl();
-		return boardDao;
+	public static NoticeDao getBoardDao() {
+		if(noticeDao == null)
+			noticeDao = new NoticeDaoImpl();
+		return noticeDao;
 	}
 
 	@Override
-	public void writeArticle(BoardDto boardDto) throws SQLException {
+	public void writeArticle(NoticeDto noticeDto) throws SQLException {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			conn = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append("insert into notice (user_id, subject, content) \n");
+			sql.append("insert into notice (user_id, notice_title, notice_content) \n");
 			sql.append("values (?, ?, ?)");
 			pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, boardDto.getUserId());
-			pstmt.setString(2, boardDto.getSubject());
-			pstmt.setString(3, boardDto.getContent());
+			pstmt.setString(1, noticeDto.getUserId());
+			pstmt.setString(2, noticeDto.getTitle());
+			pstmt.setString(3, noticeDto.getContent());
 			pstmt.executeUpdate();
 		} finally {
 			dbUtil.close(pstmt, conn);
@@ -46,26 +46,26 @@ public class NoticeDaoImpl implements BoardDao {
 	}
 
 	@Override
-	public List<BoardDto> listArticle(Map<String, Object> param, String order) throws SQLException {
-		List<BoardDto> list = new ArrayList<>();
+	public List<NoticeDto> listArticle(Map<String, Object> param) throws SQLException {
+		List<NoticeDto> list = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			conn = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append("select article_no, user_id, subject, content, hit, register_time \n");
+			sql.append("select notice_no, user_id, notice_title, notice_content, notice_hit, notice_register_time \n");
 			sql.append("from notice \n");
 			String key = (String) param.get("key");
 			String word = (String) param.get("word");
 			if(!key.isEmpty() && !word.isEmpty()) {
-				if("subject".equals(key)) {
-					sql.append("where subject like concat('%', ?, '%') \n");
+				if("notice_title".equals(key)) {
+					sql.append("where notice_title like concat('%', ?, '%') \n");
 				} else {
 					sql.append("where ").append(key).append(" = ? \n");
 				}
 			}
-			sql.append("order by ").append(order).append(" desc \n");
+			sql.append("order by ").append(param.get("order")).append(" desc \n");
 			sql.append("limit ?, ?");
 			pstmt = conn.prepareStatement(sql.toString());
 			int idx = 0;
@@ -75,15 +75,15 @@ public class NoticeDaoImpl implements BoardDao {
 			pstmt.setInt(++idx, (Integer) param.get("listsize"));
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
-				BoardDto boardDto = new BoardDto();
-				boardDto.setArticleNo(rs.getInt("article_no"));
-				boardDto.setUserId(rs.getString("user_id"));
-				boardDto.setSubject(rs.getString("subject"));
-				boardDto.setContent(rs.getString("content"));
-				boardDto.setHit(rs.getInt("hit"));
-				boardDto.setRegisterTime(rs.getString("register_time"));
+				NoticeDto noticeDto = new NoticeDto();
+				noticeDto.setNoticeNo(rs.getInt("notice_no"));
+				noticeDto.setUserId(rs.getString("user_id"));
+				noticeDto.setTitle(rs.getString("notice_title"));
+				noticeDto.setContent(rs.getString("notice_content"));
+				noticeDto.setHit(rs.getInt("notice_hit"));
+				noticeDto.setRegisterTime(rs.getString("notice_register_time"));
 				
-				list.add(boardDto);
+				list.add(noticeDto);
 			}
 		} finally {
 			dbUtil.close(rs, pstmt, conn);
@@ -100,13 +100,13 @@ public class NoticeDaoImpl implements BoardDao {
 		try {
 			conn = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append("select count(article_no) \n");
+			sql.append("select count(notice_no) \n");
 			sql.append("from notice \n");
 			String key = (String) param.get("key");
 			String word = (String) param.get("word");
 			if(!key.isEmpty() && !word.isEmpty()) {
-				if("subject".equals(key)) {
-					sql.append("where subject like concat('%', ?, '%') \n");
+				if("notice_title".equals(key)) {
+					sql.append("where notice_title like concat('%', ?, '%') \n");
 				} else {
 					sql.append("where ").append(key).append(" = ? \n");
 				}
@@ -125,47 +125,47 @@ public class NoticeDaoImpl implements BoardDao {
 	}
 
 	@Override
-	public BoardDto getArticle(int articleNo) throws SQLException {
-		BoardDto boardDto = null;
+	public NoticeDto getArticle(int noticeNo) throws SQLException {
+		NoticeDto noticeDao = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			conn = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append("select article_no, user_id, subject, content, hit, register_time \n");
+			sql.append("select notice_no, user_id, notice_title, notice_content, notice_hit, notice_register_time \n");
 			sql.append("from notice \n");
-			sql.append("where article_no = ?");
+			sql.append("where notice_no = ?");
 			pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setInt(1, articleNo);
+			pstmt.setInt(1, noticeNo);
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
-				boardDto = new BoardDto();
-				boardDto.setArticleNo(rs.getInt("article_no"));
-				boardDto.setUserId(rs.getString("user_id"));
-				boardDto.setSubject(rs.getString("subject"));
-				boardDto.setContent(rs.getString("content"));
-				boardDto.setHit(rs.getInt("hit"));
-				boardDto.setRegisterTime(rs.getString("register_time"));
+				noticeDao = new NoticeDto();
+				noticeDao.setNoticeNo(rs.getInt("notice_no"));
+				noticeDao.setUserId(rs.getString("user_id"));
+				noticeDao.setTitle(rs.getString("notice_title"));
+				noticeDao.setContent(rs.getString("notice_content"));
+				noticeDao.setHit(rs.getInt("notice_hit"));
+				noticeDao.setRegisterTime(rs.getString("notice_register_time"));
 			}
 		} finally {
 			dbUtil.close(rs, pstmt, conn);
 		}
-		return boardDto;
+		return noticeDao;
 	}
 
 	@Override
-	public void updateHit(int articleNo) throws SQLException {
+	public void updateHit(int noticeNo) throws SQLException {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			conn = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
 			sql.append("update notice \n");
-			sql.append("set hit = hit + 1 \n");
-			sql.append("where article_no = ?");
+			sql.append("set notice_hit = notice_hit + 1 \n");
+			sql.append("where notice_no = ?");
 			pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setInt(1, articleNo);
+			pstmt.setInt(1, noticeNo);
 			pstmt.executeUpdate();
 		} finally {
 			dbUtil.close(pstmt, conn);
@@ -173,19 +173,19 @@ public class NoticeDaoImpl implements BoardDao {
 	}
 
 	@Override
-	public void modifyArticle(BoardDto boardDto) throws SQLException {
+	public void modifyArticle(NoticeDto noticeDto) throws SQLException {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int cnt = 0;
 		try {
 			conn = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append("update notice set subject = ?, content = ? where article_no = ?");
+			sql.append("update notice set notice_title = ?, notice_content = ? where notice_no = ?");
 			
 			pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, boardDto.getSubject());
-			pstmt.setString(2, boardDto.getContent());
-			pstmt.setInt(3, boardDto.getArticleNo());
+			pstmt.setString(1, noticeDto.getTitle());
+			pstmt.setString(2, noticeDto.getContent());
+			pstmt.setInt(3, noticeDto.getNoticeNo());
 			
 			cnt = pstmt.executeUpdate();
 			
@@ -196,16 +196,16 @@ public class NoticeDaoImpl implements BoardDao {
 	}
 
 	@Override
-	public void deleteArticle(int articleNo) throws SQLException {
+	public void deleteArticle(int noticeNo) throws SQLException {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			conn = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
 			sql.append("delete from notice \n");
-			sql.append("where article_no = ?");
+			sql.append("where notice_no = ?");
 			pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setInt(1, articleNo);
+			pstmt.setInt(1, noticeNo);
 			pstmt.executeUpdate();
 		} finally {
 			dbUtil.close(pstmt, conn);
