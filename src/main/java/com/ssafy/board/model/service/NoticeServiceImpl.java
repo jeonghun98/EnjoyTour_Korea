@@ -4,32 +4,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ssafy.board.model.BoardDto;
-import com.ssafy.board.model.dao.BoardDao;
+import com.ssafy.board.model.NoticeDto;
+import com.ssafy.board.model.dao.NoticeDao;
 import com.ssafy.board.model.dao.NoticeDaoImpl;
 import com.ssafy.util.PageNavigation;
 import com.ssafy.util.SizeConstant;
 
-public class NoticeServiceImpl implements BoardService {
+public class NoticeServiceImpl implements NoticeService {
 	
-	private static BoardService boardService = new NoticeServiceImpl();
-	private BoardDao boardDao;
+	private static NoticeService boardService = new NoticeServiceImpl();
+	private NoticeDao noticeDao;
 	
 	private NoticeServiceImpl() {
-		boardDao = NoticeDaoImpl.getBoardDao();
+		noticeDao = NoticeDaoImpl.getBoardDao();
 	}
 
-	public static BoardService getBoardService() {
+	public static NoticeService getBoardService() {
 		return boardService;
 	}
 
 	@Override
-	public void writeArticle(BoardDto boardDto) throws Exception {
-		boardDao.writeArticle(boardDto);
+	public void writeArticle(NoticeDto boardDto) throws Exception {
+		noticeDao.writeArticle(boardDto);
 	}
 
 	@Override
-	public List<BoardDto> listArticle(Map<String, String> map, String order) throws Exception {
+	public List<NoticeDto> listArticle(Map<String, String> map) throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
 		String key = map.get("key");
 //		if("userid".equals(key))
@@ -40,7 +40,7 @@ public class NoticeServiceImpl implements BoardService {
 		int start = pgno * SizeConstant.LIST_SIZE - SizeConstant.LIST_SIZE;
 		param.put("start", start);
 		param.put("listsize", SizeConstant.LIST_SIZE);
-		return boardDao.listArticle(param, order);
+		return noticeDao.listArticle(param);
 	}
 	
 	@Override
@@ -59,7 +59,7 @@ public class NoticeServiceImpl implements BoardService {
 //			key = "user_id";
 		param.put("key", key.isEmpty() ? "" : key);
 		param.put("word", map.get("word").isEmpty() ? "" : map.get("word"));
-		int totalCount = boardDao.getTotalArticleCount(param);
+		int totalCount = noticeDao.getTotalArticleCount(param);
 		pageNavigation.setTotalCount(totalCount);
 		int totalPageCount = (totalCount - 1) / sizePerPage + 1;
 		pageNavigation.setTotalPageCount(totalPageCount);
@@ -73,24 +73,24 @@ public class NoticeServiceImpl implements BoardService {
 	}
 
 	@Override
-	public BoardDto getArticle(int articleNo) throws Exception {
-		return boardDao.getArticle(articleNo);
+	public NoticeDto getArticle(int noticeNo) throws Exception {
+		return noticeDao.getArticle(noticeNo);
 	}
 
 	@Override
-	public void updateHit(int articleNo) throws Exception {
-		boardDao.updateHit(articleNo);
+	public void updateHit(int noticeNo) throws Exception {
+		noticeDao.updateHit(noticeNo);
 	}
 
 	@Override
-	public void modifyArticle(BoardDto boardDto) throws Exception {
-		boardDao.modifyArticle(boardDto);
+	public void modifyArticle(NoticeDto boardDto) throws Exception {
+		noticeDao.modifyArticle(boardDto);
 		
 	}
 
 	@Override
-	public void deleteArticle(int articleNo) throws Exception {
-		boardDao.deleteArticle(articleNo);
+	public void deleteArticle(int noticeNo) throws Exception {
+		noticeDao.deleteArticle(noticeNo);
 	}
 
 }
