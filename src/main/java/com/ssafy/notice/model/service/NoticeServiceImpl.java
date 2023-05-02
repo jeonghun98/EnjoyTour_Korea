@@ -1,46 +1,44 @@
-package com.ssafy.board.model.service;
+package com.ssafy.notice.model.service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ssafy.board.model.NoticeDto;
-import com.ssafy.board.model.dao.NoticeDao;
-import com.ssafy.board.model.dao.NoticeDaoImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ssafy.notice.model.NoticeDto;
+import com.ssafy.notice.model.mapper.NoticeMapper;
 import com.ssafy.util.PageNavigation;
 import com.ssafy.util.SizeConstant;
 
+@Service
 public class NoticeServiceImpl implements NoticeService {
 	
-	private static NoticeService boardService = new NoticeServiceImpl();
-	private NoticeDao noticeDao;
-	
-	private NoticeServiceImpl() {
-		noticeDao = NoticeDaoImpl.getBoardDao();
-	}
+	private NoticeMapper noticeMapper;
 
-	public static NoticeService getBoardService() {
-		return boardService;
+	public NoticeServiceImpl(NoticeMapper noticeMapper) {
+		super();
+		this.noticeMapper = noticeMapper;
 	}
 
 	@Override
-	public void writeArticle(NoticeDto boardDto) throws Exception {
-		noticeDao.writeArticle(boardDto);
+	@Transactional
+	public void writeArticle(NoticeDto noticeDto) throws Exception {
+		noticeMapper.writeArticle(noticeDto);
 	}
 
 	@Override
 	public List<NoticeDto> listArticle(Map<String, String> map) throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
 		String key = map.get("key");
-//		if("userid".equals(key))
-//			key = "user_id";
 		param.put("key", key.isEmpty() ? "" : key);
 		param.put("word", map.get("word").isEmpty() ? "" : map.get("word"));
 		int pgno = Integer.parseInt(map.get("pgno"));
 		int start = pgno * SizeConstant.LIST_SIZE - SizeConstant.LIST_SIZE;
 		param.put("start", start);
 		param.put("listsize", SizeConstant.LIST_SIZE);
-		return noticeDao.listArticle(param);
+		return noticeMapper.listArticle(param);
 	}
 	
 	@Override
@@ -55,11 +53,9 @@ public class NoticeServiceImpl implements NoticeService {
 		pageNavigation.setNaviSize(naviSize);
 		Map<String, Object> param = new HashMap<String, Object>();
 		String key = map.get("key");
-//		if ("userid".equals(key))
-//			key = "user_id";
 		param.put("key", key.isEmpty() ? "" : key);
 		param.put("word", map.get("word").isEmpty() ? "" : map.get("word"));
-		int totalCount = noticeDao.getTotalArticleCount(param);
+		int totalCount = noticeMapper.getTotalArticleCount(param);
 		pageNavigation.setTotalCount(totalCount);
 		int totalPageCount = (totalCount - 1) / sizePerPage + 1;
 		pageNavigation.setTotalPageCount(totalPageCount);
@@ -74,23 +70,23 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public NoticeDto getArticle(int noticeNo) throws Exception {
-		return noticeDao.getArticle(noticeNo);
+		return noticeMapper.getArticle(noticeNo);
 	}
 
 	@Override
 	public void updateHit(int noticeNo) throws Exception {
-		noticeDao.updateHit(noticeNo);
+		noticeMapper.updateHit(noticeNo);
 	}
 
 	@Override
 	public void modifyArticle(NoticeDto boardDto) throws Exception {
-		noticeDao.modifyArticle(boardDto);
+		noticeMapper.modifyArticle(boardDto);
 		
 	}
 
 	@Override
 	public void deleteArticle(int noticeNo) throws Exception {
-		noticeDao.deleteArticle(noticeNo);
+		noticeMapper.deleteArticle(noticeNo);
 	}
 
 }
