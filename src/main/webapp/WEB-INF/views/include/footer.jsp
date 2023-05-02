@@ -53,7 +53,7 @@ pageEncoding="UTF-8"%>
 
         let attractionLinks = document.querySelectorAll(".attraction-link");
         for(let attractionLink of attractionLinks){
-            attractionLink.href = "${root}/attraction?action=view";
+            attractionLink.href = "${root}/attraction/view";
         }
         
         let hotPlaceLinks = document.querySelectorAll(".hotPlace-link");

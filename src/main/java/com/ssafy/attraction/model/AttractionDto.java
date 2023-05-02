@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 public class AttractionDto {
-	private List<String> images = new ArrayList<>();
+//	private List<String> images = new ArrayList<>();
+	private String image1;
+	private String image2;
 	private int contentid;
 	private int contenttypeid;
 	private String title;
@@ -121,15 +123,24 @@ public class AttractionDto {
 	}
 
 	public AttractionDto() {
-		images.add(null);
-		images.add(null);
+		image1 = null;
+		image2 = null;;
 	}
 	
-	public List<String> getImages() {
-		return images;
+	public String getImage1() {
+		return image1;
 	}
-	public void setImages(List<String> images) {
-		this.images = images;
+
+	public void setImage1(String image1) {
+		this.image1 = image1;
+	}
+
+	public String getImage2() {
+		return image2;
+	}
+
+	public void setImage2(String image2) {
+		this.image2 = image2;
 	}
 
 	@JsonGetter("contentid")
@@ -220,25 +231,25 @@ public class AttractionDto {
 
 	@JsonGetter("firstimage")
 	public String getFirstImage() {
-		return images.get(0);
+		return image1;
 	}
 
 	@JsonGetter("firstimage2")
 	public String getFirstImage2() {
-		return images.get(1);
+		return image2;
 	}
 	@JsonSetter("firstimage")
 	public void setFirstImage(String image) {
-		this.images.set(0, image);
+		this.image1 = image;
 	}
 
 	@JsonSetter("firstimage2")
 	public void setFirstImage2(String image) {
-		this.images.set(1, image);
+		this.image2 = image;
 	}
 	@Override
 	public String toString() {
-		return "AttractionDto [images=" + images + ", contentId=" + ", contentTypeId="  
+		return "AttractionDto [image1=" + image1 + ", image2=" + ", image2 =" + ", contentId=" + ", contentTypeId="  
 				+ ", title=" + title + ", addr1=" + addr1 + ", addr2=" + addr2 + ", overView=" + overview + ", zipcode="
 				+ zipcode + ", tel=" + tel + ", mapY=" + latitude + ", mapX=" + longitude + ", sidoCode=" + sidoCode
 				+ ", gugunCode=" + gugunCode + "]";
