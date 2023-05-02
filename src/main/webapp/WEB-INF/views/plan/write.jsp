@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<%@ include file="/include/head.jsp"%>
+<%@ include file="/WEB-INF/views/include/head.jsp"%>
 <style>
 /* Import Google font - Poppins */
 @import
@@ -162,7 +162,7 @@
 </head>
 <body>
 	<div class="wrapper">
-		<%@ include file="/include/nav.jsp"%>
+		<%@ include file="/WEB-INF/views/include/nav.jsp"%>
 
 		<!-- 관광지 정보 컨텐츠 START  -->
 		<div class="container">
@@ -226,15 +226,15 @@
 		<!-- 관광지 컨텐츠 컨텐츠 END  -->
 
 		<!-- 모달공간 start-->
-		<%@ include file="/user/modal.jsp"%>
+		<%@ include file="/WEB-INF/views/user/modal.jsp"%>
 		<!-- 모달공간 end-->
 	</div>
 
-	<%@ include file="/include/footer.jsp"%>
+	<%@ include file="/WEB-INF/views/include/footer.jsp"%>
 
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=74c637e1bdf74a44bf0242d00be654fb&libraries=services"></script>
-	<script src="./assets/js/map.js"></script>
+	<script src="${root}/assets/js/map.js"></script>
 	<script>
             document.getElementById("btn-plan-write").onclick = function () {
                 let list = [];
@@ -243,18 +243,16 @@
                         list.push(item.value);
                     }
                 );
-
-                fetch("${root}/tripplan", {
-                    method: "PUT",
+                let config = {
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(list)
-                })
+                    body: JSON.stringify(list),
+                };
+                fetch("${root}/tripplan/write", config)
                     .then((res) => res.json())
-                    .then((res) => {
-                        console.log(res);
-                    });
+                    .then((res) => console.log(res));
             };
             
             document.getElementById("btn-plan-opt").onclick = function () {
