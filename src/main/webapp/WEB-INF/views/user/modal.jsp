@@ -402,7 +402,7 @@
 		  		 	resultDiv.textContent = "아이디는 4자 이상 16자 이하 입니다.";
 		  		 	isUseId = false;
 		  	 	} else {
-		  		 	fetch("${root}/user/idcheck?userid=" + userid)
+		  		 	fetch("${root}/user/" + userid)
 			   		.then(response => response.text())
 			   		.then(data => {
 				 		if(data == 0) {

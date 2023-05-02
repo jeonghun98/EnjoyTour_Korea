@@ -44,8 +44,10 @@ public class MemberController {
 	@ResponseBody
 	public int idCheck(@PathVariable("userid") String userId) throws Exception {
 		// (0 : 사용 X, 1 : 사용 O)
-		System.out.println("MemberController - idCheck 함수");
-		return memberService.idCheck(userId);
+		System.out.println("MemberController - idCheck 파라미터 "+ userId);
+		int check = memberService.idCheck(userId);
+		System.out.println("MemberController - idCheck 함수 "+ check);
+		return check;
 	}
 	
 	@GetMapping("/pwdfind")
