@@ -1,46 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ssafy.member.model.mapper.MemberMapper">
-	
-	<resultMap type="memberDto" id="member">
-		<result column="user_id" property="userId"/>
-		<result column="user_pw" property="userPw"/>
-		<result column="user_name" property="userName"/>
-		<result column="user_email" property="userEmail"/>
-		<result column="user_phone" property="userPhone"/>
-	</resultMap>
-	
-	<select id="idCheck" parameterType="String" resultType="int">
-		select count(user_id)
-		from members
-		where user_id = #{userid}
-	</select>
-	
-	<select id="pwdFind" parameterType="map" resultType="member">
-		select user_pw
-		from member
-		where user_id = #{userId} and user_email = #{email}
-	</select>
-	
-	<insert id="joinMember" parameterType="member">
-		insert into member (user_id, user_pw, user_name, user_email, user_phone)
-		values (#{userId}, #{userPw}, #{userName}, #{userEmail}, #{userPhone})
-	</insert>
-	
-	<select id="loginMember" parameterType="map" resultType="member"> <!-- 진행중 -->
-		select user_id, user_name, user_email, user_phone
-		from member
-		where user_id = #{userId} and user_pw = #{userId}
-	</select>
-	
-	
-	
-<!-- 
-	MemberDto loginMember(String userId, String userPwd) throws SQLException;
-	void deleteMember(String userId) throws SQLException;
-	void updateMember(MemberDto memberDto) throws SQLException; 
-	-->
-	
+    
+    <resultMap type="memberDto" id="member">
+        <result column="user_id" property="userId"/>
+        <result column="user_pw" property="userPw"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_email" property="userEmail"/>
+        <result column="user_phone" property="userPhone"/>
+    </resultMap>
+    
+    <select id="idCheck" parameterType="String" resultType="int">
+        select count(user_id)
+        from member
+        where user_id = #{userId}
+    </select>
+    
+    <select id="pwdFind" parameterType="map" resultMap="member">
+        select user_pw
+        from member
+        where user_id = #{userId} and user_email = #{email}
+    </select>
+    
+    <insert id="joinMember" parameterType="memberDto">
+        insert into member (user_id, user_pw, user_name, user_email, user_phone)
+        values (#{userId}, #{userPw}, #{userName}, #{userEmail}, #{userPhone})
+    </insert>
+    
+    <select id="loginMember" parameterType="map" resultMap="member">
+        select user_id, user_name, user_email, user_phone
+        from member
+        where user_id = #{userId} and user_pw = #{userPw}
+    </select>
+    
+    <delete id="deleteMember" parameterType="String">
+        delete from member where user_id = #{userId}
+    </delete>
+    
+    <update id="updateMember" parameterType="memberDto">
+        update member 
+        set user_pw = #{userPw}, user_email = #{userEmail} 
+        where user_id = #{userId}
+    </update>
+    
 </mapper>
