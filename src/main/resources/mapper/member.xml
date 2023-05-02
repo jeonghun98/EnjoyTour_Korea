@@ -14,33 +14,33 @@
     
     <select id="idCheck" parameterType="String" resultType="int">
         select count(user_id)
-        from member
+        from enjoytrip.member
         where user_id = #{userId}
     </select>
     
     <select id="pwdFind" parameterType="map" resultMap="member">
         select user_pw
-        from member
-        where user_id = #{userId} and user_email = #{email}
+        from enjoytrip.member
+        where user_id = #{userId} and user_email = #{userEmail}
     </select>
     
     <insert id="joinMember" parameterType="memberDto">
-        insert into member (user_id, user_pw, user_name, user_email, user_phone)
+        insert into enjoytrip.member (user_id, user_pw, user_name, user_email, user_phone)
         values (#{userId}, #{userPw}, #{userName}, #{userEmail}, #{userPhone})
     </insert>
     
     <select id="loginMember" parameterType="map" resultMap="member">
-        select user_id, user_name, user_email, user_phone
-        from member
+        select user_id, user_pw, user_name, user_email, user_phone 
+        from enjoytrip.member 
         where user_id = #{userId} and user_pw = #{userPw}
     </select>
     
     <delete id="deleteMember" parameterType="String">
-        delete from member where user_id = #{userId}
+        delete from enjoytrip.member where user_id = #{userId}
     </delete>
     
     <update id="updateMember" parameterType="memberDto">
-        update member 
+        update enjoytrip.member 
         set user_pw = #{userPw}, user_email = #{userEmail} 
         where user_id = #{userId}
     </update>

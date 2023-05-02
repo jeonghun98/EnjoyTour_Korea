@@ -81,7 +81,7 @@ pageEncoding="UTF-8"%>
                         <a
                             class="nav-link active"
                             aria-current="page"
-                            href="${root}/user?action=logout"
+                            href="${root}/user/logout"
                             >로그아웃</a
                         >
                     </li>
