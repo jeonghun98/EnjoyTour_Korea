@@ -5,12 +5,12 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <%@ include file="/include/head.jsp" %>
+        <%@ include file="/WEB-INF/views/include/head.jsp" %>
     </head>
 
     <body>
         <div class="wrapper">
-            <%@ include file="/include/nav.jsp" %>
+            <%@ include file="/WEB-INF/views/include/nav.jsp" %>
            
 
             <!-- 홈 컨텐츠 START  -->
@@ -135,11 +135,11 @@
             <!-- 홈 컨텐츠 END  -->
 
             <!-- 모달공간 start-->
-            <%@ include file="/user/modal.jsp" %>
+            <%@ include file="/WEB-INF/views/user/modal.jsp" %>
             <!-- 모달공간 end-->
         </div>
         
-        <%@ include file="/include/footer.jsp" %>
+        <%@ include file="/WEB-INF/views/include/footer.jsp" %>
 
     </body>
 </html>
