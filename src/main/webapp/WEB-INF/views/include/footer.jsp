@@ -78,7 +78,7 @@ pageEncoding="UTF-8"%>
 
         let planLinks = document.querySelectorAll(".plan-link");
         for(let planLink of planLinks){
-        	planLink.href = "${root}/tripplan?action=write"
+        	planLink.href = "${root}/tripplan/view"
         }       
     </script>
     <script
