@@ -6,7 +6,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <%@ include file = "/include/head.jsp" %>
+        <%@ include file = "/WEB-INF/views/include/head.jsp" %>
         <style>
             .wrap {
                 position: absolute;
@@ -100,7 +100,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 
     <body>
         <div class="wrapper">
-            <%@ include file = "/include/nav.jsp" %>
+            <%@ include file = "/WEB-INF/views/include/nav.jsp" %>
 
             <!-- 관광지 정보 컨텐츠 START  -->
             <div class="container">
@@ -170,15 +170,15 @@ uri="http://java.sun.com/jsp/jstl/core" %>
             <!-- 홈 컨텐츠 컨텐츠 END  -->
 
             <!-- 모달공간 start-->
-            <%@ include file = "/user/modal.jsp" %>
+            <%@ include file = "/WEB-INF/views/user/modal.jsp" %>
             <!-- 모달공간 end-->
         </div>
         <!-- 관광지 정보 end -->
-        <%@ include file = "/include/footer.jsp" %>
+        <%@ include file = "/WEB-INF/views/include/footer.jsp" %>
         <script
             type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=74c637e1bdf74a44bf0242d00be654fb&libraries=services"
         ></script>
-        <script src="./assets/js/map.js"></script>
+        <script src="${root}/assets/js/map.js"></script>
     </body>
 </html>

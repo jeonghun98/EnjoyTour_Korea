@@ -61,7 +61,7 @@ let regionMap = {
 
 // 관광 지역 만들기
 function makeOption(data) {
-    console.log(data);
+//    console.log(data);
     // 각 지역에 대한 배열
     let areas = data.response.body.items.item;
     let sel = document.getElementById("search-area");
@@ -87,7 +87,7 @@ function makeRegionKeyword(data) {
     let regions = data.response.body.items.item;
     let sel = document.getElementById("search-region");
     let query = `<option value ="0" selected> 전체 </option>`;
-    console.log(regions);
+//    console.log(regions);
     regions.forEach(function (region) {
         query += `<option value=${region.name}> ${region.name}</option>`;
     });
@@ -107,7 +107,7 @@ function regionOnclickHandler(e, root) {
                 // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
                 map.setCenter(coords);
                 let radius = 5000;
-                let tripInfoUrl = `${root}/attraction?action=searchByLoc&mapX=${result[0].x}&mapY=${result[0].y}&radius=${radius}`;
+                let tripInfoUrl = `${root}/attraction/searchByLoc?mapX=${result[0].x}&mapY=${result[0].y}&radius=${radius}`;
                 fetch(tripInfoUrl)
                     .then((response) => response.json())
                     .then((data) => makeMarker(data));
@@ -126,7 +126,7 @@ function makeMarker(data) {
 
     items.forEach(function (item) {
         let idx = item.contenttypeid;
-        let markerImageSrc = `./assets/img/icon_${idx}.png`;
+        let markerImageSrc = `/assets/img/icon_${idx}.png`;
         let imageSize = new kakao.maps.Size(30, 30),
             imageOptions = {
                 offset: new kakao.maps.Point(25, 20),
@@ -151,7 +151,7 @@ function makeMarker(data) {
             `        </div>` +
             `        <div class="body">` +
             `            <div class="img">` +
-            `            <img src="${item.firstimage}" width ="73" height="70" >` +
+            `            <img src="${item.firstimage}" width ="73" height="70" onerror="this.src='/assets/img/ssafy_logo.png'">` +
             `           </div>` +
             `            <div class="desc">` +
             `                <div class="ellipsis">${item.addr1}</div>` +

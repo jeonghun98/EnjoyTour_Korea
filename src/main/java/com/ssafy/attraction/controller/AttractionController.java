@@ -1,62 +1,70 @@
-//package com.ssafy.attraction.controller;
-//
-//import java.io.BufferedReader;
-//import java.io.IOException;
-//import java.util.List;
-//import java.util.Map;
-//
-//import javax.servlet.RequestDispatcher;
-//import javax.servlet.ServletException;
-//import javax.servlet.annotation.WebServlet;
-//import javax.servlet.http.HttpServlet;
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
-//
-//import com.ssafy.attraction.model.AttractionDto;
-//import com.ssafy.attraction.model.service.AttractionService;
-//import com.ssafy.attraction.model.service.AttractionServiceImpl;
-//import java.io.File;
-//import java.io.IOException;
-//
-//import com.fasterxml.jackson.core.JsonGenerationException;
-//import com.fasterxml.jackson.databind.JsonMappingException;
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//
-///**
-// * Servlet implementation class AttractionController
-// */
-//@WebServlet("/attraction")
-//public class AttractionController extends HttpServlet {
-//
-//	/**
-//	 * 
-//	 */
-//	private static final long serialVersionUID = 1L;
-//	private AttractionService attractionService = AttractionServiceImpl.getAttractionService();
-//
-//	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-//			throws ServletException, IOException {
-//		String action = request.getParameter("action");
-//		String path = "";
-//
-//		System.out.println("action: " + action + "");
-//
-//		if ("view".equals(action)) {
-//			path = "/attraction/attraction.jsp";
-//			forward(request, response, path);
-//		} else if ("searchByLoc".equals(action)) {
-//			searchByLoc(request, response);
-////			path = "/attraction/attraction.jsp";
-////			forward(request, response, path);
-//		}
-//	}
-//
-//	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-//			throws ServletException, IOException {
-//		request.setCharacterEncoding("utf-8");
-//		doGet(request, response);
-//	}
-//
+package com.ssafy.attraction.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServlet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ssafy.attraction.model.AttractionDto;
+import com.ssafy.attraction.model.service.AttractionService;
+
+@Controller
+@RequestMapping("/attraction")
+public class AttractionController extends HttpServlet {
+	private static final Logger logger = LoggerFactory.getLogger(AttractionController.class);
+	private AttractionService attractionservice;
+	
+	@Autowired
+	public AttractionController(AttractionService attractionservice) {
+		super();
+		this.attractionservice = attractionservice;
+	}
+
+	@GetMapping("/view")
+	public String view(Model model)
+			throws Exception {
+		return "attraction/attraction";
+	}
+	
+	@ResponseBody
+	@GetMapping("/searchByLoc")
+	public ResponseEntity<?> searchByLoc(@RequestParam Float mapX, @RequestParam Float mapY, @RequestParam Float radius, Model model) {
+		logger.debug("searchByLoc call");
+		try {
+			Map<String, Float> map = new HashMap<String, Float>();
+			map.put("latitude", mapY);
+			map.put("longitude", mapX);
+			map.put("meter", radius);
+			List<AttractionDto> list = attractionservice.searchAttractionByLatLon(map);
+			if(list != null && !list.isEmpty()) {
+				System.out.println(list.size());
+				return new ResponseEntity<List<AttractionDto>>(list, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	private ResponseEntity<String> exceptionHandling(Exception e) {
+		e.printStackTrace();
+		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 //	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 //			throws ServletException, IOException {
 //		request.setCharacterEncoding("utf-8");
@@ -85,39 +93,4 @@
 //		}
 //
 //	}
-//
-//	private void forward(HttpServletRequest request, HttpServletResponse response, String path)
-//			throws ServletException, IOException {
-//		RequestDispatcher dispatcher = request.getRequestDispatcher(path);
-//		dispatcher.forward(request, response);
-//	}
-//
-//	private void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
-//		response.sendRedirect(request.getContextPath() + path);
-//	}
-//
-//	protected String insert(HttpServletRequest request, HttpServletResponse response) {
-//		String path = "/attraction/attraction.jsp";
-//		return path;
-//	}
-//
-//	private void searchByLoc(HttpServletRequest request, HttpServletResponse response)
-//			throws ServletException, IOException {
-//		response.setContentType("application/json");
-//		response.setCharacterEncoding("utf-8");
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		float latitude = Float.parseFloat(request.getParameter("mapY"));
-//		float longitude = Float.parseFloat(request.getParameter("mapX"));
-//		float meter = Float.parseFloat(request.getParameter("radius"));
-//
-//		try {
-//			List<AttractionDto> list = attractionService.searchAttractionByLatLon(latitude, longitude, meter);
-//			System.out.println(list.size());
-//			String result = objectMapper.writeValueAsString(list);
-//			//System.out.println(result);
-//			response.getWriter().write(result);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-//}
+}
