@@ -128,9 +128,9 @@
                         <input
                             type="text"
                             class="form-control"
-                            id="join_id"
+                            id="userId"
                             placeholder="아이디 입력..."
-                            name="join_id"
+                            name="userId"
                         />
                     </div>
                     <div id="idcheck-result"></div>
@@ -139,9 +139,9 @@
                         <input
                             type="password"
                             class="form-control"
-                            id="join_pwd"
+                            id="userPw"
                             placeholder="비밀번호 입력..."
-                            name="join_pwd"
+                            name="userPw"
                         />
                     </div>
                     <div class="mb-3">
@@ -149,9 +149,9 @@
                         <input
                             type="text"
                             class="form-control"
-                            id="join_name"
+                            id="userName"
                             placeholder="이름 입력..."
-                            name="join_name"
+                            name="userName"
                         />
                     </div>
                     <div class="mb-3">
@@ -159,19 +159,19 @@
                         <input
                             type="email"
                             class="form-control"
-                            id="join_email"
+                            id="userEmail"
                             placeholder="이메일 입력..."
-                            name="join_email"
+                            name="userEmail"
                         />
                     </div>
                     <div class="mb-3">
-                        <label for="age-register-input" class="form-label">나이:</label>
+                        <label for="age-register-input" class="form-label">전화번호:</label>
                         <input
                             type="number"
                             class="form-control"
-                            id="join_age"
-                            placeholder="나이 입력..."
-                            name="join_age"
+                            id="userPhone"
+                            placeholder="전화번호 입력..."
+                            name="userPhone"
                         />
                     </div>
                 </form>
@@ -222,12 +222,12 @@
               <span class="float-end" id="mypage-name">${userinfo.userName}</span>
           </div>
           <div class="mb-3">
-              나이:
-              <span class="float-end" id="mypage-age">${userinfo.age}</span>
+              전화번호:
+              <span class="float-end" id="mypage-age">${userinfo.userPhone}</span>
           </div>
           <div class="mb-3">
               이메일:
-              <span class="float-end" id="mypage-email">${userinfo.email}</span>
+              <span class="float-end" id="mypage-email">${userinfo.userEmail}</span>
                     </div>
                     <div class="container border-secondary h3 border"></div>
                     <div class="mb-3">
@@ -362,7 +362,7 @@
                   return;
                 } else {
                   let form = document.querySelector("#form-login");
-                  form.setAttribute("action", "${root}/user");
+                  form.setAttribute("action", "${root}/user/login");
                   form.submit();
                 }
               });
@@ -371,9 +371,9 @@
 		    document.querySelector("#btn-find").addEventListener("click", function () {
 				let userid = document.querySelector("#find_id").value;
 				let usereamil = document.querySelector("#find_email").value;
-				
+				console.log(userid, usereamil);
 		  	 	let resultDiv = document.querySelector("#pwdfind-result");
-	  		 	fetch("${root}/user?action=pwdfind&userid=" + userid +"&email=" + usereamil)
+	  		 	fetch("${root}/user/pwdfind?userid=" + userid +"&email=" + usereamil)
 		   		.then(response => response.text())
 		   		.then(data => {
 			 		if(data.length == 0) {
@@ -388,12 +388,12 @@
          
 		 // find modal data Init
             document.querySelector("#btn-find-close").addEventListener("click", function () {
-                location.href = "${root}/index.jsp";
+                location.href = "${root}";
               });
 		    
             // register
 		    let isUseId = false;
-		    document.querySelector("#join_id").addEventListener("keyup", function () {
+		    document.querySelector("#userId").addEventListener("keyup", function () {
 				let userid = this.value;
 				
 		  	 	let resultDiv = document.querySelector("#idcheck-result");
@@ -402,7 +402,7 @@
 		  		 	resultDiv.textContent = "아이디는 4자 이상 16자 이하 입니다.";
 		  		 	isUseId = false;
 		  	 	} else {
-		  		 	fetch("${root}/user?action=idcheck&userid=" + userid)
+		  		 	fetch("${root}/user/idcheck?userid=" + userid)
 			   		.then(response => response.text())
 			   		.then(data => {
 				 		if(data == 0) {
@@ -419,18 +419,18 @@
 		    });
 		    
 			document.querySelector("#btn-register").addEventListener("click", function () {
-				if (!document.querySelector("#join_name").value) {
+				if (!document.querySelector("#userName").value) {
 		          alert("이름 입력해주세요");
 		          return;
-		        } else if (!document.querySelector("#join_id").value) {
+		        } else if (!document.querySelector("#userId").value) {
 		          alert("아이디 입력해주세요");
 		          return;
-		        } else if (!document.querySelector("#join_pwd").value) {
+		        } else if (!document.querySelector("#userPw").value) {
 		          alert("비밀번호 입력해주세요");
 		          return;
 		        } else {
 		          let form = document.querySelector("#form-join");
-		          form.setAttribute("action", "${root}/user");
+		          form.setAttribute("action", "${root}/user/join");
 		          form.submit();
 		        }
 			});
@@ -442,7 +442,7 @@
 		          return;
 		        } else {
 		          let form = document.querySelector("#form-update");
-		          form.setAttribute("action", "${root}/user?action=update");
+		          form.setAttribute("action", "${root}/user/update");
 		          form.submit();
 		        }
 			});
@@ -450,7 +450,7 @@
 			//delete user
 			document.querySelector("#btn-deleteUser").addEventListener("click", function () {
 				if(confirm("탈퇴하시겠습니까?")) {
-					location.href = "${root}/user?action=delete";
+					location.href = "${root}/user/delete";
 				}
 			});
  </script>

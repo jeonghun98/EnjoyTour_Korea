@@ -31,7 +31,7 @@ import com.ssafy.member.model.service.MemberServiceImpl;
 @Controller
 @RequestMapping("/user")
 public class MemberController {
-	private static final long serialVersionUID = 1L;
+//	private static final long serialVersionUID = 1L;
 	
 	private MemberService memberService;
        
@@ -48,14 +48,18 @@ public class MemberController {
 		return memberService.idCheck(userId);
 	}
 	
-	@PostMapping("/pwdfind")
+	@GetMapping("/pwdfind")
+	@ResponseBody
 	public String pwdfind(@RequestParam(name = "userid") String userId, @RequestParam(name = "email") String email) throws Exception {
+		System.out.println("pwdfind함수 파라미터 "+userId+" "+email);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("userId", userId);
-		map.put("email", email);
+		map.put("userEmail", email);
 		MemberDto memberDto = memberService.pwdFind(map);
 		System.out.println("MemberController - pwdfind 함수"+memberDto.toString());
-		return memberDto.getUserPw();
+		String pwd = memberDto.getUserPw();
+		System.out.println("pwd:"+pwd);
+		return pwd;
 	}
 	
 //	@GetMapping("/join")
@@ -65,16 +69,17 @@ public class MemberController {
 	
 	@PostMapping("/join")
 	public String join(MemberDto memberDto) throws Exception{
-		MemberDto memberDto2 = new MemberDto();
-		memberDto2.setUserName(memberDto.getUserName());
-		memberDto2.setUserId(memberDto.getUserId());
-		memberDto2.setUserPw(memberDto.getUserPw());
-		memberDto2.setUserEmail(memberDto.getUserEmail());
-		memberDto2.setUserPhone(memberDto.getUserPhone());
-		
+		System.out.println("join 파라미터"+memberDto.toString());
+//		MemberDto memberDto2 = new MemberDto();
+//		memberDto2.setUserName(memberDto.getUserName());
+//		memberDto2.setUserId(memberDto.getUserId());
+//		memberDto2.setUserPw(memberDto.getUserPw());
+//		memberDto2.setUserEmail(memberDto.getUserEmail());
+//		memberDto2.setUserPhone(memberDto.getUserPhone());
+//		System.out.println("join 결과값"+memberDto2.toString());
 		int cnt = memberService.joinMember(memberDto);
 		System.out.println("MemberController - join 함수 "+cnt);
-		return "redirect:/index";
+		return "redirect:/";
 	}
 	
 //	@GetMapping("/login")
@@ -86,10 +91,10 @@ public class MemberController {
 	public String login(@RequestParam(name = "login_id") String userId, @RequestParam(name = "login_pwd") String userPwd,
 			@RequestParam(name = "saveid", required = false) String idsave,
 			HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+		System.out.println("PostMapping login 파라미터 "+userId+" "+userPwd);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("userId", userId);
-		map.put("userPwd", userPwd);		
+		map.put("userPw", userPwd);		
 		try {
 			MemberDto memberDto = memberService.loginMember(map);
 			if(memberDto != null) {
@@ -113,15 +118,15 @@ public class MemberController {
 						}
 					}
 				}
-				return "redirect:/index";
+				return "redirect:/";
 			} else {
 				request.setAttribute("msg", "아이디 또는 비밀번호 확인 후 다시 로그인하세요.");
-				return "redirect:/index";
+				return "redirect:/";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("msg", "로그인 중 에러 발생!!!");
-			return "redirect:/index";
+			return "redirect:/";
 		}
 		
 	}
@@ -130,7 +135,7 @@ public class MemberController {
 	public String logout(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		HttpSession session = request.getSession();
 		session.invalidate();
-		return "redirect:/index";
+		return "redirect:/";
 	}
 	
 	@PostMapping("/update")
@@ -146,9 +151,12 @@ public class MemberController {
 			String userPhone = memberDto.getUserPhone();
 			String userName = memberDto.getUserName();
 			String useremail = memberDto.getUserEmail();
+			String userPw = memberDto.getUserPw();
 			
 			MemberDto memberDto_set = new MemberDto();
-			memberDto_set.setUserPw(pwd);
+			memberDto_set.setUserPw(userPw);
+			if(pwd.length() != 0)
+				memberDto_set.setUserPw(pwd);
 			
 			memberDto_set.setUserEmail(useremail);
 			if(email.length() != 0)
@@ -164,11 +172,11 @@ public class MemberController {
 				
 				session.setAttribute("userinfo", memberDto_set); // session userinfo update
 				
-				return "redirect:/index";
+				return "redirect:/";
 			} catch (Exception e) {
 				e.printStackTrace();
 				request.setAttribute("msg", "유저 정보 업데이트 중 에러 발생!!!");
-				return "redirect:/index";
+				return "redirect:/";
 			}
 		} else
 			return "redirect:/index";
@@ -184,13 +192,13 @@ public class MemberController {
 				try {
 					memberService.deleteMember(userId);
 					session.invalidate();
-					return "redirect:/index";
+					return "redirect:/";
 				} catch (Exception e) {
 					e.printStackTrace();
-					return "redirect:/index";
+					return "redirect:/";
 				}
 			} else
-				return "redirect:/index";
+				return "redirect:/";
 		}
 	
 	}
