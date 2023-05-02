@@ -33,8 +33,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public MemberDto loginMember(String userId, String userPwd) throws Exception {
-		return memberMapper.loginMember(userId, userPwd);
+	public MemberDto loginMember(Map<String, String> map) throws Exception {
+		return memberMapper.loginMember(map);
 	}
 
 	@Override

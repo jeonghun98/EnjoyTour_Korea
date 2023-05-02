@@ -1,32 +1,200 @@
-//package com.ssafy.member.controller;
-//
-//import java.io.IOException;
-//import java.io.PrintWriter;
-//import java.time.LocalDate;
-//
-//import javax.servlet.RequestDispatcher;
-//import javax.servlet.ServletException;
-//import javax.servlet.annotation.WebServlet;
-//import javax.servlet.http.Cookie;
-//import javax.servlet.http.HttpServlet;
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
-//import javax.servlet.http.HttpSession;
-//
-//import com.ssafy.member.model.MemberDto;
-//import com.ssafy.member.model.service.MemberService;
-//import com.ssafy.member.model.service.MemberServiceImpl;
-//
-//@WebServlet("/user")
-//public class MemberController extends HttpServlet {
-//	private static final long serialVersionUID = 1L;
-//	
-//	private MemberService memberService;
-//	
-//	public void init() {
-//		memberService = MemberServiceImpl.getMemberService();
+package com.ssafy.member.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ssafy.member.model.MemberDto;
+import com.ssafy.member.model.service.MemberService;
+import com.ssafy.member.model.service.MemberServiceImpl;
+
+@Controller
+@RequestMapping("/user")
+public class MemberController {
+	private static final long serialVersionUID = 1L;
+	
+	private MemberService memberService;
+       
+	public MemberController(MemberService memberService) {
+		super();
+		this.memberService = memberService;
+	}
+	
+	@GetMapping("/{userid}")
+	@ResponseBody
+	public int idCheck(@PathVariable("userid") String userId) throws Exception {
+		// (0 : 사용 X, 1 : 사용 O)
+		System.out.println("MemberController - idCheck 함수");
+		return memberService.idCheck(userId);
+	}
+	
+	@PostMapping("/pwdfind")
+	public String pwdfind(@RequestParam(name = "userid") String userId, @RequestParam(name = "email") String email) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userId", userId);
+		map.put("email", email);
+		MemberDto memberDto = memberService.pwdFind(map);
+		System.out.println("MemberController - pwdfind 함수"+memberDto.toString());
+		return memberDto.getUserPw();
+	}
+	
+//	@GetMapping("/join")
+//	public String join() {
+//		return "redirect:/user/modal";
 //	}
-//       
+	
+	@PostMapping("/join")
+	public String join(MemberDto memberDto) throws Exception{
+		MemberDto memberDto2 = new MemberDto();
+		memberDto2.setUserName(memberDto.getUserName());
+		memberDto2.setUserId(memberDto.getUserId());
+		memberDto2.setUserPw(memberDto.getUserPw());
+		memberDto2.setUserEmail(memberDto.getUserEmail());
+		memberDto2.setUserPhone(memberDto.getUserPhone());
+		
+		int cnt = memberService.joinMember(memberDto);
+		System.out.println("MemberController - join 함수 "+cnt);
+		return "redirect:/index";
+	}
+	
+//	@GetMapping("/login")
+//	public String login() {
+//		return "redirect:/user/modal";
+//	}
+	
+	@PostMapping("/login")
+	public String login(@RequestParam(name = "login_id") String userId, @RequestParam(name = "login_pwd") String userPwd,
+			@RequestParam(name = "saveid", required = false) String idsave,
+			HttpServletRequest request, HttpServletResponse response) throws Exception{
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userId", userId);
+		map.put("userPwd", userPwd);		
+		try {
+			MemberDto memberDto = memberService.loginMember(map);
+			if(memberDto != null) {
+				HttpSession session = request.getSession();
+				session.setAttribute("userinfo", memberDto);
+				System.out.println("MemberController - login 함수"+memberDto.toString());
+				if("ok".equals(idsave)) {
+					Cookie cookie = new Cookie("user_id", userId);
+					cookie.setPath(request.getContextPath());
+					cookie.setMaxAge(60 * 60 * 24 * 365 * 40);
+					response.addCookie(cookie);
+				} else {
+					Cookie cookies[] = request.getCookies();
+					if(cookies != null) {
+						for(Cookie cookie : cookies) {
+							if("user_id".equals(cookie.getName())) {
+								cookie.setMaxAge(0);
+								response.addCookie(cookie);
+								break;
+							}
+						}
+					}
+				}
+				return "redirect:/index";
+			} else {
+				request.setAttribute("msg", "아이디 또는 비밀번호 확인 후 다시 로그인하세요.");
+				return "redirect:/index";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			request.setAttribute("msg", "로그인 중 에러 발생!!!");
+			return "redirect:/index";
+		}
+		
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		HttpSession session = request.getSession();
+		session.invalidate();
+		return "redirect:/index";
+	}
+	
+	@PostMapping("/update")
+	public String update(@RequestParam(name = "mypage_pwd") String pwd, @RequestParam(name = "mypage_email") String email,
+			HttpServletRequest request, HttpServletResponse response) throws Exception{
+		
+		
+		HttpSession session = request.getSession();
+		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
+		
+		if (memberDto != null) {
+			String userId = memberDto.getUserId();
+			String userPhone = memberDto.getUserPhone();
+			String userName = memberDto.getUserName();
+			String useremail = memberDto.getUserEmail();
+			
+			MemberDto memberDto_set = new MemberDto();
+			memberDto_set.setUserPw(pwd);
+			
+			memberDto_set.setUserEmail(useremail);
+			if(email.length() != 0)
+				memberDto_set.setUserEmail(email);
+
+			memberDto_set.setUserId(userId);
+			
+			try {
+				memberService.updateMember(memberDto_set);
+				memberDto_set.setUserPhone(userPhone);
+				memberDto_set.setUserName(userName);
+				memberDto_set.setUserPw("");
+				
+				session.setAttribute("userinfo", memberDto_set); // session userinfo update
+				
+				return "redirect:/index";
+			} catch (Exception e) {
+				e.printStackTrace();
+				request.setAttribute("msg", "유저 정보 업데이트 중 에러 발생!!!");
+				return "redirect:/index";
+			}
+		} else
+			return "redirect:/index";
+	}
+	
+	@GetMapping("/delete")
+	public String delete(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		HttpSession session = request.getSession();
+		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
+		if (memberDto != null) {
+			String userId = memberDto.getUserId();
+			
+				try {
+					memberService.deleteMember(userId);
+					session.invalidate();
+					return "redirect:/index";
+				} catch (Exception e) {
+					e.printStackTrace();
+					return "redirect:/index";
+				}
+			} else
+				return "redirect:/index";
+		}
+	
+	}
+
 //	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //		String action = request.getParameter("action");
 //		
@@ -136,7 +304,6 @@
 //		Map<String, String> map = new HashMap<String, String>();
 //		map.put("userId", request.getParameter("login_id"));
 //		map.put("userPwd", request.getParameter("login_pwd"));
-//		MemberDto memberDto = memberService.pwdFind(map);
 //		*/
 //		try {
 //			MemberDto memberDto = memberService.loginMember(userId, userPwd);
@@ -215,7 +382,7 @@
 //	} else
 //		return "/index.jsp";
 //	}
-//
+
 //	private String delete(HttpServletRequest request, HttpServletResponse response) {
 //		HttpSession session = request.getSession();
 //		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
@@ -233,5 +400,6 @@
 //			return "/index.jsp";
 //	
 //		}
+//	
 //	}
-//
+

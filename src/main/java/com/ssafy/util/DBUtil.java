@@ -1,13 +1,13 @@
-package com.ssafy.util;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-public class DBUtil {
-	
+//package com.ssafy.util;
+//
+//import java.sql.Connection;
+//import java.sql.DriverManager;
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//
+//public class DBUtil {
+//	
 //	private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 //	private static final String URL = "jdbc:mysql://localhost:8080/enjoytrip?serverTimezone=UTC";
 //	private static final String DB_ID = "ssafy";
@@ -31,7 +31,7 @@ public class DBUtil {
 //	public Connection getConnection() throws SQLException {
 //		return DriverManager.getConnection(URL, DB_ID, DB_PWD);
 //	}
-	
+//	
 //	public static void close(PreparedStatement pstmt, Connection conn) {
 //		try {
 //			if(pstmt != null)
@@ -55,16 +55,16 @@ public class DBUtil {
 //			e.printStackTrace();
 //		}
 //	}
-	
-	public void close(AutoCloseable... autoCloseables) {
-		for(AutoCloseable ac : autoCloseables) {
-			if(ac != null) {
-				try {
-					ac.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-}
+//	
+//	public void close(AutoCloseable... autoCloseables) {
+//		for(AutoCloseable ac : autoCloseables) {
+//			if(ac != null) {
+//				try {
+//					ac.close();
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//	}
+//}
