@@ -39,7 +39,7 @@
 	
 	<update id="modifyHotplace" parameterType="HotplaceDto">
 		update hotplace
-		set hotplace_title = #{title}, hotplace_content = #{content}
+		set hotplace_title = #{title}, hotplace_content = #{content}, hotplace_like = #{like}, hotplace_date = #{date}, hotplace_image =#{img} 
 		where hotplace_no = #{hotplaceNo}
 	</update>
 	
