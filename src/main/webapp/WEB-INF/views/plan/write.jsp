@@ -237,18 +237,21 @@
 	<script src="${root}/assets/js/map.js"></script>
 	<script>
             document.getElementById("btn-plan-write").onclick = function () {
-                let list = [];
+            	console.log(document.querySelectorAll(".list-item-contentid"));
+            	let contents = [];
                 document.querySelectorAll(".list-item-contentid").forEach(
-                    (item) => {
-                        list.push(item.value);
-                    }
-                );
+                        (item) => {
+                        	contents.push(item.value);
+                });
                 let config = {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(list),
+                    body: JSON.stringify(contents),
+/*                     body: JSON.stringify({
+                    	"contents": contents
+                    }), */
                 };
                 fetch("${root}/tripplan/write", config)
                     .then((res) => res.json())
