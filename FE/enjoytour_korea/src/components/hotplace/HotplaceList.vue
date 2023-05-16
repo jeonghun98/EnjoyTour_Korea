@@ -1,10 +1,10 @@
 <template>
-    <div></div>
+    <div>HotplaceList</div>
 </template>
 
 <script>
 export default {
-    name: '',
+    name: 'HotplaceList',
     components: {},
     data() {
         return {

@@ -15,7 +15,7 @@
           <a href="#" class="nav-link text-secondary plan-link">나만의 여행계획</a>
         </li>
         <li>
-          <a href="#" id="hotPlace" class="nav-link text-secondary hotPlace-link">HotPlace</a>
+          <a href="#" id="" class="nav-link text-secondary hotPlace-link"></a>
         </li>
         <li>
           <a href="#" class="nav-link text-secondary">사이트소개</a>

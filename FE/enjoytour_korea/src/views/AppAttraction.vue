@@ -1,18 +1,14 @@
 <template>
-    <div></div>
+    <attraction-view></attraction-view>
 </template>
 
 <script>
+import AttractionView from "@/components/attraction/AttractionView.vue"
 export default {
-    name: '',
-    components: {},
-    data() {
-        return {
-            message: '',
-        };
+    name: 'AppAttractionView',
+    components: {
+        AttractionView,
     },
-    created() {},
-    methods: {},
 };
 </script>
 
