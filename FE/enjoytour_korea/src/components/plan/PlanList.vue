@@ -1,10 +1,10 @@
 <template>
-    <div>NoticeList</div>
+    <div>PlanList</div>
 </template>
 
 <script>
 export default {
-    name: 'NoticeList',
+    name: 'PlanList',
     components: {},
     data() {
         return {
