@@ -7,6 +7,14 @@
     <resultMap type="memberDto" id="member">
         <result column="user_id" property="userId"/>
         <result column="user_pw" property="userPw"/>
+   <!--       <result column="user_name" property="userName"/>
+        <result column="user_email" property="userEmail"/>
+        <result column="user_phone" property="userPhone"/>-->
+    </resultMap>
+    
+    <resultMap type="memberDto" id="memberDetail" extends="member">
+       <!--   <result column="user_id" property="userId"/>
+        <result column="user_pw" property="userPw"/>-->
         <result column="user_name" property="userName"/>
         <result column="user_email" property="userEmail"/>
         <result column="user_phone" property="userPhone"/>
@@ -18,7 +26,7 @@
         where user_id = #{userId}
     </select>
     
-    <select id="pwdFind" parameterType="map" resultMap="member">
+    <select id="pwdFind" parameterType="map" resultMap="memberDetail">
         select user_pw
         from enjoytrip.member
         where user_id = #{userId} and user_email = #{userEmail}
@@ -29,7 +37,8 @@
         values (#{userId}, #{userPw}, #{userName}, #{userEmail}, #{userPhone})
     </insert>
     
-    <select id="loginMember" parameterType="map" resultMap="member">
+    <!-- 로그인 -->
+    <select id="loginMember" parameterType="memberDto" resultMap="memberDetail">
         select user_id, user_pw, user_name, user_email, user_phone 
         from enjoytrip.member 
         where user_id = #{userId} and user_pw = #{userPw}
@@ -44,5 +53,12 @@
         set user_pw = #{userPw}, user_email = #{userEmail} 
         where user_id = #{userId}
     </update>
+    
+    <!-- 로그인 회원 정보 호출 -->
+    <select id="userInfo" parameterType="String" resultMap="memberDetail">
+        select user_id, user_pw, user_name, user_email, user_phone 
+        from enjoytrip.member 
+        where user_id = #{userId}
+    </select>
     
 </mapper>
