@@ -111,59 +111,14 @@
     <!-- 상단 navbar end -->
     <div class="container bg-body">
       <div class="row">
-        <div class="col p-1">
-          <div class="nav-scroller">
-            <nav class="nav nav-underline" aria-label="Secondary navigation">
-              <!-- <c:if test="${fn:contains(path, 'index')}">
-                <a class="nav-link ps-0 pe-0 ms-2 me-2 active home-link" href="">홈</a>
-              </c:if>
-              <c:if test="${not fn:contains(path, 'index')}">
-                <a class="nav-link ps-0 pe-0 ms-2 me-2 home-link" href="">홈</a>
-              </c:if>
-
-              <c:if test="${fn:contains(path, 'notice')}">
-                <a class="nav-link ps-0 pe-0 ms-2 me-2 active notice-link" href="#">공지사항</a>
-              </c:if>
-              <c:if test="${not fn:contains(path, 'notice')}">
-                <a class="nav-link ps-0 pe-0 ms-2 me-2 notice-link" href="#">공지사항</a>
-              </c:if>
-
-              <c:if test="${fn:contains(path, 'attraction')}">
-                <a class="nav-link ps-0 pe-0 ms-2 me-2 active attraction-link" href=""
-                  >관광지 정보</a
-                >
-              </c:if>
-              <c:if test="${not fn:contains(path, 'attraction')}">
-                <a class="nav-link ps-0 pe-0 ms-2 me-2 attraction-link" href="">관광지 정보</a>
-              </c:if>
-              <c:if test="${fn:contains(path, 'inform')}">
-                <a class="nav-link ps-0 pe-0 ms-2 me-2 active inform-link" href="">여행정보공유</a>
-              </c:if>
-              <c:if test="${not fn:contains(path, 'inform')}">
-                <a class="nav-link ps-0 pe-0 ms-2 me-2 inform-link" href="">여행정보공유</a>
-              </c:if>
-
-              <c:if test="${fn:contains(path, 'plan')}">
-                <a class="nav-link ps-0 pe-0 ms-2 me-2 active plan-link" href="#"
-                  >나만의 여행경로</a
-                >
-              </c:if>
-              <c:if test="${not fn:contains(path, 'plan')}">
-                <a class="nav-link ps-0 pe-0 ms-2 me-2 plan-link" href="#">나만의 여행경로</a>
-              </c:if>
-
-              <c:if test="${fn:contains(path, 'hotplaces')}">
-                <a class="nav-link link-danger ps-0 pe-0 ms-2 me-2 active hotPlace-link" href=""
-                  >HotPlace</a
-                >
-              </c:if>
-              <c:if test="${not fn:contains(path, 'hotplaces')}">
-                <a class="nav-link link-danger ps-0 pe-0 ms-2 me-2 hotPlace-link" href=""
-                  >HotPlace</a
-                >
-              </c:if> -->
-            </nav>
-          </div>
+        <div>
+          <b-nav tabs align="center">
+            <b-nav-item active><router-link to="/">홈</router-link></b-nav-item>
+            <b-nav-item><router-link to="/notice">공지사항</router-link></b-nav-item>
+            <b-nav-item><router-link to="/attraction">한국 여행지</router-link></b-nav-item>
+            <b-nav-item><router-link to="/plan">모두의 여행계획</router-link></b-nav-item>
+            <b-nav-item><router-link to="/hotplace">핫플자랑하기</router-link></b-nav-item>
+          </b-nav>
         </div>
         <hr style="position: relative; top: -5px" />
       </div>
