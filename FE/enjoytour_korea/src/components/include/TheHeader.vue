@@ -1,19 +1,13 @@
 <template>
-    <div></div>
+    <title>EnjoyTrip</title>
 </template>
 
 <script>
 export default {
-    name: '',
-    components: {},
-    data() {
-        return {
-            message: '',
-        };
-    },
-    created() {},
-    methods: {},
+    name: "TheHeader",
 };
 </script>
 
-<style scoped></style>
+<style>
+a {text-decoration: none;}
+</style>
