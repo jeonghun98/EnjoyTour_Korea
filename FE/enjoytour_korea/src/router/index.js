@@ -48,12 +48,12 @@ const routes = [
         component: NoticeWrite,
       },
       {
-        path: "view/:articleno",
+        path: "view/:noticeNo",
         name: "noticeView",
         component: NoticeView,
       },
       {
-        path: "modify/:articleno",
+        path: "modify/:noticeNo",
         name: "noticeModify",
         component: NoticeModify,
       },
