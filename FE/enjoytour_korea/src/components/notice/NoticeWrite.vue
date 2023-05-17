@@ -1,19 +1,13 @@
 <template>
-    <div></div>
+    <notice-input-item type="write"></notice-input-item>
 </template>
 
 <script>
+import NoticeInputItem from "./item/NoticeInputItem.vue";
 export default {
-    name: '',
-    components: {},
-    data() {
-        return {
-            message: '',
-        };
-    },
-    created() {},
-    methods: {},
+  name: "NoticeWrite",
+    components: {
+    NoticeInputItem,
+  },
 };
 </script>
-
-<style scoped></style>
