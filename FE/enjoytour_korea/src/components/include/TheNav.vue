@@ -45,7 +45,8 @@
                 <b>사용자</b>
               </template>
               <b-dropdown-item href="#">
-                <b>회원가입</b>
+                <b v-b-modal.modal-join>회원가입</b>
+                <user-join-modal></user-join-modal>
               </b-dropdown-item>
               <b-dropdown-item href="#">
                 <b v-b-modal.modal-login>로그인</b>
@@ -164,12 +165,14 @@
 </template>
 
 <script>
+import UserJoinModal from '../user/UserJoinModal.vue';
 import UserLoginModal from "../user/UserLoginModal.vue";
 
 export default {
   name: "TheNav",
   components: {
     UserLoginModal,
+    UserJoinModal,
   },
   data() {
     return {
