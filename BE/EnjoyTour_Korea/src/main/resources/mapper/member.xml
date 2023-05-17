@@ -58,7 +58,27 @@
     <select id="userInfo" parameterType="String" resultMap="memberDetail">
         select user_id, user_pw, user_name, user_email, user_phone 
         from enjoytrip.member 
-        where user_id = #{userId}
+        where user_id = #{userid}
     </select>
+    
+    <!-- refresh 토큰 관련 함수들 -->
+    	<select id="getRefreshToken" parameterType="string" resultType="string">
+		select token
+		from enjoytrip.member 
+		where user_id = #{userId}
+	</select>
+	
+	<update id="saveRefreshToken" parameterType="map">
+		update enjoytrip.member 
+		set token = #{token}
+		where user_id = #{user_id}
+	</update>
+	
+	<update id="deleteRefreshToken" parameterType="map">
+		update enjoytrip.member 
+		set token = #{token, jdbcType=VARCHAR}
+		where user_id = #{user_id}
+	</update>
+	
     
 </mapper>

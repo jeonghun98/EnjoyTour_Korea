@@ -17,7 +17,7 @@ public interface MemberService {
 	
 	MemberDto userInfo(String userId) throws Exception; // 회원 정보 호출
 	// refresh token 관련
-//	void saveRefreshToken(String userId, String refreshToken) throws Exception; // 리프레쉬 토큰 저장
-//	Object getRefreshToken(String userId) throws Exception; // 리프레쉬 토큰 호출
-//	void deleteRefreshToken(String userId) throws Exception; // 리프레쉬 토큰 삭제
+	void saveRefreshToken(String userId, String refreshToken) throws Exception; // 리프레쉬 토큰 저장
+	Object getRefreshToken(String userId) throws Exception; // 리프레쉬 토큰 호출
+	void deleteRefreshToken(String userId) throws Exception; // 리프레쉬 토큰 삭제
 }
