@@ -21,10 +21,10 @@
 	<sql id="search">
 		<if test="word != null and word != ''">
 			<if test="key == 'title'">
-				and notice_title like concat('%', #{word}, '%')
+				where notice_title like concat('%', #{word}, '%')
 			</if>
 			<if test="key != 'title'">
-				and ${key} = #{word}
+				where ${key} = #{word}
 			</if>
 		</if>
 	</sql>
@@ -34,7 +34,7 @@
 		from notice
 		<include refid="search"></include>
 		order by notice_no desc
-		limit #{start}, #{listsize}
+		limit #{start}, #{spp}
 	</select>
 	
 	<select id="getTotalArticleCount" parameterType="map" resultType="int">
