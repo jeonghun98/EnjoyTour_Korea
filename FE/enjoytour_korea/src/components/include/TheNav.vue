@@ -113,11 +113,11 @@
       <div class="row">
         <div>
           <b-nav tabs align="center">
-            <b-nav-item active><router-link to="/">홈</router-link></b-nav-item>
-            <b-nav-item><router-link to="/notice">공지사항</router-link></b-nav-item>
-            <b-nav-item><router-link to="/attraction">한국 여행지</router-link></b-nav-item>
-            <b-nav-item><router-link to="/plan">모두의 여행계획</router-link></b-nav-item>
-            <b-nav-item><router-link to="/hotplace">핫플자랑하기</router-link></b-nav-item>
+            <b-nav-item to="/" exact exact-active-class="active"><b>홈</b></b-nav-item>
+            <b-nav-item to="/notice" exact exact-active-class="active"><b>공지사항</b></b-nav-item>
+            <b-nav-item to="/attraction" exact exact-active-class="active"><b>한국 여행지</b></b-nav-item>
+            <b-nav-item to="/plan" exact exact-active-class="active"><b>모두의 여행계획</b></b-nav-item>
+            <b-nav-item to="/hotplace" exact exact-active-class="active"><b>핫플자랑하기</b></b-nav-item>
           </b-nav>
         </div>
         <hr style="position: relative; top: -5px" />
