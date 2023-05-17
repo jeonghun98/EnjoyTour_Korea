@@ -4,7 +4,7 @@
 
 <script>
 export default {
-    name: '',
+    name: 'NoticeModify',
     components: {},
     data() {
         return {
