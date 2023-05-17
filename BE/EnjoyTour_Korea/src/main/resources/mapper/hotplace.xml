@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ssafy.hotplace.model.mapper.HotplaceMapper">
+
+	<resultMap type="hotplaceDto" id="hotplace">
+		<result column="hotplace_no" property="hotplaceNo"/>
+		<result column="user_id" property="userId"/>
+		<result column="hotplace_title" property="title"/>
+		<result column="hotplace_content" property="content"/>
+		<result column="hotplace_like" property="like"/>
+		<result column="hotplace_date" property="date"/>
+		<result column="hotplace_image" property="img"/>
+	</resultMap>
+	
+	<insert id="writeHotplace" parameterType="HotplaceDto">
+		insert into hotplace (hotplace_no, user_id, hotplace_title, hotplace_content, hotplace_like, hotplace_date, hotplace_image)
+		values (#{hotplaceNo}, #{userId}, #{title}, #{content}, #{like}, #{date}, #{img})
+	</insert>
+	
+	<select id="listHotplace" resultMap="hotplace">
+		select hotplace_no, user_id, hotplace_title, hotplace_content, hotplace_like, hotplace_date, hotplace_image
+		from hotplace
+		order by hotplace_no desc
+	</select>
+	
+	<select id="getHotplace" parameterType="int" resultMap="hotplace">
+		select hotplace_no, user_id, hotplace_title, hotplace_content, hotplace_like, hotplace_date, hotplace_image
+		from hotplace
+		where hotplace_no = #{hotplaceNo}
+	</select>
+	
+	<update id="updateLike" parameterType="int">
+		update hotplace
+		set hotplace_like = hotplace_like + 1
+		where hotplace_no = #{hotplaceNo}
+	</update>
+	
+	<update id="modifyHotplace" parameterType="HotplaceDto">
+		update hotplace
+		set hotplace_title = #{title}, hotplace_content = #{content}, hotplace_like = #{like}, hotplace_date = #{date}, hotplace_image =#{img} 
+		where hotplace_no = #{hotplaceNo}
+	</update>
+	
+	
+	<delete id="deleteHotplace" parameterType="int">
+		delete from hotplace
+		where hotplace_no = #{hotplaceNo}
+	</delete>
+</mapper>	
+	
