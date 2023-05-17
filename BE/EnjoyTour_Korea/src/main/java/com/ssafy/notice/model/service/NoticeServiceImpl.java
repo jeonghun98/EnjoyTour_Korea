@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.notice.model.NoticeDto;
+import com.ssafy.notice.model.NoticeParameterDto;
 import com.ssafy.notice.model.mapper.NoticeMapper;
 import com.ssafy.util.PageNavigation;
 import com.ssafy.util.SizeConstant;
@@ -29,16 +30,19 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public List<NoticeDto> listArticle(Map<String, String> map) throws Exception {
-		Map<String, Object> param = new HashMap<String, Object>();
-		String key = map.get("key");
-		param.put("key", key.isEmpty() ? "" : key);
-		param.put("word", map.get("word").isEmpty() ? "" : map.get("word"));
-		int pgno = Integer.parseInt(map.get("pgno"));
-		int start = pgno * SizeConstant.LIST_SIZE - SizeConstant.LIST_SIZE;
-		param.put("start", start);
-		param.put("listsize", SizeConstant.LIST_SIZE);
-		return noticeMapper.listArticle(param);
+	public List<NoticeDto> listArticle(NoticeParameterDto noticeParameterDto) throws Exception {
+		int start = noticeParameterDto.getPg() == 0 ? 0 : (noticeParameterDto.getPg() - 1) * noticeParameterDto.getSpp();
+		noticeParameterDto.setStart(start);
+		return noticeMapper.listArticle(noticeParameterDto);
+//		Map<String, Object> param = new HashMap<String, Object>();
+//		String key = map.get("key");
+//		param.put("key", key.isEmpty() ? "" : key);
+//		param.put("word", map.get("word").isEmpty() ? "" : map.get("word"));
+//		int pgno = Integer.parseInt(map.get("pgno"));
+//		int start = pgno * SizeConstant.LIST_SIZE - SizeConstant.LIST_SIZE;
+//		param.put("start", start);
+//		param.put("listsize", SizeConstant.LIST_SIZE);
+//		return noticeMapper.listArticle(param);
 	}
 	
 	@Override

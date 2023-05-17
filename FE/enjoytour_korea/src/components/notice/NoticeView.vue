@@ -5,19 +5,21 @@
       <div class="row my-2">
         <h4 class="text-secondary fw-bold">{{ notice.noticeNo }}. {{ notice.title }}</h4>
       </div>
-      <div class="row">
+      <div>
         <div class="col-md-8">
           <div class="clearfix align-content-center">
-            <img
+            <span>
+              <img
               class="avatar me-2 float-md-start bg-light p-2"
               src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
             />
-            <p>
-              <span class="fw-bold">{{ notice.noticeNo }}</span> <br />
+            </span>
+            <span>
+              <span class="fw-bold">{{ notice.userId }}</span> <br />
               <span class="text-secondary fw-light">
                 {{ notice.registerTime | dateFormat }} 조회 : {{ notice.hit }}
               </span>
-            </p>
+            </span>
           </div>
         </div>
         <div class="divider mb-3"></div>

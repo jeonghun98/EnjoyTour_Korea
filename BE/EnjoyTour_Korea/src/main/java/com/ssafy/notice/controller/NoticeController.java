@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.notice.model.NoticeDto;
+import com.ssafy.notice.model.NoticeParameterDto;
 import com.ssafy.notice.model.service.NoticeService;
 import com.ssafy.util.PageNavigation;
 import com.ssafy.util.ParameterCheck;
@@ -87,13 +88,12 @@ public class NoticeController {
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "공지사항 글목록", notes = "모든 게시글의 정보를 반환한다.", response = List.class)
+	@ApiOperation(value = "공지사항 글목록", notes = "모든 공지사항 정보를 반환한다.", response = List.class)
 	@ApiResponses({@ApiResponse(code = 200, message ="공지 전체 목록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
 	@GetMapping
-	public ResponseEntity<List<NoticeDto>> noticeList() throws Exception {
+	public ResponseEntity<List<NoticeDto>> noticeList(@ApiParam(value = "공지사항 얻기위한 부가정보.", required = false) NoticeParameterDto noticeParameterDto) throws Exception {
 		logger.info("noticeList - 호출");
-		Map<String, String> map = parameterCheck(null);
-		return new ResponseEntity<List<NoticeDto>>(noticeService.listArticle(map), HttpStatus.OK);
+		return new ResponseEntity<List<NoticeDto>>(noticeService.listArticle(noticeParameterDto), HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "공지사항 글보기", notes = "글번호에 해당하는 게시글의 정보를 반환한다.", response = NoticeDto.class)

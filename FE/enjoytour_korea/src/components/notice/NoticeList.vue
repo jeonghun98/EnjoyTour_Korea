@@ -4,7 +4,8 @@
     <div class="col-lg-12 col-md-10 col-sm-12">
       <div class="row align-self-center mb-2">
         <div class="col-md-2 text-start">
-          <button type="button" id="btn-mv-register" class="btn btn-outline-primary btn-sm" @click="moveWrite">
+          <button type="button" id="btn-mv-register" class="btn btn-outline-primary btn-sm"
+          @click="moveWrite">
                 글쓰기
           </button>
           <!-- <c:if test="${userinfo.userId eq 'admin'}">
@@ -14,20 +15,23 @@
             </c:if> -->
         </div>
         <div class="col-md-7 offset-5 d-flex justify-content-end">
-          <form class="d-flex" id="form-search" action="">
+          <form class="d-flex" id="form-search" @submit="onSearch">
             <input type="hidden" name="action" value="list" />
             <input type="hidden" name="pgno" value="1" />
-            <select
+            <b-select v-model="selected" :options="options"></b-select>
+            <!-- <div class="mt-3">Selected: <strong>{{ selected }}</strong></div> -->
+            <!-- <select
               name="key"
               id="key"
               class="form-select form-select-sm ms-5 me-1 w-50"
               aria-label="검색조건"
+              v-model = "key"
             >
               <option selected>검색조건</option>
               <option value="noticeno">글번호</option>
               <option value="title">제목</option>
               <option value="user_id">작성자</option>
-            </select>
+            </select> -->
             <div class="input-group input-group-sm">
               <input
                 type="text"
@@ -35,8 +39,9 @@
                 id="word"
                 class="form-control"
                 placeholder="검색어..."
+                v-model = "word"
               />
-              <button id="btn-search" class="btn btn-dark" type="button">검색</button>
+              <button id="btn-search" class="btn btn-dark" type="submit" @submit="onSearch">검색</button>
             </div>
           </form>
           <div>
@@ -90,6 +95,15 @@ export default {
   data() {
     return {
       notices: [],
+      key: null,
+      word : null,
+      selected: null,
+        options: [
+          { value: null, text: '검색조건' },
+          { value: 'notice_no', text: '글번호' },
+          { value: 'title', text: '제목' },
+          // { value: 'userId', text: '작성자' },
+        ]
       // fields: [
       //   { key: "noticeNo", label: "글번호", tdClass: "tdClass" },
       //   { key: "title", label: "제목", tdClass: "tdSubject" },
@@ -101,7 +115,7 @@ export default {
   },
   created() {
     http.get(`/notice`).then(({ data }) => {
-      // console.log(data);
+      // console.l/og(data);
       this.notices = data;
     });
   },
@@ -109,6 +123,15 @@ export default {
     moveWrite() {
       this.$router.push({ name: "noticeWrite" });
     },
+    onSearch(event) {
+      event.preventDefault();
+        http.get(`/notice`, { params: {key : this.selected, word : this.word} })
+      .then(({ data }) => {
+        console.log(data);
+        this.notices = data;
+      });
+    },
+
     // viewArticle(notice) {
     //   this.$router.push({
     //     name: "noticeView",
