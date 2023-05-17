@@ -7,6 +7,12 @@ import AppHotplace from "@/views/AppHotplace";
 import AppNotice from "@/views/AppNotice";
 import AppPlan from "@/views/AppPlan";
 
+// components
+import NoticeList from "@/components/notice/NoticeList";
+import NoticeWrite from "@/components/notice/NoticeWrite";
+import NoticeView from "@/components/notice/NoticeView";
+import NoticeModify from "@/components/notice/NoticeModify";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -29,6 +35,29 @@ const routes = [
     path: "/notice",
     name: "notice",
     component: AppNotice,
+    redirect: "/notice/list",
+    children: [
+      {
+        path: "list",
+        name: "noticeList",
+        component: NoticeList,
+      },
+      {
+        path: "write",
+        name: "noticeWrite",
+        component: NoticeWrite,
+      },
+      {
+        path: "view/:noticeNo",
+        name: "noticeView",
+        component: NoticeView,
+      },
+      {
+        path: "modify/:noticeNo",
+        name: "noticeModify",
+        component: NoticeModify,
+      },
+    ],
   },
   {
     path: "/plan",

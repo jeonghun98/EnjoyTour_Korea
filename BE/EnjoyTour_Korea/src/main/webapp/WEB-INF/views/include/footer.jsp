@@ -63,7 +63,7 @@ pageEncoding="UTF-8"%>
         
         let noticeLinks = document.querySelectorAll(".notice-link");
         for(let noticeLink of noticeLinks){
-        	noticeLink.href = "${root}/noticeArticle?action=list"
+        	noticeLink.href = "${root}/notice?action=list"
         }
         
         let informLinks = document.querySelectorAll(".inform-link");
