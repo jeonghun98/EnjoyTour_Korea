@@ -6,9 +6,13 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import com.ssafy.attraction.model.AttractionDto;
+import com.ssafy.attraction.model.SidoGugunCodeDto;
 
 @Mapper
 public interface AttractionMapper {
-	void insertAttraction(AttractionDto attractionDto) throws SQLException;
+//	void insertAttraction(AttractionDto attractionDto) throws SQLException;
 	List<AttractionDto> searchAttractionByLatLon(Map<String, Float> map) throws Exception;
+	List<SidoGugunCodeDto> getSido() throws SQLException;
+	List<SidoGugunCodeDto> getGugunInSido(String sido) throws SQLException;
+	List<AttractionDto> getAttractionInGugun(String gugun) throws SQLException;
 }

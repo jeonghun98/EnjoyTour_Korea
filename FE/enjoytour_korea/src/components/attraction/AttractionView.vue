@@ -2,23 +2,11 @@
   <div class="wrapper">
     <!-- 관광지 정보 컨텐츠 START  -->
     <div class="container">
-      <div
-        class="row bg-image p-1 me-1 ms-1 shadow-1-strong rounded content-title"
-        style="
-          /* background-image: url('${root}/assets/img/korea1.jpg'); */
-          background-size: cover;
-          height: 105px;
-        "
-      >
-        <div class="col-12 text-light">
-          <h3 class="fw-bold pt-3">관광지 정보</h3>
-          <span class="content-desc">어떤 지역에 어떤 관광지가 있는지 찾아보세요</span>
-        </div>
-      </div>
 
-      <div class="col">
+
+      <!-- <div class="col"> -->
         <!-- 관광지 검색 start -->
-        <form class="d-flex justify-content-around m-3" role="search" style="height: 3rem">
+        <!-- <form class="d-flex justify-content-around m-3" role="search" style="height: 3rem">
           <select
             id="search-area"
             class="form-select m-1"
@@ -52,7 +40,9 @@
             <option value="39">음식점</option>
           </select>
         </form>
-      </div>
+      </div> -->
+
+      
       <!-- map start -->
       <div class="row d-flex justify-content-center m-1">
         <div id="map" style="width: 100%; height: 40rem"></div>
