@@ -52,7 +52,7 @@ export default {
     };
   },
   created() {},
-  computed() {},
+  // computed() {},
   methods: {
     confirm() {
       console.log(`로그인 완료: id-${this.user.userid}, pw-${this.user.userpwd}`);

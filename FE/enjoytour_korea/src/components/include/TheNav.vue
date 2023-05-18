@@ -44,16 +44,16 @@
               <template #button-content>
                 <b>사용자</b>
               </template>
-              <b-dropdown-item href="#">
-                <b v-b-modal.modal-join>회원가입</b>
+              <b-dropdown-item href="#" v-b-modal.modal-join>
+                회원가입
                 <user-join-modal></user-join-modal>
               </b-dropdown-item>
-              <b-dropdown-item href="#">
-                <b v-b-modal.modal-login>로그인</b>
+              <b-dropdown-item href="#" v-b-modal.modal-login>
+                로그인
                 <user-login-modal></user-login-modal>
               </b-dropdown-item>
               <b-dropdown-item href="#">
-                <b>로그아웃</b>
+                로그아웃
               </b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>

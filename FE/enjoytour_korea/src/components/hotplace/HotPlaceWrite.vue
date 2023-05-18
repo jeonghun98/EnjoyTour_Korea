@@ -4,7 +4,7 @@
 
 <script>
 export default {
-    name: '',
+    name: 'HotplaceWrite',
     components: {},
     data() {
         return {

@@ -12,6 +12,7 @@ import NoticeList from "@/components/notice/NoticeList";
 import NoticeWrite from "@/components/notice/NoticeWrite";
 import NoticeView from "@/components/notice/NoticeView";
 import NoticeModify from "@/components/notice/NoticeModify";
+import HotplaceList from '@/components/hotplace/HotplaceList';
 
 Vue.use(VueRouter);
 
@@ -30,6 +31,14 @@ const routes = [
     path: "/hotplace",
     name: "hotplace",
     component: AppHotplace,
+    redirect: "/hotplace/list",
+    children: [
+      {
+        path: "list",
+        name: "hotplaceList",
+        component: HotplaceList,
+      },
+    ],
   },
   {
     path: "/notice",
