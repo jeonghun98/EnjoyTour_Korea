@@ -43,7 +43,7 @@
                 id="word"
                 class="form-control"
                 placeholder="검색어..."
-                v-model="word"
+                v-model="searchWord"
               />
               <button id="btn-search" class="btn btn-dark" type="submit" @submit="onSearch">
                 검색
@@ -112,8 +112,14 @@ export default {
     return {
       notices: [],
       selected: null,
-      key: null,
-      word : null,
+      searchWord : null,
+      param : {
+        pg: 1,
+        spp: 20,
+        key: null,
+        word: null,
+      },
+    
       options: [
         { value: null, text: "검색조건" },
         { value: "notice_no", text: "글번호" },
@@ -130,14 +136,8 @@ export default {
     };
   },
   created() {
-    let param = {
-      pg: 1,
-      spp: 20,
-      key: null,
-      word: null,
-    };
     listArticle(
-      param,
+      this.param,
       ({ data }) => {
         this.notices = data;
       },
@@ -153,7 +153,8 @@ export default {
     onSearch(event) {
       event.preventDefault();
       this.param.key = this.selected;
-      this.param.word = this.word;
+      this.param.word = this.searchWord;
+
         listArticle(
           this.param,
           ({ data }) => {
