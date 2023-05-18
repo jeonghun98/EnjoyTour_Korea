@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import http from "@/api/http";
+import { writeArticle, modifyArticle, getArticle } from "@/api/notice";
 
 export default {
   name: "NoticeInputItem",
@@ -65,9 +65,16 @@ export default {
   },
   created() {
     if (this.type === "modify") {
-      http.get(`/notice/${this.$route.params.noticeNo}`).then(({ data }) => {
-        this.notice = data;
-      });
+      let param = this.$route.params.noticeNo;
+      getArticle(
+        param,
+        ({ data }) => {
+          this.notice = data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
       this.isUserid = true;
     }
   },
@@ -87,45 +94,55 @@ export default {
         ((msg = "내용 입력해주세요"), (err = false), this.$refs.content.focus());
 
       if (!err) alert(msg);
-      else this.type === "write" ? this.WriteArticle() : this.modifyArticle();
+      else this.type === "write" ? this.WriteNotice() : this.modifyNotice();
     },
     onReset(event) {
       event.preventDefault();
       this.notice.title = "";
       this.notice.content = "";
     },
-    WriteArticle() {
-      http
-        .post(`/notice`, {
-          userId: this.notice.userId,
-          title: this.notice.title,
-          content: this.notice.content,
-        })
-        .then(({ data }) => {
+    WriteNotice() {
+      let param = {
+        userId: this.notice.userId,
+        title: this.notice.title,
+        content: this.notice.content,
+      };
+      writeArticle(
+        param,
+        ({ data }) => {
           let msg = "등록 처리시 문제가 발생했습니다.";
           if (data === "success") {
             msg = "등록이 완료되었습니다.";
           }
           alert(msg);
           this.moveList();
-        });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
-    modifyArticle() {
-      http
-        .put(`/notice`, {
+    modifyNotice() {
+      let param = {
           noticeNo: this.notice.noticeNo,
           userId: this.notice.userId,
           title: this.notice.title,
           content: this.notice.content,
-        })
-        .then(({ data }) => {
+      };
+      modifyArticle(
+        param,
+        ({ data }) => {
           let msg = "수정 처리시 문제가 발생했습니다.";
           if (data === "success") {
             msg = "수정이 완료되었습니다.";
           }
           alert(msg);
           this.moveList();
-        });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
     moveList() {
       this.$router.push({ name: "noticeList" });
