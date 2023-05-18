@@ -3,7 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-import "@/api/vueBootstrap.js";
+import "@/api/lib/vueBootstrap.js";
 // import "@/assets/js/map.js";
 
 Vue.config.productionTip = false;
