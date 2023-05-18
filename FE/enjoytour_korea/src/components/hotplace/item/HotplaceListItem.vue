@@ -1,15 +1,14 @@
 <template>
   <div class="col">
             <b-card
-              title="Title"
-              :img-src="require('../../../assets/img/korea1.jpg')"
-              img-alt="Image"
+              :title="titleText"
+              img-src=""
+              img-alt="글쓰기"
               img-top
             >
+             <!-- :img-src="require('../../../assets/img/ssafy_logo.png')" -->
               <b-card-text>
-                This is a wider card with supporting text below as a natural
-                lead-in to additional content. This content is a little bit
-                longer.
+                {{content}}
               </b-card-text>
               <template #footer>
                 <div class="d-flex justify-content-between align-items-center">
@@ -17,31 +16,47 @@
                     <button
                       type="button"
                       class="btn btn-sm btn-outline-secondary"
+                      @click="moveView"
                     >
                       자세히 보기
                     </button>
                   </div>
-                  <small class="text-muted">9 mins</small>
+                  <small class="text-muted">좋아요 : {{like}}</small>
                 </div>
               </template>
             </b-card>
           </div>
 </template>
 
-<script>
+<script> 
 export default {
   name: 'HotplaceListItem',
   components: {},
+  props: {
+    hotplaceNo: Number,
+    userId: String,
+    title: String,
+    content: String,
+    like: Number,
+    date: String,
+    img: String,
+  }, 
   data() {
     return {
       message: '',
-      data() {
-        
-      },
     };
   },
   created() {},
-  methods: {},
+  computed: {
+    titleText() {
+      return this.title;
+    }
+  },
+  methods: {
+    moveView() {
+      alert("`${hotplaceNo}`번 핫플로 이동합니다")
+    },
+  },
 };
 </script>
 

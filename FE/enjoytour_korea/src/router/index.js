@@ -13,6 +13,11 @@ import NoticeWrite from "@/components/notice/NoticeWrite";
 import NoticeView from "@/components/notice/NoticeView";
 import NoticeModify from "@/components/notice/NoticeModify";
 import HotplaceList from '@/components/hotplace/HotplaceList';
+import HotplaceWrite from '@/components/hotplace/HotplaceWrite';
+import HotplaceModify from '@/components/hotplace/HotplaceModify';
+import HotplaceView from '@/components/hotplace/HotplaceView';
+import HotplaceDelete from '@/components/hotplace/HotplaceDelete';
+
 
 Vue.use(VueRouter);
 
@@ -37,6 +42,26 @@ const routes = [
         path: "list",
         name: "hotplaceList",
         component: HotplaceList,
+      },
+      {
+        path: "write",
+        name: "hotplaceWrite",
+        component: HotplaceWrite,
+      },
+      {
+        path: "view/:no",
+        name: "hotplaceView",
+        component: HotplaceView,
+      },
+      {
+        path: "modify/:no",
+        name: "hotplaceModify",
+        component: HotplaceModify,
+      },
+      {
+        path: "delete/:no",
+        name: "hotplaceDelete",
+        component: HotplaceDelete,
       },
     ],
   },
