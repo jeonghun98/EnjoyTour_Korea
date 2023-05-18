@@ -73,7 +73,7 @@ export default {
     };
   },
   created() {},
-  computed() {},
+  // computed() {},
   methods: {
     confirm() {
       console.log(`회원가입: ${this.user.userid}, ${this.user.userpwd}, ${this.user.username}, ${this.user.useremail}, ${this.user.userphone}`);

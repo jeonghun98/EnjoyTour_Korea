@@ -1,12 +1,12 @@
 <template>
   <div>
-    핫플레이스 수정화면입니다
+    삭제중..
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HotplaceModify',
+  name: 'HotplaceDelete',
   components: {},
   data() {
     return {
