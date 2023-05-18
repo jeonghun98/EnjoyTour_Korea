@@ -10,9 +10,9 @@
           <div class="clearfix align-content-center">
             <span>
               <img
-              class="avatar me-2 float-md-start bg-light p-2"
-              src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
-            />
+                class="avatar me-2 float-md-start bg-light p-2"
+                src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
+              />
             </span>
             <span>
               <span class="fw-bold">{{ notice.userId }}</span> <br />
@@ -38,7 +38,7 @@
             type="button"
             id="btn-mv-modify"
             class="btn btn-outline-success mb-3 ms-1"
-            @click="moveModifyArticle"
+            @click="moveModifyNotice"
           >
             글수정
           </button>
@@ -46,7 +46,7 @@
             type="button"
             id="btn-delete"
             class="btn btn-outline-danger mb-3 ms-1"
-            @click="deleteArticle"
+            @click="deleteNotice"
           >
             글삭제
           </button>
@@ -59,7 +59,7 @@
 
 <script>
 import moment from "moment";
-import http from "@/api/http";
+import { getArticle,deleteArticle } from "@/api/notice";
 
 export default {
   name: "noticeView",
@@ -70,28 +70,41 @@ export default {
     };
   },
   created() {
-    http.get(`/notice/${this.$route.params.noticeNo}`).then(({ data }) => {
-      this.notice = data;
-      // console.log(data);
-    });
+    let param = this.$route.params.noticeNo;
+    getArticle(
+      param,
+      ({ data }) => {
+        this.notice = data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   },
   methods: {
-    moveModifyArticle() {
+    moveModifyNotice() {
       this.$router.replace({
         name: "noticeModify",
         params: { noticeNo: this.notice.noticeNo },
       });
     },
-    deleteArticle() {
+    deleteNotice() {
       if (confirm("정말로 삭제하시겠습니까?")) {
-        http.delete(`/notice/${this.$route.params.noticeNo}`).then(({ data }) => {
-          let msg = "삭제 처리시 문제가 발생했습니다.";
-          if (data === "success") {
-            msg = "삭제가 완료되었습니다.";
+        let param = this.$route.params.noticeNo;
+        deleteArticle(
+          param,
+          ({ data }) => {
+            let msg = "삭제 처리시 문제가 발생했습니다.";
+            if (data === "success") {
+              msg = "삭제가 완료되었습니다.";
+            }
+            alert(msg);
+            this.$router.push({ name: "noticeList" });
+          },
+          (error) => {
+            console.log(error);
           }
-          alert(msg);
-          this.$router.push({ name: "noticeList" });
-        });
+        );
       }
     },
     moveList() {

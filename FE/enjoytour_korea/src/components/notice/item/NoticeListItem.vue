@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <tr class="text-center">
     <b-th scope="row">{{ noticeNo }}</b-th>
     <b-td class="text-start" >
@@ -10,11 +10,11 @@
     </b-td>
     <b-td>{{ userId }}</b-td>
     <b-td>{{ hit }}</b-td>
-    <b-td>{{ registerTime }}</b-td>
+    <b-td>{{ registerTime | dateFormat }}</b-td>
   </tr>
 </template>
 <script>
-// import moment from "moment";
+import moment from "moment";
 
 export default {
   name: "NoticeListItem",
@@ -26,13 +26,17 @@ export default {
     hit: Number,
     registerTime: String,
   },
-  // methods: {
-  //   moveView() {
-  //     this.$router.push({ name: 'noticeView', params: { noticeNo: this.noticeNo } });
-  //   },
-  // }
-  
+  methods: {
+    moveView() {
+      this.$router.push({ name: 'noticeView', params: { noticeNo: this.noticeNo } });
+    },
+  },
+  filters: {
+    dateFormat(regtime) {
+      return moment(new Date(regtime)).format("YY.MM.DD");
+    },
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped></style> -->

@@ -4,9 +4,13 @@
     <div class="col-lg-12 col-md-10 col-sm-12">
       <div class="row align-self-center mb-2">
         <div class="col-md-2 text-start">
-          <button type="button" id="btn-mv-register" class="btn btn-outline-primary btn-sm"
-          @click="moveWrite">
-                글쓰기
+          <button
+            type="button"
+            id="btn-mv-register"
+            class="btn btn-outline-primary btn-sm"
+            @click="moveWrite"
+          >
+            글쓰기
           </button>
           <!-- <c:if test="${userinfo.userId eq 'admin'}">
               <button type="button" id="btn-mv-register" class="btn btn-outline-primary btn-sm">
@@ -39,9 +43,11 @@
                 id="word"
                 class="form-control"
                 placeholder="검색어..."
-                v-model = "word"
+                v-model="word"
               />
-              <button id="btn-search" class="btn btn-dark" type="submit" @submit="onSearch">검색</button>
+              <button id="btn-search" class="btn btn-dark" type="submit" @submit="onSearch">
+                검색
+              </button>
             </div>
           </form>
           <div>
@@ -63,7 +69,18 @@
           </div>
         </div>
       </div>
-      <table class="table table-hover">
+      <b-row>
+        <b-col>
+          <b-table striped hover :items="notices" :fields="fields" @row-clicked="viewNotice">
+            <template #cell(subject)="data">
+              <router-link :to="{ name: 'noticeView', params: { noticeNo: data.item.noticeNo } }">
+                {{ data.item.title }}
+              </router-link>
+            </template>
+          </b-table>
+        </b-col>
+      </b-row>
+      <!-- <table class="table table-hover">
         <thead>
           <tr class="text-center">
             <th scope="col">글번호</th>
@@ -74,50 +91,60 @@
           </tr>
         </thead>
         <tbody>
-          <!-- 하위 component인 ListRow에 데이터 전달(props) -->
           <notice-list-item v-for="notice in notices" :key="notice.noticeNo" v-bind="notice" />
         </tbody>
-      </table>
+      </table> -->
     </div>
     <!-- <div class="row">${navigation.navigator}</div> -->
   </div>
 </template>
 
 <script>
-import http from "@/api/http";
-import NoticeListItem from "./item/NoticeListItem.vue";
+// import NoticeListItem from "./item/NoticeListItem.vue";
+import { listArticle } from "@/api/notice";
 
 export default {
   name: "NoticeList",
   components: {
-    NoticeListItem,
+    // NoticeListItem,
   },
   data() {
     return {
       notices: [],
+      selected: null,
       key: null,
       word : null,
-      selected: null,
-        options: [
-          { value: null, text: '검색조건' },
-          { value: 'notice_no', text: '글번호' },
-          { value: 'title', text: '제목' },
-          // { value: 'userId', text: '작성자' },
-        ]
-      // fields: [
-      //   { key: "noticeNo", label: "글번호", tdClass: "tdClass" },
-      //   { key: "title", label: "제목", tdClass: "tdSubject" },
-      //   { key: "userId", label: "작성자", tdClass: "tdClass" },
-      //   { key: "registerTime", label: "작성일", tdClass: "tdClass" },
-      //   { key: "hit", label: "조회수", tdClass: "tdClass" },
-      // ],
+      options: [
+        { value: null, text: "검색조건" },
+        { value: "notice_no", text: "글번호" },
+        { value: "title", text: "제목" },
+        // { value: 'userId', text: '작성자' },
+      ],
+      fields: [
+        { key: "noticeNo", label: "글번호", tdClass: "tdClass" },
+        { key: "title", label: "제목", tdClass: "tdTitle" },
+        { key: "userId", label: "작성자", tdClass: "tdClass" },
+        { key: "hit", label: "조회수", tdClass: "tdClass" },
+        { key: "registerTime", label: "작성일", tdClass: "tdClass" },
+      ],
     };
   },
   created() {
-    http.get(`/notice`).then(({ data }) => {
-      // console.l/og(data);
-      this.notices = data;
-    });
+    let param = {
+      pg: 1,
+      spp: 20,
+      key: null,
+      word: null,
+    };
+    listArticle(
+      param,
+      ({ data }) => {
+        this.notices = data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   },
   methods: {
     moveWrite() {
@@ -125,19 +152,35 @@ export default {
     },
     onSearch(event) {
       event.preventDefault();
-        http.get(`/notice`, { params: {key : this.selected, word : this.word} })
-      .then(({ data }) => {
-        console.log(data);
-        this.notices = data;
+      this.param.key = this.selected;
+      this.param.word = this.word;
+        listArticle(
+          this.param,
+          ({ data }) => {
+            this.notices = data;
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+    },
+    viewNotice(notice) {
+      this.$router.push({
+        name: "noticeView",
+        params: { noticeNo: notice.noticeNo },
       });
     },
-
-    // viewArticle(notice) {
-    //   this.$router.push({
-    //     name: "noticeView",
-    //     params: { noticeNo: notice.noticeNo },
-    //   });
-    // },
   },
 };
 </script>
+
+<style scope>
+.tdClass {
+  width: 50px;
+  text-align: center;
+}
+.tdSubject {
+  width: 300px;
+  text-align: left;
+}
+</style>

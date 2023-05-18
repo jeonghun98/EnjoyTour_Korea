@@ -89,8 +89,9 @@ export default {
       const script = document.createElement("script");
       /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
-      script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=4d5f08fd26ea3388bf683ad4be611652";
+      script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=" +
+        process.env.VUE_APP_KAKAO_MAP_API_KEY +
+        "&autoload=false";
       document.head.appendChild(script);
 
       for (let i = 0; i <= 40; i++) this.markers[i] = [];
