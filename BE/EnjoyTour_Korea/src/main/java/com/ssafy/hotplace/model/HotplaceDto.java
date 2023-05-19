@@ -1,9 +1,11 @@
 package com.ssafy.hotplace.model;
 
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "HotplaceDto (핫플레이스 정보)", description = "핫플레이스 번호, 사용자, 제목, 내용, 좋아요 수, 가입일, 이미지 정보를 가진 Domain class!!")
+@ApiModel(value = "HotplaceDto (핫플레이스 정보)", description = "핫플레이스 번호, 사용자, 제목, 내용, 좋아요 수, 가입일, 이미지, 파일 정보를 가진 Domain class!!")
 public class HotplaceDto {
 	
 	@ApiModelProperty(value = "핫플레이스 번호")
@@ -20,6 +22,8 @@ public class HotplaceDto {
 	private String date;
 	@ApiModelProperty(value = "이미지")
 	private String img;
+	@ApiModelProperty(value = "파일 정보")
+//	private List<FileInfoDto> fileInfos;
 	
 	public int getHotplaceNo() {
 		return hotplaceNo;
@@ -68,6 +72,20 @@ public class HotplaceDto {
 		return "HotplaceDto [hotplaceNo=" + hotplaceNo + ", userId=" + userId + ", title=" + title + ", content="
 				+ content + ", like=" + like + ", date=" + date + ", img=" + img + "]";
 	}
+	
+//	public List<FileInfoDto> getFileInfos() {
+//		return fileInfos;
+//	}
+//
+//	public void setFileInfos(List<FileInfoDto> fileInfos) {
+//		this.fileInfos = fileInfos;
+//	}
+//	@Override
+//	public String toString() {
+//		return "HotplaceDto [hotplaceNo=" + hotplaceNo + ", userId=" + userId + ", title=" + title + ", content="
+//				+ content + ", like=" + like + ", date=" + date + ", img=" + img + ", fileInfos=" + fileInfos + "]";
+//	}
+	
 	
 	
 }
