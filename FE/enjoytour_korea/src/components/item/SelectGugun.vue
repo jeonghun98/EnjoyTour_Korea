@@ -43,7 +43,13 @@ export default {
   methods: {
     ...mapActions(itemStore, ["getGugun"]),
     ...mapMutations(itemStore, ["CLEAR_GUGUN_LIST"]),
+    ...mapMutations(itemStore, {
+      setsidocode: "SET_SIDO",
+      setguguncode: "SET_GUGUN",
+    }),
     changeGugun() {
+      this.setsidocode(this.sidoCode);
+      this.setguguncode(this.gugunCode);
       this.$emit("select-gugun", this.gugunCode);
     },
   },

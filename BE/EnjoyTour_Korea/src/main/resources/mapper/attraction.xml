@@ -36,7 +36,8 @@
  -->
 	<select id="searchAttractionByLatLon" parameterType="map" resultMap="getAttractionDto">
 		SELECT * FROM attraction_info ai, attraction_description ad
-		WHERE ai.content_id = ad.content_id and  ST_Distance_Sphere(POINT(longitude, latitude), POINT(#{longitude}, #{latitude})) <![CDATA[ <= ]]> #{meter}
+		WHERE ai.content_id = ad.content_id 
+		and ST_Distance_Sphere(POINT(longitude, latitude), POINT(#{longitude}, #{latitude})) <![CDATA[ <= ]]> #{meter}
 	</select>
 	
 		<select id="getSido" resultMap="getsidoGugunCodeDto">

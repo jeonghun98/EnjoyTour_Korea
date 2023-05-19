@@ -4,7 +4,7 @@
     <div class="container">
       <!-- map start -->
       <div class="row d-flex justify-content-center m-1">
-        <div id="map" style="width: 100%; height: 40rem"></div>
+        <div id="kakaomap" style="width: 100%; height: 40rem"></div>
       </div>
       <!-- map end -->
     </div>
@@ -12,59 +12,80 @@
 </template>
 
 <script>
-// import { mapState} from "vuex";
-// const itemStore = "itemStore";
-import { searchByLoc } from "@/api/attraction"
+import { mapGetters } from "vuex";
+import { searchByLoc } from "@/api/attraction";
+const itemStore = "itemStore";
+
 export default {
   name: "AttractionView",
   data() {
     return {
-      //kakao
       map: null,
       markers: [], // 마커를 담는 배열
       infoWindows: [], // infoWindow를 담는 배열
       clickLine: {},
 
-      // trip
-      regionName: null,
-      regionMap: {},
-      areaCode : null
+      // regionName: null,
+      // regionMap: {},
+      // areaCode : null
     };
   },
   components: {},
   props: {
     sidoCode: String,
     gugunCode: String,
-    contentCode : Number,
+    contentCode: Number,
   },
   watch: {
     gugunCode() {
       if (this.gugunCode) {
-        console.log(this.gugunCode);
+        // this.selectOnclickHandler(this.map, this.getSidoText, this.getGugunText);
         this.selectOnclickHandler();
       }
     },
     contentCode() {
       if (this.contentCode != 0) {
-        console.log(this.contentCode)
-        this.selectOnclickHandler();
-      } 
-    }
+        // this.selectOnclickHandler(this.map, this.getSidoText, this.getGugunText);
+      }
+    },
   },
   computed: {
+    ...mapGetters(itemStore, ["getSidoText"]),
+    ...mapGetters(itemStore, ["getGugunText"]),
+    ...mapGetters(itemStore, ["getContentText"]),
   },
   created() {},
   mounted() {
     if (window.kakao && window.kakao.maps) {
       this.initMap();
     } else {
+      this.loadScript();
+    }
+  },
+  methods: {
+    initMap() {
+      const container = document.getElementById("kakaomap");
+      const options = {
+        center: new kakao.maps.LatLng(37.5013068, 127.0396597),
+        level: 5,
+      };
+      //지도 객체를 등록합니다.
+      //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
+
+      this.map = new kakao.maps.Map(container, options);
+      this.map.relayout();
+
+      // makeOption(); -> search-area 생성
+    },
+    loadScript() {
       const script = document.createElement("script");
       /* global kakao */
-      script.onload = () => kakao.maps.load(this.initMap);
-      script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=" +
+      script.src =
+        "//dapi.kakao.com/v2/maps/sdk.js?appkey=" +
         process.env.VUE_APP_KAKAO_MAP_API_KEY +
-        "&autoload=false";
+        "&autoload=false&libraries=services";
       document.head.appendChild(script);
+      script.onload = () => kakao.maps.load(this.initMap);
 
       for (let i = 0; i <= 40; i++) this.markers[i] = [];
       for (let i = 0; i <= 40; i++) this.infoWindows[i] = [];
@@ -77,118 +98,127 @@ export default {
       //   strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
       //   strokeStyle: "solid", // 선의 스타일입니다
       // });
-    }
-  },
-  methods: {
-    initMap() {
-      const container = document.getElementById("map");
-      const options = {
-        center: new kakao.maps.LatLng(37.5013068, 127.0396597),
-        level: 5,
-      };
-      //지도 객체를 등록합니다.
-      //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
-      this.map = new kakao.maps.Map(container, options);
-      this.map.relayout();
-
-      // makeOption(); -> search-area 생성
     },
-
     selectOnclickHandler() {
       // gugun or content 이 콜백 함수가 실행됩니다.
       var geocoder = new kakao.maps.services.Geocoder();
-      geocoder.addressSearch("", function (result, status) {
+      // var map = this.map; // 아래의 function에서 this.map 접근이 되지 않으므로 var map 선언
+      // var makeMarker = this.makeMarker;
+      // var createMarkerImage = this.createMarkerImage;
+      // var createMarker = this.createMarker;
+
+      geocoder.addressSearch(`${this.getSidoText} ${this.getGugunText}`, (result, status) => {
         // 정상적으로 검색이 완료됐으면
         if (status === kakao.maps.services.Status.OK) {
           var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
           // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+          // console.log(coords);
           this.map.setCenter(coords);
-          let radius = 5000;
 
-          let param = {
+          var param = {
             mapX: result[0].x,
             mapY: result[0].y,
-            radius: radius
-          }
+            radius: 5000,
+          };
           searchByLoc(
-          param,
-          ({ data }) => {
-            // this.notices = data;
-            console.log(data);
-          },
-          (error) => {
-            console.log(error);
-          }
-          );
-        
-          // let tripInfoUrl = `${root}/attraction/searchByLoc?mapX=${result[0].x}&mapY=${result[0].y}&radius=${radius}`;
-          // fetch(tripInfoUrl)
-          //   .then((response) => response.json())
-          //   .then((data) => makeMarker(data));
+            param,
+            ({ data }) => {
+              this.makeMarker(data);
+            },
+            (error) => {
+              console.log(error);
+            }
+        );
         }
       });
     },
 
-    // makeMarker(data) {
-    //   let items = data;
-    //   if (!items) return;
-    //   let pos = [];
-    //   for (let i = 0; i <= 40; i++) pos[i] = [];
+    makeMarker(data) {
+      console.log(data);
+      let items = data;
+      if (!items) return;
+      let pos = [];
+      for (let i = 0; i <= 40; i++) pos[i] = [];
 
-    //   items.forEach(function (item) {
-    //     let idx = item.contenttypeid;
-    //     let markerImageSrc = `/assets/img/icon_${idx}.png`;
-    //     let imageSize = new kakao.maps.Size(30, 30),
-    //       imageOptions = {
-    //         offset: new kakao.maps.Point(25, 20),
-    //       };
-    //     let markerImage = createMarkerImage(markerImageSrc, imageSize, imageOptions);
-    //     var marker = createMarker(new kakao.maps.LatLng(item.mapy, item.mapx), markerImage);
+      items.forEach((item) => {
+        let idx = item.contenttypeid;
+        // console.log(idx);
+        const markerImageSrc = require(`@/assets/img/icon_${idx}.png`);
+        const ssafyImageSrc = require("@/assets/img/ssafy_logo.png");
 
-    //     //	https://velog.io/@seochanh/newbie-00010
-    //     let content =
-    //       `<div class="wrap" id="${idx}_${markers[idx].length}">` +
-    //       `    <div class="info">` +
-    //       `        <div class="title">` +
-    //       `            ${item.title}` +
-    //       `            <div class="close" onclick ="closeInfo(${idx},${markers[idx].length})" id="close" title="닫기"></div>` +
-    //       `        </div>` +
-    //       `        <div class="body">` +
-    //       `            <div class="img">` +
-    //       `            <img src="${item.firstimage}" width ="73" height="70" onerror="this.src='/assets/img/ssafy_logo.png'">` +
-    //       `           </div>` +
-    //       `            <div class="desc">` +
-    //       `                <div class="ellipsis">${item.addr1}</div>` +
-    //       `                <div><a href="#" onclick ="addTrack2(${item.contentid}, \`${item.title}\`, \`${item.firstimage}\`, ${item.mapx}, ${item.mapy})" id="track2">여행경로 추가하기</div>` +
-    //       `            </div>` +
-    //       `        </div>` +
-    //       `    </div>` +
-    //       `</div>`;
-    //     let infowindow = new kakao.maps.InfoWindow({
-    //       content: content,
-    //     });
-    //     // let infoOverlay = new kakao.maps.CustomOverlay({
-    //     //     content: content,
-    //     //     position: marker.getPosition(),
-    //     //     yAnchor: 1,
-    //     //     zIndex: 2
-    //     // });
+        let imageSize = new kakao.maps.Size(30, 30),
+          imageOptions = {
+            offset: new kakao.maps.Point(25, 20),
+          };
+        let markerImage = this.createMarkerImage(markerImageSrc, imageSize, imageOptions);
+        // var marker = this.createMarker(new kakao.maps.LatLng(item.mapy, item.mapx));
+        var marker = this.createMarker(new kakao.maps.LatLng(item.latitude, item.longitude), markerImage);
 
-    //     kakao.maps.event.addListener(marker, "click", function () {
-    //       // 마커 위에 인포윈도우를 표시합니다
-    //       infowindow.open(map, marker);
-    //       // infoOverlay.setMap(map);
-    //     });
-    //     marker.setMap(map);
-    //     markers[idx].push(marker);
-    //     infoWindows[idx].push(infowindow);
-    //   });
-    // },
+        //	https://velog.io/@seochanh/newbie-00010
+        let content =
+          `<div class="wrap" id="${idx}_${this.markers[idx].length}">` +
+          `    <div class="info">` +
+          `        <div class="title">` +
+          `            ${item.title}` +
+          `            <div class="close" onclick ="${this.closeInfo(idx,this.markers[idx].length)}" id="close" title="닫기"></div>` +
+          `        </div>` +
+          `        <div class="body">` +
+          `            <div class="img">` +
+          `             <a href = https://map.kakao.com/?q=${item.title}>`+      
+          `               <img src="${item.image1}" width ="73" height="70" onerror="this.src='${ssafyImageSrc}'">` +
+          `             </a></div>` +
+          `            <div class="desc">` +
+          `                <div class="ellipsis">${item.addr1}</div>` +
+          `                <div><a href="#" onclick ="addTrack2(${item.contentid}, \`${item.title}\`, \`${item.image1}\`, ${item.longitude}, ${item.latitude})" id="track2">여행경로 추가하기</div>` +
+          `            </div>` +
+          `        </div>` +
+          `    </div>` +
+          `</div>`;
+        let infowindow = new kakao.maps.InfoWindow({
+          content: content,
+        });
 
+        // let infoOverlay = new kakao.maps.CustomOverlay({
+        //     content: content,
+        //     position: marker.getPosition(),
+        //     yAnchor: 1,
+        //     zIndex: 2
+        // });
 
-    // closeInfo(first, second) {
-    // infoWindows[first][second].setMap(null);
-    // },
+        kakao.maps.event.addListener(marker, "mouseover", () => {
+          // 마커 위에 인포윈도우를 표시합니다
+          infowindow.open(this.map, marker);
+          // infoOverlay.setMap(map);
+        });
+        marker.setMap(this.map);
+        this.markers[idx].push(marker);
+        this.infoWindows[idx].push(infowindow);
+      });
+    },
+
+    createMarkerImage(src, size, options) {
+      var markerImage = new kakao.maps.MarkerImage(src, size, options);
+      return markerImage;
+    },
+
+    // 좌표와 마커이미지를 받아 마커를 생성하여 리턴하는 함수
+    createMarker(position, image) {
+      var marker = new kakao.maps.Marker({
+        position: position,
+        image: image,
+      });
+      return marker;
+    },
+
+    closeInfo(first, second) {
+      // this.infoWindows[first][second].setMap(null);
+      for (var i = 0; i < this.infoWindows[first].length; i++) {
+        if (i == second) {
+          this.infoWindows[first][i].setMap(null);
+          break;
+        }
+      }
+    },
 
     // contentidOnclickHandler(e) {
     //   let typeId = e.value;
@@ -212,7 +242,6 @@ export default {
     //   }
     // },
 
-
     // makeTripList(data) {
     // let trips = data.response.body.items.item;
     // let tripContent = ``;
@@ -228,21 +257,6 @@ export default {
     // document.getElementById("trip-list").innerHTML = tripContent;
     // },
 
-    // createMarkerImage(src, size, options) {
-    // var markerImage = new kakao.maps.MarkerImage(src, size, options);
-    // return markerImage;
-    // },
-
-    
-    // // 좌표와 마커이미지를 받아 마커를 생성하여 리턴하는 함수
-    // createMarker(position, image) {
-    //   var marker = new kakao.maps.Marker({
-    //     position: position,
-    //     image: image,
-    //   });
-    //   return marker;
-    // },
-    
     // searchByKeyword() {
     //   let keyword = document.getElementById("search-keyword").value;
     //   console.log(keyword);
