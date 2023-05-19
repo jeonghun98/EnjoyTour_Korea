@@ -41,7 +41,8 @@ export default {
   },
   methods: {
     moveWrite() {
-        alert("등록하기 버튼");
+        alert("핫플 write 이동");
+        this.$router.push({ name: "hotplaceWrite" });
     },
   },
 };

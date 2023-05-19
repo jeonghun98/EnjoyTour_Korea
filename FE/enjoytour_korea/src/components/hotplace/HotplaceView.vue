@@ -10,7 +10,7 @@ export default {
   components: {},
   data() {
     return {
-      message: '',
+      hotplace: {},
     };
   },
   created() {},
