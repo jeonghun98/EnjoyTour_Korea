@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.hotplace.model.HotplaceDto;
 import com.ssafy.hotplace.model.service.HotplaceService;
@@ -29,7 +30,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@Controller
+@RestController
 @RequestMapping("/hotplace")
 @Api(tags= {"핫플레이스 관리"})
 public class HotplaceController {
@@ -43,10 +44,10 @@ public class HotplaceController {
 		this.hotplaceService = hotplaceService;
 	}
 
-	@ResponseBody
+//	@ResponseBody
 	@ApiOperation(value = "", notes = "핫플레이스를 <b>등록</b>합니다")
 	@ApiResponses({@ApiResponse(code = 200, message ="핫플 등록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
-	@PostMapping(value="/")
+	@PostMapping
 	public ResponseEntity<?> hotplaceWrite(@RequestBody HotplaceDto hotplaceDto){
 		logger.debug("hotplaceWrite hotplaceDto: "+hotplaceDto.toString());
 		try {
@@ -58,10 +59,10 @@ public class HotplaceController {
 		}
 	}
 	
-	@ResponseBody
+//	@ResponseBody
 	@ApiOperation(value = "", notes = "핫플레이스의 <b>전체 목록</b>을 리턴합니다.")
 	@ApiResponses({@ApiResponse(code = 200, message ="핫플 전체 목록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
-	@GetMapping(value = "/")
+	@GetMapping
 	public ResponseEntity<?> hotplaceList() {
 		logger.debug("hotplaceList call");
 		try {
@@ -77,18 +78,18 @@ public class HotplaceController {
 		
 	}
 	
-	@GetMapping("/view")
-	public String view(@RequestParam("hotplaceno") int hotplaceNo, Model model)
-			throws Exception {
-		HotplaceDto hotplaceDto = hotplaceService.getHotplace(hotplaceNo);
-		model.addAttribute("hotplace", hotplaceDto);
-		return "hotplace/view";
-	}
+//	@GetMapping("/view")
+//	public String view(@RequestParam("hotplaceno") int hotplaceNo, Model model)
+//			throws Exception {
+//		HotplaceDto hotplaceDto = hotplaceService.getHotplace(hotplaceNo);
+//		model.addAttribute("hotplace", hotplaceDto);
+//		return "hotplace/view";
+//	}
 	
-	@ResponseBody
+//	@ResponseBody
 	@ApiOperation(value = "", notes = "핫플레이스를 <b>수정</b>합니다.")
 	@ApiResponses({@ApiResponse(code = 200, message ="핫플 전체 목록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
-	@PutMapping(value = "/")
+	@PutMapping
 	public ResponseEntity<?> hotplaceModify(@RequestBody HotplaceDto hotplaceDto) {
 		logger.debug("hotplaceModify hotplaceDto : {}", hotplaceDto);
 		try {
@@ -100,7 +101,7 @@ public class HotplaceController {
 		}
 	}
 	
-	@ResponseBody
+//	@ResponseBody
 	@ApiOperation(value = "", notes = "핫플레이스를 <b>삭제</b>합니다.")
 	@ApiResponses({@ApiResponse(code = 200, message ="핫플 전체 목록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
 	@ApiImplicitParams({@ApiImplicitParam(name = "hotplaceno", value ="삭제 번호", required = true, dataType = "int", paramType = "path")})
