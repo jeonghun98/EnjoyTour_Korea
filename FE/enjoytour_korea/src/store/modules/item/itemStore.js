@@ -17,12 +17,21 @@ const itemStore = {
     guguns: [{ value: null, text: "선택하세요" }],
     contents: [{ value: 0, text: "관광지 유형" }],
 
-    // 바로 부모, 자식 관계이므로 -> map, sido, guguns, content는 store 저장하지 않는다.
-    // sido: null,
-    // gugun: null,
-    // content : 0,
+    sido: { value: null, text: "선택하세요" },
+    gugun: { value: null, text: "선택하세요" },
+    content: { value: 0, text: "관광지 유형" },
   },
-  getters: {},
+  getters: {
+    getSidoText(state) {
+      return state.sido.text;
+    },
+    getGugunText(state) {
+      return state.gugun.text;
+    },
+    getContentText(state) {
+      return state.content.text;
+    },
+  },
   mutations: {
     CLEAR_SIDO_LIST(state) {
       state.sidos = [{ value: null, text: "선택하세요" }];
@@ -33,6 +42,17 @@ const itemStore = {
     CLEAR_CONTENT_LIST(state) {
       state.contents = [{ value: 0, text: "관광지 유형" }];
     },
+
+    CLEAR_SIDO(state) {
+      state.sido = { value: null, text: "선택하세요" };
+    },
+    CLEAR_GUGUN(state) {
+      state.gugun = { value: null, text: "선택하세요" };
+    },
+    CLEAR_CONTENT(state) {
+      state.content = { value: 0, text: "관광지 유형" };
+    },
+
     SET_SIDO_LIST(state, sidos) {
       sidos.forEach((sido) => {
         state.sidos.push({ value: sido.sidoCode, text: sido.sidoName });
@@ -46,6 +66,28 @@ const itemStore = {
     SET_CONTENT_LIST(state) {
       contents.forEach((content) => {
         state.contents.push({ value: content.value, text: content.text });
+      });
+    },
+
+    SET_SIDO(state, sidoCode) {
+      state.sidos.forEach((sido) => {
+        if (sido.value == sidoCode) {
+          state.sido = { value: sido.value, text: sido.text };
+        }
+      });
+    },
+    SET_GUGUN(state, gugunCode) {
+      state.guguns.forEach((gugun) => {
+        if (gugun.value == gugunCode) {
+          state.gugun = { value: gugun.value, text: gugun.text };
+        }
+      });
+    },
+    SET_CONTENT(state, contentCode) {
+      state.contents.forEach((content) => {
+        if (content.value == contentCode) {
+          state.content = { value: content.value, text: content.text };
+        }
       });
     },
   },
