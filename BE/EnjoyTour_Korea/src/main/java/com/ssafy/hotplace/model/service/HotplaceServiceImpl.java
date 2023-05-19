@@ -1,7 +1,7 @@
 package com.ssafy.hotplace.model.service;
 
+import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,11 @@ public class HotplaceServiceImpl implements HotplaceService {
 	@Override
 	@Transactional
 	public void writeHotplace(HotplaceDto hotplaceDto) throws Exception {
-		hotplaceMapper.writeHotplace(hotplaceDto);		
+//		hotplaceMapper.writeHotplace(hotplaceDto);
+//		List<FileInfoDto> fileInfos = hotplaceDto.getFileInfos();
+//		if (fileInfos != null && !fileInfos.isEmpty()) {
+//			hotplaceMapper.registerFile(hotplaceDto);
+//		}
 	}
 
 	@Override
@@ -48,8 +52,14 @@ public class HotplaceServiceImpl implements HotplaceService {
 
 	@Override
 	@Transactional
-	public void deleteHotplace(int hotplaceNo) throws Exception {
+	public void deleteHotplace(int hotplaceNo, String path) throws Exception {
+		List<FileInfoDto> fileList = hotplaceMapper.fileInfoList(hotplaceNo);
+		hotplaceMapper.deleteFile(hotplaceNo);
 		hotplaceMapper.deleteHotplace(hotplaceNo);
+		for(FileInfoDto fileInfoDto : fileList) {
+			File file = new File(path + File.separator + fileInfoDto.getSaveFolder() + File.separator + fileInfoDto.getSaveFile());
+			file.delete();
+		}
 	}
 
 }

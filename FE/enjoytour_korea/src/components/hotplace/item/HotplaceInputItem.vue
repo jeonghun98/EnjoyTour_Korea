@@ -1,17 +1,19 @@
 <template>
   <div class="col-lg-12 col-md-10 col-sm-12">
-      <form id="form-register" method="POST" action="" @submit="onSubmit" @reset="onReset">
+      <form id="form-register" method="POST" action="" enctype="multipart/form-data" @submit="onSubmit" @reset="onReset">
         <!-- <input type="hidden" name="action" value="write" /> -->
         <div class="mt-3 text-danger fw-bold">
           스마트폰으로 찍은 사진을 올려주세요
         </div>
         <div class="mb-3 mt-1">
-          <input
+          <b-form-file 
+            multiple
             type="file"
             class="form-control"
-            id="img"
-            name="file"
+            id="file"
+            name="fileInfos[]"
             accept=".gif, .jpg, .png"
+            v-model = "hotplace.fileInfos"
           />
         </div>
         <div class="mb-3 mt-3">
@@ -70,7 +72,6 @@
             type="submit"
             id="btn-inform-register"
             class="btn btn-outline-primary mb-3 mr-3"
-            
             v-if="this.type === 'write'"
           >
             등록
@@ -79,7 +80,6 @@
             type="submit"
             id="btn-inform-register"
             class="btn btn-outline-primary mb-3 mr-3"
-            @click="modifyHotplace"
             v-else
           >
             수정
@@ -112,10 +112,11 @@ export default {
       hotplace: {
         hotplaceNo: 0,
         userId: "ssafy",
-        img: "hotplace.img",
+        // img: "",
         title: "",
         date: "",
         content: "",
+        fileInfos: [],
       },
       isUserid: false,
     };
@@ -127,10 +128,11 @@ export default {
 
       let err = true;
       let msg = "";
-      !this.hotplace.date && ((msg = "날짜 입력해주세요"), (err = false), this.$refs.date.focus());
-      err && !this.hotplace.title && ((msg = "제목 입력해주세요"), (err = false), this.$refs.title.focus());
-      err && !this.hotplace.content && ((msg = "내용 입력해주세요"), (err = false), this.$refs.content.focus());
+      // !this.hotplace.date && ((msg = "날짜 입력해주세요"), (err = false), this.$refs.date.focus());
+      // err && !this.hotplace.title && ((msg = "제목 입력해주세요"), (err = false), this.$refs.title.focus());
+      // err && !this.hotplace.content && ((msg = "내용 입력해주세요"), (err = false), this.$refs.content.focus());
 
+      console.log("onSubmit - type:", this.type);
       if (!err) alert(msg);
       else this.type === "write" ? this.registHotplace() : this.modifyHotplace();
     },
@@ -139,29 +141,82 @@ export default {
       this.hotplace.hotplaceNo = 0;
       this.hotplace.title = "";
       this.hotplace.content = "";
-      this.hotplace.img = "";
+      // this.hotplace.img = "";
       this.hotplace.date = "";
+      this.hotplace.fileInfos = [];
       this.moveListHotplace();
     },
     registHotplace() {
-      alert("핫플레이스 등록");
-      let param = {
-        hotplaceNo: this.hotplace.hotplaceNo,
-        userId: this.hotplace.userId,
-        title: this.hotplace.title,
-        content: this.hotplace.content,
-        img: this.hotplace.img,
-        date: this.hotplace.date,
-      };
-      console.log("registHotplace:",param);
+      // alert("핫플레이스 등록");
+      // let param = {
+      //   hotplaceNo: this.hotplace.hotplaceNo,
+      //   userId: this.hotplace.userId,
+      //   title: this.hotplace.title,
+      //   content: this.hotplace.content,
+      //   img: this.hotplace.img,
+      //   date: this.hotplace.date,
+      // };
+      // console.log("registHotplace:",param);
+
+      // writeHotplace(
+      //   param,
+      //   ({ data }) => {
+      //     let msg = "등록 처리시 문제가 발생했습니다.";
+      //     if (data === "success") {
+      //       msg = "등록이 완료되었습니다.";
+      //       // console.log("registHotplace - writeHotplace: 성공");
+      //     }
+      //     alert(msg);
+      //     this.moveListHotplace();
+      //   },
+      //   (error) => {
+      //     console.log(error);
+      //   }
+      // );
+
+      // Process each file
+      // this.hotplace.fileInfos.forEach(thisFile => {
+      //   console.log("Submitting " + thisFile.name)
+      //   // add submit logic here
+      // })
+
+
+      const formData = new FormData();
+      formData.append("hotplaceNo", this.hotplace.hotplaceNo);
+      formData.append("userId", this.hotplace.userId);
+      formData.append("title", this.hotplace.title);
+      formData.append("content", this.hotplace.content);
+      // formData.append("img", this.hotplace.img);
+      formData.append("date", this.hotplace.date);
+      // formData.append("thumbNail", this.hotplace.fileInfos);
+      console.log(1)
+      console.dir(this.hotplace.fileInfos)
+
+      for(let i=0; i<this.hotplace.fileInfos.length;i+=1){
+        const file = this.hotplace.fileInfos[i];
+        formData.append(`thumbNail[${i}]`,file);        
+      }
+
+      // FormData의 key 확인
+      // for (let key of formData.keys()) {
+      //   console.log(key);
+      // }
+
+      let cnt=0;
+      // FormData의 value 확인
+      for (let value of formData.values()) {
+        console.log(value);
+        cnt++;
+      }
+      console.log("length:",cnt)
 
       writeHotplace(
-        param,
+        formData,
         ({ data }) => {
           let msg = "등록 처리시 문제가 발생했습니다.";
           if (data === "success") {
             msg = "등록이 완료되었습니다.";
-            console.log("registHotplace - writeHotplace: 성공");
+            // console.log("registHotplace - writeHotplace: 성공");
           }
           alert(msg);
           this.moveListHotplace();

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.ssafy.hotplace.model.FileInfoDto;
 import com.ssafy.hotplace.model.HotplaceDto;
 
 @Mapper
@@ -17,4 +18,8 @@ public interface HotplaceMapper {
 	void modifyHotplace(HotplaceDto hotplaceDto) throws Exception;
 	void deleteHotplace(int hotplaceNo) throws Exception;
 	
+	// -- 파일 설정
+	void registerFile(HotplaceDto hotplaceDto) throws Exception;
+	void deleteFile(int hotplaceNo) throws Exception;
+	List<FileInfoDto> fileInfoList(int hotplaceNo) throws Exception;
 }
