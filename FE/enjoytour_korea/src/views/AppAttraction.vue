@@ -1,5 +1,5 @@
 <template>
-  <b-container class="bv-example-row mt-3 text-center">
+  <b-container class="bv-example-row mt-3">
     <div class="row bg-image p-1 me-1 ms-1 shadow-1-strong rounded content-title" id="background">
       <div class="col-12 text-light">
         <h3 class="fw-bold pt-3">관광지 정보</h3>
@@ -10,14 +10,11 @@
     <b-row class="mt-3">
       <select-sido @select-sido="selectSido"></select-sido>
       <select-gugun :sidoCode="sidoCode" @select-gugun="selectGugun"></select-gugun>
-      <b-col class="sm-3">
-        <!-- <b-form-select v-model="gugunCode" :options="guguns" @change="changeGugun"></b-form-select> -->
-        <b-form-select v-model="content" :options="contents"></b-form-select>
-        </b-col>
+      <select-content @select-content="selectContent"></select-content>
     </b-row>
     <b-row class="mt-3">
       <b-col cols="12">
-        <attraction-view></attraction-view>
+        <attraction-view :sidoCode="sidoCode" :gugunCode="gugunCode" :contentCode="contentCode"></attraction-view>
       </b-col>
     </b-row>
   </b-container>
@@ -27,37 +24,33 @@
 import AttractionView from "@/components/attraction/AttractionView.vue";
 import SelectSido from "@/components/item/SelectSido.vue";
 import SelectGugun from "@/components/item/SelectGugun.vue";
+import SelectContent from "@/components/item/SelectContent.vue";
+
 export default {
   name: "AppAttractionView",
   components: {
     SelectSido,
     SelectGugun,
+    SelectContent,
     AttractionView,
   },
   data() {
     return {
       sidoCode: null,
-      //   chargerList: [],
-      content : 0,
-      contents : [
-            { value: 0, text: "관광지 유형", },
-            { value: 12, text: "관광지", },
-            { value: 14, text: "문화시설", },
-            { value: 15, text : "축제공연행사",},
-            { value: 25, text : "여행코스",},
-            { value: 28, text: "레포츠", },
-            { value: 32, text : "숙박",},
-            { value: 38, text: "쇼핑", },
-            { value: 39, text : "음식점",},
-        ],
+      gugunCode: null,
+      contentCode : 0,
     };
   },
   methods: {
     selectSido(sidoCode) {
       this.sidoCode = sidoCode;
     },
+    selectContent(contentCode) {
+      this.contentCode = contentCode;
+    },
     selectGugun(gugunCode) {
       console.log("구군바뀜", gugunCode);
+      this.gugunCode = gugunCode;
       //   console.log("구군바꼈으니 충전소 찾으러 가자!!!", gugunCode);
       //   const SERVICE_KEY = process.env.VUE_APP_APT_DEAL_API_KEY;
 

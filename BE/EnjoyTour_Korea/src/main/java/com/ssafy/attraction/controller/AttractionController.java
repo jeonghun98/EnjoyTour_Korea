@@ -42,8 +42,14 @@ public class AttractionController extends HttpServlet {
 		super();
 		this.attractionservice = attractionservice;
 	}
+	@ApiOperation(value = "관광지 정보", notes = "관광지 정보를 반환한다.", response = List.class)
 	@GetMapping("/searchByLoc")
-	public ResponseEntity<?> searchByLoc(@RequestParam Float mapX, @RequestParam Float mapY, @RequestParam Float radius, Model model) {
+	public ResponseEntity<?> searchByLoc(
+//			@RequestParam("sido") @ApiParam(value = "시도코드.", required = true) String sido,
+//			@RequestParam("gugun") @ApiParam(value = "구군코드.", required = true) String gugun,
+			@RequestParam("mapX") @ApiParam(value = "mapX", required = true) Float mapX,
+			@RequestParam("mapY") @ApiParam(value = "mapY", required = true) Float mapY,
+			@RequestParam("radius") @ApiParam(value = "radius", required = true) Float radius) {
 		logger.debug("searchByLoc call");
 		try {
 			Map<String, Float> map = new HashMap<String, Float>();

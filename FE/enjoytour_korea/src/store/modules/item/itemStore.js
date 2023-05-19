@@ -1,10 +1,26 @@
 import { sidoList, gugunList } from "@/api/item/item.js";
 
+const contents = [
+  { value: 12, text: "관광지" },
+  { value: 14, text: "문화시설" },
+  { value: 15, text: "축제공연행사" },
+  { value: 25, text: "여행코스" },
+  { value: 28, text: "레포츠" },
+  { value: 32, text: "숙박" },
+  { value: 38, text: "쇼핑" },
+  { value: 39, text: "음식점" },
+];
 const itemStore = {
   namespaced: true,
   state: {
     sidos: [{ value: null, text: "선택하세요" }],
     guguns: [{ value: null, text: "선택하세요" }],
+    contents: [{ value: 0, text: "관광지 유형" }],
+
+    // 바로 부모, 자식 관계이므로 -> map, sido, guguns, content는 store 저장하지 않는다.
+    // sido: null,
+    // gugun: null,
+    // content : 0,
   },
   getters: {},
   mutations: {
@@ -14,6 +30,9 @@ const itemStore = {
     CLEAR_GUGUN_LIST(state) {
       state.guguns = [{ value: null, text: "선택하세요" }];
     },
+    CLEAR_CONTENT_LIST(state) {
+      state.contents = [{ value: 0, text: "관광지 유형" }];
+    },
     SET_SIDO_LIST(state, sidos) {
       sidos.forEach((sido) => {
         state.sidos.push({ value: sido.sidoCode, text: sido.sidoName });
@@ -22,6 +41,11 @@ const itemStore = {
     SET_GUGUN_LIST(state, guguns) {
       guguns.forEach((gugun) => {
         state.guguns.push({ value: gugun.gugunCode, text: gugun.gugunName });
+      });
+    },
+    SET_CONTENT_LIST(state) {
+      contents.forEach((content) => {
+        state.contents.push({ value: content.value, text: content.text });
       });
     },
   },
