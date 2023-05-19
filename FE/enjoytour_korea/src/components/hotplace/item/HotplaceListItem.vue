@@ -2,7 +2,7 @@
   <div class="col">
             <b-card
               :title="titleText"
-              img-src=""
+              :img-src="require('../../../assets/img/ssafy_logo.png')"
               img-alt="글쓰기"
               img-top
             >
@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     moveView() {
-      alert("`${hotplaceNo}`번 핫플로 이동합니다")
+      alert("핫플 view 이동");
     },
   },
 };
