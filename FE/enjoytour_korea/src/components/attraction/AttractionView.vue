@@ -2,47 +2,6 @@
   <div class="wrapper">
     <!-- 관광지 정보 컨텐츠 START  -->
     <div class="container">
-
-
-      <!-- <div class="col"> -->
-        <!-- 관광지 검색 start -->
-        <!-- <form class="d-flex justify-content-around m-3" role="search" style="height: 3rem">
-          <select
-            id="search-area"
-            class="form-select m-1"
-            onchange="areaOnclickHandler(this)"
-            aria-label="Default select example"
-          >
-            <option value="0" selected>지역 선택</option>
-          </select>
-          <select
-            id="search-region"
-            class="form-select m-1"
-            onchange="regionOnclickHandler(this, '${root}')"
-            aria-label="Default select example"
-          >
-            <option value="0" selected>전체</option>
-          </select>
-          <select
-            id="search-content-id"
-            class="form-select m-1"
-            onchange="contentidOnclickHandler(this)"
-            aria-label="Default select example"
-          >
-            <option value="0" selected>관광지 유형</option>
-            <option value="12">관광지</option>
-            <option value="14">문화시설</option>
-            <option value="15">축제공연행사</option>
-            <option value="25">여행코스</option>
-            <option value="28">레포츠</option>
-            <option value="32">숙박</option>
-            <option value="38">쇼핑</option>
-            <option value="39">음식점</option>
-          </select>
-        </form>
-      </div> -->
-
-      
       <!-- map start -->
       <div class="row d-flex justify-content-center m-1">
         <div id="map" style="width: 100%; height: 40rem"></div>
@@ -53,14 +12,15 @@
 </template>
 
 <script>
+// import { mapState} from "vuex";
+// const itemStore = "itemStore";
+import { searchByLoc } from "@/api/attraction"
 export default {
   name: "AttractionView",
-  components: {},
   data() {
     return {
       //kakao
       map: null,
-      typeIds: [12, 14, 15, 25, 28, 32, 38, 39], // 관광지 타입을 만드는 배열
       markers: [], // 마커를 담는 배열
       infoWindows: [], // infoWindow를 담는 배열
       clickLine: {},
@@ -70,6 +30,28 @@ export default {
       regionMap: {},
       areaCode : null
     };
+  },
+  components: {},
+  props: {
+    sidoCode: String,
+    gugunCode: String,
+    contentCode : Number,
+  },
+  watch: {
+    gugunCode() {
+      if (this.gugunCode) {
+        console.log(this.gugunCode);
+        this.selectOnclickHandler();
+      }
+    },
+    contentCode() {
+      if (this.contentCode != 0) {
+        console.log(this.contentCode)
+        this.selectOnclickHandler();
+      } 
+    }
+  },
+  computed: {
   },
   created() {},
   mounted() {
@@ -95,25 +77,6 @@ export default {
       //   strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
       //   strokeStyle: "solid", // 선의 스타일입니다
       // });
-      // regionMap = {
-      //   1: "서울",
-      //   2: "인천",
-      //   3: "대전",
-      //   4: "대구",
-      //   5: "광주",
-      //   6: "부산",
-      //   7: "울산",
-      //   8: "세종특별자치시",
-      //   31: "경기도",
-      //   32: "강원도",
-      //   33: "충청북도",
-      //   34: "충청남도",
-      //   35: "경상북도",
-      //   36: "경상남도",
-      //   37: "전라북도",
-      //   38: "전라남도",
-      //   39: "제주도",
-      // };
     }
   },
   methods: {
@@ -131,60 +94,40 @@ export default {
       // makeOption(); -> search-area 생성
     },
 
-    // makeOption(data) {
-    //   // 각 지역에 대한 배열
-    //   let areas = data.response.body.items.item;
-    //   // TODO: regionUrl to db
-    //   let sel = document.getElementById("search-area");
-    //   areas.forEach(function (area) {
-    //     let opt = document.createElement("option"); // option 엘리먼트 생성
-    //     opt.setAttribute("value", area.code);
-    //     opt.appendChild(document.createTextNode(area.name));
-    //     sel.appendChild(opt);
-    //   });
-    // },
+    selectOnclickHandler() {
+      // gugun or content 이 콜백 함수가 실행됩니다.
+      var geocoder = new kakao.maps.services.Geocoder();
+      geocoder.addressSearch("", function (result, status) {
+        // 정상적으로 검색이 완료됐으면
+        if (status === kakao.maps.services.Status.OK) {
+          var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+          // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+          this.map.setCenter(coords);
+          let radius = 5000;
 
-    // areaOnclickHandler(data) {
-    //   this.areaCode = data.value;
-    //   // let regionUrl = `https://apis.data.go.kr/B551011/KorService1/areaCode1?serviceKey=${serviceKey}&numOfRows=40&pageNo=1&MobileOS=ETC&MobileApp=AppTest&areaCode=${areaCode}&_type=json`;
-
-    //   // fetch(regionUrl)
-    //   //   .then((response) => response.json())
-    //   //   .then((data) => makeRegionKeyword(data));
-
-    //   // TODO: regionUrl to db
-    //   makeRegionKeyword(data)
-    // },
-
-    // makeRegionKeyword(data) {
-    //   let regions = data.response.body.items.item;
-    //   let sel = document.getElementById("search-region");
-    //   let query = `<option value ="0" selected> 전체 </option>`;
-    //   //    console.log(regions);
-    //   regions.forEach(function (region) {
-    //     query += `<option value=${region.name}> ${region.name}</option>`;
-    //   });
-    //   sel.innerHTML = query;
-    // },
-
-    // regionOnclickHandler(e, root) {
-    //   regionName = e.value;
-    //   // v3가 모두 로드된 후, 이 콜백 함수가 실행됩니다.
-    //   var geocoder = new kakao.maps.services.Geocoder();
-    //   geocoder.addressSearch(`${regionMap[areaCode]} ${regionName}`, function (result, status) {
-    //     // 정상적으로 검색이 완료됐으면
-    //     if (status === kakao.maps.services.Status.OK) {
-    //       var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-    //       // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-    //       map.setCenter(coords);
-    //       let radius = 5000;
-    //       let tripInfoUrl = `${root}/attraction/searchByLoc?mapX=${result[0].x}&mapY=${result[0].y}&radius=${radius}`;
-    //       fetch(tripInfoUrl)
-    //         .then((response) => response.json())
-    //         .then((data) => makeMarker(data));
-    //     }
-    //   });
-    // },
+          let param = {
+            mapX: result[0].x,
+            mapY: result[0].y,
+            radius: radius
+          }
+          searchByLoc(
+          param,
+          ({ data }) => {
+            // this.notices = data;
+            console.log(data);
+          },
+          (error) => {
+            console.log(error);
+          }
+          );
+        
+          // let tripInfoUrl = `${root}/attraction/searchByLoc?mapX=${result[0].x}&mapY=${result[0].y}&radius=${radius}`;
+          // fetch(tripInfoUrl)
+          //   .then((response) => response.json())
+          //   .then((data) => makeMarker(data));
+        }
+      });
+    },
 
     // makeMarker(data) {
     //   let items = data;
