@@ -3,10 +3,10 @@
             <b-card
               :title="titleText"
               :img-src="require('../../../assets/img/ssafy_logo.png')"
-              img-alt="글쓰기"
+              img-alt="Image"
               img-top
             >
-             <!-- :img-src="require('../../../assets/img/ssafy_logo.png')" -->
+            <!-- :img-src="require('../../../assets/img/ssafy_logo.png')" -->
               <b-card-text>
                 {{content}}
               </b-card-text>
@@ -40,6 +40,7 @@ export default {
     like: Number,
     date: String,
     img: String,
+    fileInfos: Array,
   }, 
   data() {
     return {
@@ -54,7 +55,8 @@ export default {
   },
   methods: {
     moveView() {
-      alert("핫플 view 이동");
+      alert(`${this.hotplaceNo} 번 핫플 view 이동, 이미지: ${this.fileInfos}`);
+
     },
   },
 };

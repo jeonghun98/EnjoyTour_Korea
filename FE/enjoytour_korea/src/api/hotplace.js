@@ -3,23 +3,19 @@ import { apiInstance } from "./index.js";
 const api = apiInstance();
 
 function listHotplace(success, fail){
-  // console.log("listHotplace - axios start");
+  console.log("listHotplace - axios start");
   api.get(`/hotplace`).then(success).catch(fail);
-  // console.log("listHotplace- axios stop")
+  console.log("listHotplace- axios stop")
 }
 
-// function writeHotplace(hotplace, success, fail){
-//   // console.log("writeHotplace - axios start");
-//   api.post(`/hotplace`, JSON.stringify(hotplace)).then(success).catch(fail);
-//   // console.log("writeHotplace- axios stop")
-// }
-
 function writeHotplace(formData, success, fail){
-  console.log("writeHotplace - axios start");
-  console.log("writeHotplace - fromData:",formData);
-  console.log("writeHotplace - fromData.length:",formData.length);
-  api.post(`/hotplace`, formData, {
+  // console.log("writeHotplace - axios start");
+
+  api({
+    method: "POST",
+    url: `/hotplace`,
     headers: { "Content-Type": "multipart/form-data" },
+    data: formData,
   }).then(success).catch(fail);
 }
 

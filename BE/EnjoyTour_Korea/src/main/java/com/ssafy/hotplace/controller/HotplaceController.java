@@ -68,35 +68,34 @@ public class HotplaceController {
 			System.out.println(hotplaceDto);
 			System.out.println(files.get(0).getOriginalFilename());
 			logger.debug("MultipartFile.isEmpty : {}", files.get(0).isEmpty());
-//			if (!files[0].isEmpty()) {
-////				String realPath = servletContext.getRealPath(upload_path);
-////				String realPath = servletContext.getRealPath("/resources/img");
-//				String today = new SimpleDateFormat("yyMMdd").format(new Date());
-//				String saveFolder = upload_path + File.separator + today;
-//				logger.debug("저장 폴더 : {}", saveFolder);
-//				File folder = new File(saveFolder);
-//				if (!folder.exists())
-//					folder.mkdirs();
-//				List<FileInfoDto> fileInfos = new ArrayList<FileInfoDto>();
-//				for (MultipartFile mfile : files) {
-//					FileInfoDto fileInfoDto = new FileInfoDto();
-//					String originalFileName = mfile.getOriginalFilename();
-//					if (!originalFileName.isEmpty()) {
-//						String saveFileName = UUID.randomUUID().toString()
-//								+ originalFileName.substring(originalFileName.lastIndexOf('.'));
-//						fileInfoDto.setSaveFolder(today);
-//						fileInfoDto.setOriginalFile(originalFileName);
-//						fileInfoDto.setSaveFile(saveFileName);
-//						logger.debug("원본 파일 이름 : {}, 실제 저장 파일 이름 : {}", mfile.getOriginalFilename(), saveFileName);
-//						mfile.transferTo(new File(folder, saveFileName));
-//					}
-//					fileInfos.add(fileInfoDto);
-//				}
-//				hotplaceDto.setFileInfos(fileInfos);
-//			}
+			if (!files.get(0).isEmpty()) {
+//				String realPath = servletContext.getRealPath(upload_path);
+//				String realPath = servletContext.getRealPath("/resources/img");
+				String today = new SimpleDateFormat("yyMMdd").format(new Date());
+				String saveFolder = upload_path + File.separator + today;
+				logger.debug("저장 폴더 : {}", saveFolder);
+				File folder = new File(saveFolder);
+				if (!folder.exists())
+					folder.mkdirs();
+				List<FileInfoDto> fileInfos = new ArrayList<FileInfoDto>();
+				for (MultipartFile mfile : files) {
+					FileInfoDto fileInfoDto = new FileInfoDto();
+					String originalFileName = mfile.getOriginalFilename();
+					if (!originalFileName.isEmpty()) {
+						String saveFileName = UUID.randomUUID().toString()
+								+ originalFileName.substring(originalFileName.lastIndexOf('.'));
+						fileInfoDto.setSaveFolder(today);
+						fileInfoDto.setOriginalFile(originalFileName);
+						fileInfoDto.setSaveFile(saveFileName);
+						logger.debug("원본 파일 이름 : {}, 실제 저장 파일 이름 : {}", mfile.getOriginalFilename(), saveFileName);
+						mfile.transferTo(new File(folder, saveFileName));
+					}
+					fileInfos.add(fileInfoDto);
+				}
+				hotplaceDto.setFileInfos(fileInfos);
+			}
 			
-//			hotplaceService.writeHotplace(hotplaceDto);
-//			List<HotplaceDto> list = hotplaceService.listHotplace();
+			hotplaceService.writeHotplace(hotplaceDto);
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);

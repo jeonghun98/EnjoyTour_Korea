@@ -15,5 +15,7 @@ public interface HotplaceService {
 	void modifyHotplace(HotplaceDto hotplaceDto) throws Exception;
 	
 	void deleteHotplace(int hotplaceNo, String path) throws Exception;
+	
+//	HotplaceDto getHotplaceNo(HotplaceDto hotplaceDto) throws Exception;
 
 }
