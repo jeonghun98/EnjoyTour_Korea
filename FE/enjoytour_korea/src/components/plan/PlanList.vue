@@ -1,5 +1,9 @@
 <template>
-    <div>PlanList</div>
+    <div>
+    <router-link :to="{ name: 'planWrite'}">
+        planWrite 이동 (후에 view로 변경예정)
+    </router-link>
+    </div>
 </template>
 
 <script>
