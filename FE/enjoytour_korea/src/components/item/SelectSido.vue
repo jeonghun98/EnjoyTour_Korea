@@ -18,6 +18,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
   }  
 */
 const itemStore = "itemStore";
+const attractionStore = "attractionStore";
 
 export default {
   name: "SelectSido",
@@ -40,6 +41,7 @@ export default {
   },
   methods: {
     ...mapActions(itemStore, ["getSido"]),
+    ...mapMutations(attractionStore, ["CLEAR_ATTRACTION_LIST", "CLEAR_MARKER_POSITIONS",]),
     ...mapMutations(itemStore, ["CLEAR_SIDO_LIST"]),
     changeSido() {
       // console.log("시도 선택 ::: " + this.sidoCode);

@@ -22,7 +22,8 @@ public class AttractionDto {
 	
 	private float latitude;
 	private float longitude;
-//	private int sidoCode;
+	private String tel;
+	//	private int sidoCode;
 //	private int gugunCode;
 //	private String areacode;
 //	private String booktour;
@@ -94,6 +95,12 @@ public class AttractionDto {
 	}
 	public void setLongitude(float longitude) {
 		this.longitude = longitude;
+	}
+	public String getTel() {
+		return tel;
+	}
+	public void setTel(String tel) {
+		this.tel = tel;
 	}
 	@Override
 	public String toString() {

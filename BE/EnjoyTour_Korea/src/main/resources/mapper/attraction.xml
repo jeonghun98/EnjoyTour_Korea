@@ -15,6 +15,7 @@
 		<result column="latitude" property="latitude"/>
 		<result column="longitude" property="longitude"/>
 		<result column="overview" property="overview"/>
+		<result column="tel" property="tel"/>
 	</resultMap>
 	
 	<resultMap type="sidoGugunCodeDto" id="getsidoGugunCodeDto">
@@ -34,10 +35,26 @@
 		values (#{contentid}, #{overview})
 	</insert>
  -->
-	<select id="searchAttractionByLatLon" parameterType="map" resultMap="getAttractionDto">
+<!-- 	<select id="searchAttractionByLatLon" parameterType="map" resultMap="getAttractionDto">
 		SELECT * FROM attraction_info ai, attraction_description ad
 		WHERE ai.content_id = ad.content_id 
 		and ST_Distance_Sphere(POINT(longitude, latitude), POINT(#{longitude}, #{latitude})) <![CDATA[ <= ]]> #{meter}
+	</select> -->
+	
+	<select id="searchAttractionList" parameterType="map" resultMap="getAttractionDto">
+		SELECT * FROM attraction_info ai, attraction_description ad
+		WHERE ai.content_id = ad.content_id
+		AND ai.sido_code = #{sido}
+		AND ai.gugun_code = #{gugun}
+		<if test="content != null and content != ''">
+			AND ai.content_type_id = #{content}
+		</if>
+	</select>
+	
+	<select id="searchAttraction" parameterType="string" resultMap="getAttractionDto">
+		SELECT * FROM attraction_info ai, attraction_description ad
+		WHERE ai.content_id = ad.content_id
+		AND ai.content_id = #{contentid}
 	</select>
 	
 		<select id="getSido" resultMap="getsidoGugunCodeDto">

@@ -2,8 +2,12 @@ import { apiInstance } from "./index.js";
 
 const api = apiInstance();
 
-function searchByLoc(param, success, fail) {
-  api.get(`/attraction/searchByLoc`, { params: param }).then(success).catch(fail);
+function AttractionList(param, success, fail) {
+  api.get(`/attraction/attractionList`, { params: param }).then(success).catch(fail);
 }
 
-export { searchByLoc };
+function Attraction(param, success, fail) {
+  api.get(`/attraction`, { params: param }).then(success).catch(fail);
+}
+
+export { AttractionList,  Attraction};
