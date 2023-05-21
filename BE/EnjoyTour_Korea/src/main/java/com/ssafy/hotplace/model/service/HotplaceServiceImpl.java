@@ -52,7 +52,12 @@ public class HotplaceServiceImpl implements HotplaceService {
 
 	@Override
 	public HotplaceDto getHotplace(int hotplaceNo) throws Exception {
-		return hotplaceMapper.getHotplace(hotplaceNo);
+		HotplaceDto hotplaceDto = hotplaceMapper.getHotplace(hotplaceNo);
+		List<FileInfoDto> fileList = hotplaceMapper.fileInfoList(hotplaceNo);
+		if (fileList != null && !fileList.isEmpty()) {
+			hotplaceDto.setFileInfos(fileList);
+		}
+		return hotplaceDto;
 	}
 
 	@Override

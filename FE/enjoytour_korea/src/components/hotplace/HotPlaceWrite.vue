@@ -6,7 +6,6 @@
     </div>
     <!-- map end -->
     <hotplace-input-item type= "write"/>
-    
   </div>
 </template>
 

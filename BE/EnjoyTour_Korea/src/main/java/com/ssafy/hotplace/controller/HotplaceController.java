@@ -1,6 +1,10 @@
 package com.ssafy.hotplace.controller;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,10 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,9 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,8 +42,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
 
 @RestController
 @RequestMapping("/hotplace")
@@ -53,6 +61,7 @@ public class HotplaceController {
 	
 	private HotplaceService hotplaceService;
 
+	@Autowired
 	public HotplaceController(HotplaceService hotplaceService) {
 		super();
 		this.hotplaceService = hotplaceService;
@@ -102,7 +111,7 @@ public class HotplaceController {
 		}
 	}
 	
-//	@ResponseBody
+
 	@ApiOperation(value = "", notes = "핫플레이스의 <b>전체 목록</b>을 리턴합니다.")
 	@ApiResponses({@ApiResponse(code = 200, message ="핫플 전체 목록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
 	@GetMapping
@@ -128,11 +137,39 @@ public class HotplaceController {
 //		model.addAttribute("hotplace", hotplaceDto);
 //		return "hotplace/view";
 //	}
+	@ApiOperation(value = "", notes = "핫플레이스 번호에  <b>해당하는 핫플레이스</b>를 리턴합니다.")
+	@ApiResponses({@ApiResponse(code = 200, message ="핫플  OK"), @ApiResponse(code = 500, message ="서버 에러")})
+	@GetMapping("/{hotplaceNo}")
+	public ResponseEntity<HotplaceDto> getHotplace(@PathVariable("hotplaceNo") @ApiParam(value = "얻어올 핫플레이스 번호.", required = true) int hotplaceNo) throws Exception {
+		logger.info("getHotplace - 호출 : " + hotplaceNo);
+		return new ResponseEntity<HotplaceDto>(hotplaceService.getHotplace(hotplaceNo), HttpStatus.OK);
+	}
 	
-//	@ResponseBody
+	@GetMapping("/display/{sfolder}/{ofile}/{sfile}")
+	public ResponseEntity<Resource> display(@PathVariable("sfolder") String sfolder, @PathVariable("ofile") String ofile,
+			@PathVariable("sfile") String sfile) {
+		
+		logger.debug("display file info sfolder : {}, ofile : {}, sfile : {}", sfolder, ofile, sfile);
+		String file = upload_path + File.separator + sfolder + File.separator + sfile;
+
+		Path filePath = Paths.get(file);
+		Resource resource = new FileSystemResource(filePath); // 파일 resource 얻기
+		if(!resource.exists()) 
+			return new ResponseEntity<Resource>(HttpStatus.NOT_FOUND);
+		HttpHeaders headers = new HttpHeaders();
+		
+		try {
+			headers.add("Content-type", Files.probeContentType(filePath));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Resource>(HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+	}
+
 	@ApiOperation(value = "", notes = "핫플레이스를 <b>수정</b>합니다.")
 	@ApiResponses({@ApiResponse(code = 200, message ="핫플 전체 목록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
-	@PutMapping
+	@PutMapping(value = "/{hotplaceNo}")
 	public ResponseEntity<?> hotplaceModify(@RequestBody HotplaceDto hotplaceDto) {
 		logger.debug("hotplaceModify hotplaceDto : {}", hotplaceDto);
 		try {
@@ -144,12 +181,12 @@ public class HotplaceController {
 		}
 	}
 	
-//	@ResponseBody
+
 	@ApiOperation(value = "", notes = "핫플레이스를 <b>삭제</b>합니다.")
 	@ApiResponses({@ApiResponse(code = 200, message ="핫플 전체 목록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
-	@ApiImplicitParams({@ApiImplicitParam(name = "hotplaceno", value ="삭제 번호", required = true, dataType = "int", paramType = "path")})
-	@DeleteMapping(value = "/{hotplaceno}")
-	public ResponseEntity<?> hotplaceDelete(@PathVariable("hotplaceno") int hotplaceNo) {
+	@ApiImplicitParams({@ApiImplicitParam(name = "hotplaceNo", value ="삭제 번호", required = true, dataType = "int", paramType = "path")})
+	@DeleteMapping(value = "/{hotplaceNo}")
+	public ResponseEntity<?> hotplaceDelete(@PathVariable("hotplaceNo") int hotplaceNo) {
 		logger.debug("hotplaceDelete hotplaceDto : {}", hotplaceNo);
 		try {
 			hotplaceService.deleteHotplace(hotplaceNo, upload_path);
@@ -162,6 +199,7 @@ public class HotplaceController {
 	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();
-		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 }
