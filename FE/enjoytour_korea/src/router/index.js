@@ -14,7 +14,7 @@ import NoticeView from "@/components/notice/NoticeView";
 import NoticeModify from "@/components/notice/NoticeModify";
 
 import HotplaceList from "@/components/hotplace/HotplaceList";
-// import HotplaceWrite from "@/components/hotplace/HotplaceWrite";
+import HotplaceWrite from "@/components/hotplace/HotplaceWrite";
 import HotplaceModify from "@/components/hotplace/HotplaceModify";
 import HotplaceView from "@/components/hotplace/HotplaceView";
 import HotplaceDelete from "@/components/hotplace/HotplaceDelete";
@@ -43,23 +43,23 @@ const routes = [
         name: "hotplaceList",
         component: HotplaceList,
       },
-      // {
-      //   path: "write",
-      //   name: "hotplaceWrite",
-      //   component: HotplaceWrite,
-      // },
       {
-        path: "view/:no",
+        path: "write",
+        name: "hotplaceWrite",
+        component: HotplaceWrite,
+      },
+      {
+        path: "view/:hotplaceNo",
         name: "hotplaceView",
         component: HotplaceView,
       },
       {
-        path: "modify/:no",
+        path: "modify/:hotplaceNo",
         name: "hotplaceModify",
         component: HotplaceModify,
       },
       {
-        path: "delete/:no",
+        path: "delete/:hotplaceNo",
         name: "hotplaceDelete",
         component: HotplaceDelete,
       },

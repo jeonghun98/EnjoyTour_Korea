@@ -38,25 +38,6 @@
             v-model="hotplace.date"
           />
         </div>
-        <!-- <div class="mb-3">
-          <label for="date" class="form-label">장소유형</label>
-          <select
-            id="search-content-id"
-            class="form-select"
-            onchange="contentidOnclickHandler(this)"
-            aria-label="Default select example"
-          >
-            <option value="0" selected>관광지 유형</option>
-            <option value="12">관광지</option>
-            <option value="14">문화시설</option>
-            <option value="15">축제공연행사</option>
-            <option value="25">여행코스</option>
-            <option value="28">레포츠</option>
-            <option value="32">숙박</option>
-            <option value="38">쇼핑</option>
-            <option value="39">음식점</option>
-          </select>
-        </div> -->
         <div class="mb-3">
           <label for="content" class="form-label">핫플 상세설명</label>
           <textarea
@@ -147,68 +128,18 @@ export default {
       this.moveListHotplace();
     },
     registHotplace() {
-      // alert("핫플레이스 등록");
-      // let param = {
-      //   hotplaceNo: this.hotplace.hotplaceNo,
-      //   userId: this.hotplace.userId,
-      //   title: this.hotplace.title,
-      //   content: this.hotplace.content,
-      //   img: this.hotplace.img,
-      //   date: this.hotplace.date,
-      // };
-      // console.log("registHotplace:",param);
-
-      // writeHotplace(
-      //   param,
-      //   ({ data }) => {
-      //     let msg = "등록 처리시 문제가 발생했습니다.";
-      //     if (data === "success") {
-      //       msg = "등록이 완료되었습니다.";
-      //       // console.log("registHotplace - writeHotplace: 성공");
-      //     }
-      //     alert(msg);
-      //     this.moveListHotplace();
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //   }
-      // );
-
-      // Process each file
-      // this.hotplace.fileInfos.forEach(thisFile => {
-      //   console.log("Submitting " + thisFile.name)
-      //   // add submit logic here
-      // })
-
 
       const formData = new FormData();
       formData.append("hotplaceNo", this.hotplace.hotplaceNo);
       formData.append("userId", this.hotplace.userId);
       formData.append("title", this.hotplace.title);
       formData.append("content", this.hotplace.content);
-      // formData.append("img", this.hotplace.img);
       formData.append("date", this.hotplace.date);
-      // formData.append("thumbNail", this.hotplace.fileInfos);
-      console.log(1)
-      console.dir(this.hotplace.fileInfos)
 
       for(let i=0; i<this.hotplace.fileInfos.length;i+=1){
         const file = this.hotplace.fileInfos[i];
-        formData.append(`thumbNail[${i}]`,file);        
+        formData.append(`thumbNail`,file);        
       }
-
-      // FormData의 key 확인
-      // for (let key of formData.keys()) {
-      //   console.log(key);
-      // }
-
-      let cnt=0;
-      // FormData의 value 확인
-      for (let value of formData.values()) {
-        console.log(value);
-        cnt++;
-      }
-      console.log("length:",cnt)
 
       writeHotplace(
         formData,

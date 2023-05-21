@@ -18,6 +18,8 @@ public interface HotplaceMapper {
 	void modifyHotplace(HotplaceDto hotplaceDto) throws Exception;
 	void deleteHotplace(int hotplaceNo) throws Exception;
 	
+	HotplaceDto getHotplaceNo(HotplaceDto hotplaceDto) throws Exception;
+	
 	// -- 파일 설정
 	void registerFile(HotplaceDto hotplaceDto) throws Exception;
 	void deleteFile(int hotplaceNo) throws Exception;

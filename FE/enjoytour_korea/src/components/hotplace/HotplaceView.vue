@@ -1,10 +1,12 @@
 <template>
   <div>
-    핫플레이스 상세보기 화면입니다
+    {{hotplace.hotplaceNo}}번 핫플레이스 상세보기 화면입니다
   </div>
 </template>
 
 <script>
+import { getHotplace } from '@/api/hotplace';
+
 export default {
   name: 'HotplaceView',
   components: {},
@@ -13,7 +15,18 @@ export default {
       hotplace: {},
     };
   },
-  created() {},
+  created() {
+    let param = this.$route.params.hotplaceNo;
+    getHotplace(
+      param,
+      ({ data }) => {
+        this.hotplace = data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  },
   methods: {},
 };
 </script>

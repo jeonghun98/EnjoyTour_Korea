@@ -41,6 +41,12 @@
 		where hotplace_no = #{hotplaceNo}
 	</select>
 	
+	<select id="getHotplaceNo" parameterType="HotplaceDto" resultMap="hotplace">
+		select hotplace_no, user_id, hotplace_title, hotplace_content, hotplace_like, hotplace_date, hotplace_image
+		from hotplace
+		where user_id = #{userId} and hotplace_title = #{title} and hotplace_content = #{content}
+	</select>
+	
 	<update id="updateLike" parameterType="int">
 		update hotplace
 		set hotplace_like = hotplace_like + 1

@@ -2,11 +2,11 @@
   <div class="col">
             <b-card
               :title="titleText"
-              :img-src="require('../../../assets/img/ssafy_logo.png')"
-              img-alt="글쓰기"
+              :img-src="hotplaceImg"
+              img-alt="Image"
               img-top
             >
-             <!-- :img-src="require('../../../assets/img/ssafy_logo.png')" -->
+            <!-- :img-src="require('../../../assets/img/ssafy_logo.png')" -->
               <b-card-text>
                 {{content}}
               </b-card-text>
@@ -29,6 +29,8 @@
 </template>
 
 <script> 
+import { getImageHotplace } from '@/api/hotplace';
+
 export default {
   name: 'HotplaceListItem',
   components: {},
@@ -40,13 +42,45 @@ export default {
     like: Number,
     date: String,
     img: String,
+    fileInfos: Array,
   }, 
   data() {
     return {
-      message: '',
+      hotplaceImg: "",
+      // hotplace: {},
     };
   },
-  created() {},
+  created() {
+    console.log("HotplaceListItem : ", this.hotplaceNo);
+    if(this.fileInfos != null){
+      console.log("HotplaceListItem - 이미지 파일 있음");
+
+      let sfolder = this.fileInfos[0].saveFolder;
+      let ofile = this.fileInfos[0].originalFile;
+      let sfile = this.fileInfos[0].saveFile;
+
+      getImageHotplace(
+        sfolder, ofile, sfile,
+        ({ data }) => {
+          this.hotplaceImg = "require('" + data + "')";
+          console.log(this.hotplaceImg);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+
+    }else{
+      console.log("HotplaceListItem - 이미지 파일 없음");
+
+      this.hotplaceImg = "require('../../../assets/img/ssafy_logo.png')";
+      console.log(this.hotplaceImg);
+    }
+
+    
+
+
+  },
   computed: {
     titleText() {
       return this.title;
@@ -54,7 +88,8 @@ export default {
   },
   methods: {
     moveView() {
-      alert("핫플 view 이동");
+      // alert(`${this.hotplaceNo} 번 핫플 view 이동`);
+      this.$router.push({ name: 'hotplaceView', params: { hotplaceNo: this.hotplaceNo } });
     },
   },
 };

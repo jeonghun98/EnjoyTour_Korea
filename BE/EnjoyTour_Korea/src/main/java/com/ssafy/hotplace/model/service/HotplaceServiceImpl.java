@@ -23,21 +23,41 @@ public class HotplaceServiceImpl implements HotplaceService {
 	@Override
 	@Transactional
 	public void writeHotplace(HotplaceDto hotplaceDto) throws Exception {
-//		hotplaceMapper.writeHotplace(hotplaceDto);
-//		List<FileInfoDto> fileInfos = hotplaceDto.getFileInfos();
-//		if (fileInfos != null && !fileInfos.isEmpty()) {
-//			hotplaceMapper.registerFile(hotplaceDto);
-//		}
+		
+		hotplaceMapper.writeHotplace(hotplaceDto);
+		HotplaceDto hotplaceDto2 = hotplaceMapper.getHotplaceNo(hotplaceDto);
+		System.out.println(hotplaceDto2.toString());
+		
+		hotplaceDto.setHotplaceNo(hotplaceDto2.getHotplaceNo());
+		List<FileInfoDto> fileInfos = hotplaceDto.getFileInfos();
+		if (fileInfos != null && !fileInfos.isEmpty()) {
+			hotplaceMapper.registerFile(hotplaceDto);
+		}
 	}
 
 	@Override
 	public List<HotplaceDto> listHotplace() throws Exception {
-		return hotplaceMapper.listHotplace();
+		List<HotplaceDto> hotplaceList = hotplaceMapper.listHotplace();
+		
+		int idx = 0;
+		for(HotplaceDto hotplaceDto : hotplaceList) {
+			List<FileInfoDto> fileList = hotplaceMapper.fileInfoList(hotplaceDto.getHotplaceNo());
+			if (fileList != null && !fileList.isEmpty()) {
+				hotplaceList.get(idx).setFileInfos(fileList);
+			}
+			idx++;
+		}
+		return hotplaceList;
 	}
 
 	@Override
 	public HotplaceDto getHotplace(int hotplaceNo) throws Exception {
-		return hotplaceMapper.getHotplace(hotplaceNo);
+		HotplaceDto hotplaceDto = hotplaceMapper.getHotplace(hotplaceNo);
+		List<FileInfoDto> fileList = hotplaceMapper.fileInfoList(hotplaceNo);
+		if (fileList != null && !fileList.isEmpty()) {
+			hotplaceDto.setFileInfos(fileList);
+		}
+		return hotplaceDto;
 	}
 
 	@Override
@@ -61,5 +81,10 @@ public class HotplaceServiceImpl implements HotplaceService {
 			file.delete();
 		}
 	}
+
+//	@Override
+//	public HotplaceDto getHotplaceNo(HotplaceDto hotplaceDto) throws Exception {
+//		return hotplaceMapper.getHotplaceNo(hotplaceDto);
+//	}
 
 }
