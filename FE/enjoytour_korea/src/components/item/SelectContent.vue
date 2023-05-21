@@ -9,9 +9,10 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 const itemStore = "itemStore";
+const attractionStore = "attractionStore";
 
 export default {
   name: "SelectContent",
@@ -19,6 +20,10 @@ export default {
     return {
       contentCode: 0,
     };
+  },
+  props: {
+    sidoCode: String,
+    gugunCode : String,
   },
   computed: {
     ...mapState(itemStore, ["contents"]),
@@ -28,14 +33,26 @@ export default {
     this.SET_CONTENT_LIST();
   },
   methods: {
-    ...mapMutations(itemStore, ["CLEAR_CONTENT_LIST"]),
-    ...mapMutations(itemStore, ["SET_CONTENT_LIST"]),
+    ...mapActions(attractionStore, ["getAttractionList"]),
+    ...mapMutations(itemStore, ["CLEAR_CONTENT_LIST", "SET_CONTENT_LIST"]),
+    ...mapMutations(attractionStore, ["CLEAR_ATTRACTION_LIST", "CLEAR_MARKER_POSITIONS",]),
     ...mapMutations(itemStore, {
       setcontentcode: "SET_CONTENT",
     }),
     changeContent() {
       this.setcontentcode(this.contentCode);
       this.$emit("select-content", this.contentCode);
+
+      this.CLEAR_ATTRACTION_LIST();
+      this.CLEAR_MARKER_POSITIONS();
+    
+      if (this.sidoCode && this.gugunCode && this.contentCode) {
+        this.getAttractionList({
+          sidoCode: this.sidoCode,
+          gugunCode: this.gugunCode,
+          contentCode: this.contentCode,
+        });
+      }
     },
   },
 };

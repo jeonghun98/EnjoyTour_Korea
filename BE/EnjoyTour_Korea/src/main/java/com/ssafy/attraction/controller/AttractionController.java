@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.attraction.model.AttractionDto;
 import com.ssafy.attraction.model.SidoGugunCodeDto;
 import com.ssafy.attraction.model.service.AttractionService;
+import com.ssafy.notice.model.NoticeDto;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,32 +43,34 @@ public class AttractionController extends HttpServlet {
 		super();
 		this.attractionservice = attractionservice;
 	}
-	@ApiOperation(value = "관광지 정보", notes = "관광지 정보를 반환한다.", response = List.class)
-	@GetMapping("/searchByLoc")
-	public ResponseEntity<?> searchByLoc(
-//			@RequestParam("sido") @ApiParam(value = "시도코드.", required = true) String sido,
-//			@RequestParam("gugun") @ApiParam(value = "구군코드.", required = true) String gugun,
-			@RequestParam("mapX") @ApiParam(value = "mapX", required = true) Float mapX,
-			@RequestParam("mapY") @ApiParam(value = "mapY", required = true) Float mapY,
-			@RequestParam("radius") @ApiParam(value = "radius", required = true) Float radius) {
-		logger.debug("searchByLoc call");
-		try {
-			Map<String, Float> map = new HashMap<String, Float>();
-			map.put("latitude", mapY);
-			map.put("longitude", mapX);
-			map.put("meter", radius);
-			List<AttractionDto> list = attractionservice.searchAttractionByLatLon(map);
-			if(list != null && !list.isEmpty()) {
-				System.out.println(list.size());
-				return new ResponseEntity<List<AttractionDto>>(list, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			return exceptionHandling(e);
-		}
+	
+	@ApiOperation(value = "관광지 정보", notes = "관광지 정보를 반환한다.")
+	@GetMapping
+	public ResponseEntity<?> searchAttraction(
+			@RequestParam("contentid") @ApiParam(value = "contentid.", required = true) String contentid
+			) throws Exception {
+		logger.debug("searchAttractionList call");
+		return new ResponseEntity<AttractionDto>(attractionservice.searchAttraction(contentid), HttpStatus.OK);
 	}
 	
+	
+	@ApiOperation(value = "관광지 리스트 정보", notes = "관광지 리스트 정보를 반환한다.", response = List.class)
+	@GetMapping("/attractionList")
+	public ResponseEntity<?> searchAttractionList(
+			@RequestParam("sido") @ApiParam(value = "시도코드.", required = true) String sido,
+			@RequestParam("gugun") @ApiParam(value = "구군코드.", required = true) String gugun,
+			@RequestParam("content") @ApiParam(value = "content코드.", required = true) String content
+//			@RequestParam("mapX") @ApiParam(value = "mapX", required = true) Float mapX,
+//			@RequestParam("mapY") @ApiParam(value = "mapY", required = true) Float mapY,
+//			@RequestParam("radius") @ApiParam(value = "radius", required = true) Float radius
+			) throws Exception  {
+		logger.debug("searchAttractionList call");
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("sido", sido);
+		map.put("gugun", gugun);
+		map.put("content", content);
+		return new ResponseEntity<List<AttractionDto>>(attractionservice.searchAttractionList(map), HttpStatus.OK);
+	}
 	
 	@ApiOperation(value = "시도 정보", notes = "전국의 시도를 반환한다.", response = List.class)
 	@GetMapping("/sido")

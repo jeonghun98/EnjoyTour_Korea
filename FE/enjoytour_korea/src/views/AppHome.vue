@@ -89,4 +89,6 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style>
+@import "@/assets/css/bootstrapHorizon.css";
+</style>
