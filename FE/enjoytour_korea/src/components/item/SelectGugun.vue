@@ -18,6 +18,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
   }
 */
 const itemStore = "itemStore";
+const attractionStore = "attractionStore";
 
 export default {
   name: "SelectGugun",
@@ -42,6 +43,8 @@ export default {
   created() {},
   methods: {
     ...mapActions(itemStore, ["getGugun"]),
+    ...mapActions(attractionStore, ["getAttractionList"]),
+    ...mapMutations(attractionStore, ["CLEAR_ATTRACTION_LIST", "CLEAR_MARKER_POSITIONS",]),
     ...mapMutations(itemStore, ["CLEAR_GUGUN_LIST"]),
     ...mapMutations(itemStore, {
       setsidocode: "SET_SIDO",
@@ -51,6 +54,17 @@ export default {
       this.setsidocode(this.sidoCode);
       this.setguguncode(this.gugunCode);
       this.$emit("select-gugun", this.gugunCode);
+      
+      this.CLEAR_ATTRACTION_LIST();
+      this.CLEAR_MARKER_POSITIONS();
+    
+      if (this.sidoCode && this.gugunCode) {
+        this.getAttractionList({
+          sidoCode: this.sidoCode,
+          gugunCode: this.gugunCode,
+          contentCode: '',
+        });
+      }
     },
   },
 };

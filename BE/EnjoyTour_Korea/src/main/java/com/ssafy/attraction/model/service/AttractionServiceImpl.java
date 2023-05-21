@@ -30,10 +30,15 @@ public class AttractionServiceImpl implements AttractionService
 //	}
 
 	@Override
-	public List<AttractionDto> searchAttractionByLatLon(Map<String, Float> map) throws Exception {
-		return attractionmapper.searchAttractionByLatLon(map);
+	public List<AttractionDto> searchAttractionList(Map<String, String> map) throws Exception {
+		return attractionmapper.searchAttractionList(map);
 	}
 
+	@Override
+	public AttractionDto searchAttraction(String contentid) throws Exception {
+		return attractionmapper.searchAttraction(contentid);
+	}
+	
 	@Override
 	public List<SidoGugunCodeDto> getSido() throws Exception {
 		return attractionmapper.getSido();
@@ -48,4 +53,5 @@ public class AttractionServiceImpl implements AttractionService
 	public List<AttractionDto> getAttractionInGugun(String gugun) throws Exception {
 		return attractionmapper.getAttractionInGugun(gugun);
 	}
+
 }

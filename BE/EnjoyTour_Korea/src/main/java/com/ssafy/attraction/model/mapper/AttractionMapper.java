@@ -11,7 +11,8 @@ import com.ssafy.attraction.model.SidoGugunCodeDto;
 @Mapper
 public interface AttractionMapper {
 //	void insertAttraction(AttractionDto attractionDto) throws SQLException;
-	List<AttractionDto> searchAttractionByLatLon(Map<String, Float> map) throws Exception;
+	List<AttractionDto> searchAttractionList(Map<String, String> map) throws Exception;
+	AttractionDto searchAttraction(String contentid) throws Exception;
 	List<SidoGugunCodeDto> getSido() throws SQLException;
 	List<SidoGugunCodeDto> getGugunInSido(String sido) throws SQLException;
 	List<AttractionDto> getAttractionInGugun(String gugun) throws SQLException;
