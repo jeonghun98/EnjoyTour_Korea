@@ -1,21 +1,69 @@
 <template>
-  <div id="attraction-map">
-    <div id="kakaomap" style="width: 100%; height: 40rem"></div>
-    <!-- <b-modal v-model="modalShow" size="xl" ok-only> -->
-      <!-- <template #modal-header>
-        <h5 class = "modal-title">관광지 정보</h5>
-        </template> -->
-      <!-- <attraction-modal></attraction-modal> -->
-    <!-- </b-modal> -->
-  </div>
+  <b-row class="mt-3">
+    <b-col cols="9">
+      <div id="attraction-map">
+        <div id="kakaomap" style="width: 100%; height: 40rem"></div>
+      </div>
+    </b-col>
+    <b-col>
+      <div class="row" id="plan-item-list">
+        <div>
+          <h3 style="font-weight: bold">여행경로</h3>
+          <draggable class="list-group" group="planListGroup" :list="planList" :key="planList.length" @change="setPlanMarker">
+            <div v-if="planList.length == 0">여행경로를 추가해주세요</div>
+            <div v-else class="list-group-item" v-for="(atr, index) in planList" :key="index">
+              <b-card no-body class="attraction-item overflow-hidden">
+                <b-row no-gutters>
+                  <b-col md="4" class="m-auto">
+                    <b-card-img
+                      class="img align-middle"
+                      v-if="atr.image1 != ''"
+                      :src="atr.image1"
+                      :alt="atr.title"
+                    />
+                    <b-card-img
+                      class="img align-middle"
+                      v-if="atr.image1 == ''"
+                      :src="require('@/assets/img/ssafy_logo.png')"
+                      alt="no image"
+                    />
+                  </b-col>
+                  <b-col md="8" class="m-auto pl-3">
+                    <table>
+                      <tr>
+                        <td v-if="atr.title.length > 15" class="item-title">
+                          <strong>{{ index + 1 }}번</strong><br />{{ atr.title.substr(0, 15) }}...
+                        </td>
+                        <td v-if="atr.title.length <= 15" class="item-title">
+                          <strong>{{ index + 1 }}번</strong><br />
+                          {{ atr.title }}
+                        </td>
+                        <td>
+                          <b-button
+                            class="delete-btn"
+                            variant="danger"
+                            @click="deleteItem(atr.contentid)"
+                          >
+                            삭제
+                          </b-button>
+                        </td>
+                      </tr>
+                    </table>
+                  </b-col>
+                </b-row>
+              </b-card>
+            </div>
+          </draggable>
+        </div>
+      </div>
+    </b-col>
+  </b-row>
 </template>
 
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
-// import { searchByLoc } from "@/api/attraction";
-// import AttractionModal from "@/components/attraction/AttractionModal";
-// const itemStore = "itemStore";
 const attractionStore = "attractionStore";
+import draggable from "vuedraggable";
 
 export default {
   name: "PlanMap",
@@ -24,46 +72,60 @@ export default {
       map: null,
       markers: [], // 마커를 담는 배열
       lat: null,
-      lon: null,
-    //   modalShow: false,
-      nowOverlay: null,
-
+        lon: null,
+      
       customOverlays: [],
       polyline: null,
+
+      planList: [],
     };
   },
-    components: {
-        // AttractionModal
-    },
+  components: {
+    draggable,
+  },
   props: {
-    // sidoCode: String,
-    // gugunCode: String,
-    // contentCode: Number,
+    opt : Boolean,
   },
   computed: {
     // ...mapGetters(itemStore, ["getSidoText", "getGugunText", "getContentText"]),
-    ...mapState(attractionStore, ["latitude", "longitude", "markerPositions"]),
+    ...mapState(attractionStore, [
+      "latitude",
+      "longitude",
+      "attractions",
+      //   "planMarkers"
+    ]),
   },
-  watch: {
-    markerPositions: function (markerPositions) {
+    watch: {
+    opt() {
+        console.log(this.opt)
+    },
+    planList() {
       // 오버레이 초기화
-    //   this.customOverlays.forEach((overlay) => {
-    //     overlay.setMap(null);
-    //   });
-    //   this.customOverlays = [];
+      this.customOverlays.forEach((overlay) => {
+        overlay.setMap(null);
+      });
+      this.customOverlays = [];
 
+      const positions = this.planList.map(
+        (position) => new kakao.maps.LatLng(position.latitude, position.longitude)
+      );
+      if (this.planList.length > 0) this.makeLine(positions);
+      this.setPlanMarker();
+    },
+    attractions: function (attractions) {
       if (this.markers.length > 0) {
         this.markers.forEach((marker) => marker.setMap(null));
       }
-      const positions = markerPositions.map(
-        (position) => new kakao.maps.LatLng(position[0], position[1])
+      const positions = attractions.map(
+        (position) => new kakao.maps.LatLng(position.latitude, position.longitude)
       );
-      if (markerPositions.length > 0) {
-        this.markers = markerPositions.map((position) => {
-          var pos = new kakao.maps.LatLng(position[0], position[1]);
+      if (attractions.length > 0) {
+        this.markers = attractions.map((position) => {
+          var pos = new kakao.maps.LatLng(position.latitude, position.longitude);
 
           var imageSrc;
-          if (position[3] != null) imageSrc = require(`@/assets/img/icon_${position[3]}.png`);
+          if (position.contenttypeid != null)
+            imageSrc = require(`@/assets/img/icon_${position.contenttypeid}.png`);
           else imageSrc = require("@/assets/img/ssafy_logo.png");
 
           const ssafyImageSrc = require("@/assets/img/ssafy_logo.png");
@@ -84,15 +146,15 @@ export default {
             '<div class = "wrap">' +
             '   <div class="info">' +
             '    <div class="title" style="background-color:1BB1FF;">' +
-            position[4] +
+            position.title +
             "   </div>" +
             '    <div class="body">' +
             '     <div class="img">' +
-            `        <img src="${position[6]}" width ="73" height="70" onerror="this.src='${ssafyImageSrc}'">` +
+            `        <img src="${position.image1}" width ="73" height="70" onerror="this.src='${ssafyImageSrc}'">` +
             "     </div>" +
             '      <div class="desc">' +
             '       <div class="ellipsis"> ' +
-            position[5] +
+            position.addr1 +
             "</div>" +
             '       <div class="desc_marker"> ' +
             "마커 클릭시 상세보기" +
@@ -104,11 +166,11 @@ export default {
             "    </div>" +
             "   </div>";
 
-            let infowindow = new kakao.maps.InfoWindow({
+          let infowindow = new kakao.maps.InfoWindow({
             content: contents,
             position: pos,
-            });
-          
+          });
+
           // 마커 mouseover 이벤트
           kakao.maps.event.addListener(marker, "mouseover", () => {
             infowindow.open(this.map, marker);
@@ -118,12 +180,12 @@ export default {
             infowindow.close();
           });
 
-          // 마커 클릭 이벤트
+          // // 마커 클릭 이벤트
           kakao.maps.event.addListener(marker, "click", () => {
-            this.getAttraction(position[2]);
-            this.map.panTo(new kakao.maps.LatLng(position[0], position[1]));
-            // his.modalShow = !this.modalShow;
-            this.makeLine(positions);
+            this.getAttraction(position.contentid);
+            this.map.panTo(new kakao.maps.LatLng(position.latitude, position.longitude));
+            this.planList.push(position);
+            console.log("push", this.planList);
           });
           return marker;
         });
@@ -134,15 +196,8 @@ export default {
         this.map.setBounds(bounds);
       }
     },
-
-    // modalShow: function () {
-    //   if (!this.modalShow) {
-    //     this.CLEAR_ATTRACTION();
-    //   }
-    // },
   },
   created() {
-    // this.modalShow = false;
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -150,11 +205,13 @@ export default {
     } else {
       this.loadScript();
     }
+    this.CLEAR_PLAN_MARKERS();
   },
   methods: {
     ...mapMutations(attractionStore, [
       "CLEAR_ATTRACTION",
-      // "CLEAR_ATTRACTION_LIST",
+      "SET_PLAN_MARKERS",
+      "CLEAR_PLAN_MARKERS",
     ]),
     ...mapActions(attractionStore, ["getPosition", "getAttraction"]),
 
@@ -162,7 +219,7 @@ export default {
       const container = document.getElementById("kakaomap");
       const options = {
         center: new kakao.maps.LatLng(37.5013068, 127.0396597),
-        level: 5,
+        level: 4,
       };
 
       this.map = new kakao.maps.Map(container, options);
@@ -192,71 +249,37 @@ export default {
         "&autoload=false&libraries=services";
       document.head.appendChild(script);
       script.onload = () => kakao.maps.load(this.initMap);
-
-      // this.clickLine = new kakao.maps.Polyline({
-      //   map: map, // 선을 표시할 지도입니다
-      //   path: [], // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
-      //   strokeWeight: 3, // 선의 두께입니다
-      //   strokeColor: "#FF4444", // 선의 색깔입니다
-      //   strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
-      //   strokeStyle: "solid", // 선의 스타일입니다
-      // });
-      },
-      makeLine(positions) {
-      // 연결선 초기화
+    },
+    makeLine(positions) {
       if (this.polyline != null) {
         this.polyline.setMap(null);
       }
-      // 연결선 생성
       this.polyline = new kakao.maps.Polyline({
+        map: this.map,
         path: positions, // 선을 구성하는 좌표배열
         strokeWeight: 3, // 두께
         strokeColor: "#FF4444", // 색깔
-        strokeOpacity: 0.7, // 불투명도(1에서 0 사이의 값, 0: 투명)
+        strokeOpacity: 0.9, // 불투명도(1에서 0 사이의 값, 0: 투명)
         strokeStyle: "solid", // 스타일
       });
       // 연결선 표시
       this.polyline.setMap(this.map);
     },
-    // makeTripList(data) {
-    // let trips = data.response.body.items.item;
-    // let tripContent = ``;
-    // trips.forEach(function (trip) {
-    //     tripContent += `<tr>
-    //     <td><img src ="${trip.firstimage}" width="100px"></td>
-    //     <td>${trip.title}</td>
-    // <td>${trip.addr1}${trip.addr2}</td>
-    // <td>${trip.mapy}</td>
-    // <td>${trip.mapx}</td>
-    // </tr>`;
-    // });
-    // document.getElementById("trip-list").innerHTML = tripContent;
-    // },
 
-    // searchByKeyword() {
-    //   let keyword = document.getElementById("search-keyword").value;
-    //   console.log(keyword);
-    //   regionName = e.value;
-    //   // v3가 모두 로드된 후, 이 콜백 함수가 실행됩니다.
-    //   var geocoder = new kakao.maps.services.Geocoder();
-    //   geocoder.addressSearch(`${regionName}`, function (result, status) {
-    //     // 정상적으로 검색이 완료됐으면
-    //     if (status === kakao.maps.services.Status.OK) {
-    //       var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-    //       // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-    //       map.setCenter(coords);
-    //       let radius = 5000;
-    //       let tripInfoUrl = `https://apis.data.go.kr/B551011/KorService1/locationBasedList1?serviceKey=${serviceKey}&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json&listYN=Y&arrange=A&mapX=${result[0].x}&mapY=${result[0].y}&radius=${radius}`;
-    //       fetch(tripInfoUrl)
-    //         .then((response) => response.json())
-    //         .then((data) => makeMarker(data));
-    //     }
-    //   });
-    // },
-
-    // checkEnter(event) {
-    //   if (event.keyCode == 13) searchByKeyword();
-    // },
+    deleteItem(contentid) {
+      for (let i = 0; i < this.planList.length; i++) {
+        if (this.planList[i].contentid === contentid) {
+          this.planList.splice(i, 1);
+          i--;
+          break;
+        }
+      }
+    },
+    setPlanMarker() {
+    //   console.log("setPlanMarker", this.planList);
+      this.CLEAR_PLAN_MARKERS();
+      this.SET_PLAN_MARKERS(this.planList);
+    },
 
     //addTrack2 , clearPath, changePath(...)
   },
@@ -364,5 +387,48 @@ export default {
 
 .info .addTrack {
   color: #5085bb;
+}
+
+#plan-item-list {
+  width: 100%;
+  height: 80vh;
+  margin: 0;
+}
+.list-group {
+  height: 73vh;
+  overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  background-color: white;
+}
+.list-group::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera*/
+}
+.list-group-item {
+  width: 100%;
+ /* height: 100px;*/
+  padding: 0;
+  cursor: pointer;
+}
+.list-group-item img {
+  height: 100px;
+}
+tr {
+  height: 100px;
+}
+.item-title {
+  width: 75%;
+  font-size: 1.1rem;
+  padding-right: 5px;
+  align-items: center;
+  text-overflow: ellipsis;
+}
+.delete-btn {
+  width: 25%;
+  width: 60px;
+  margin-right: 5px;
+  padding: 0;
+  padding-block: 5px;
+  align-items: center;
 }
 </style>

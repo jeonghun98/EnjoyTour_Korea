@@ -145,7 +145,7 @@ const attractionStore = {
             contenttypeid: attraction.contenttypeid,
             // createdTime: attraction.createdTime,
             image1: attraction.image1,
-            image2: attraction.image2,
+            // image2: attraction.image2,
             longitude: attraction.longitude,
             latitude: attraction.latitude,
             // mLevel: attraction.mLevel,
