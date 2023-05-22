@@ -10,7 +10,7 @@
       <div class="album">
       <div class="container p-0 py-2">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            <hotplace-list-item v-for="hotplace in hotplaces" :key="hotplace.hotplaceNo" v-bind="hotplace"></hotplace-list-item> <!-- v-for해야함 -->
+            <hotplace-list-item v-for="hotplace in hotplaces" :key="hotplace.hotplaceNo" v-bind="hotplace"></hotplace-list-item> 
         </div>
       </div>
     </div>

@@ -31,5 +31,13 @@ function getImageHotplace(sfolder, ofile, sfile, success, fail){
   api.get(`/hotplace/display/${sfolder}/${ofile}/${sfile}`, {responseType: 'blob'}).then(success).catch(fail);
 }
 
+function modifyHotplace(formData, hotplaceNo, success, fail) {
+  api({
+    method: "PUT",
+    url: `/hotplace/${hotplaceNo}`,
+    headers: { "Content-Type": "multipart/form-data" },
+    data: formData,
+  }).then(success).catch(fail);
+}
 
-export { listHotplace, writeHotplace, getHotplace, getImageHotplace };
+export { listHotplace, writeHotplace, getHotplace, getImageHotplace, modifyHotplace };

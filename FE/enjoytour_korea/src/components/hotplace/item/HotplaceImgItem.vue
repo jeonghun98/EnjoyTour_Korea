@@ -1,5 +1,8 @@
 <template>
-  <b-img-lazy id="imgItem" :src="hotplaceImg" alt="Image"></b-img-lazy>
+  <span>
+    <b-img-lazy id="imgItem" :src="hotplaceImg" alt="Image" class="m-3"></b-img-lazy>
+  <!-- {{originalFile}} -->
+  </span>
 </template>
 
 <script>
@@ -20,20 +23,19 @@ export default {
     };
   },
   created() {
-    // console.log("HotplaceListItem : ", this.hotplaceNo);
-    if(this.fileInfos != null){
-      // console.log("HotplaceListItem - 이미지 파일 있음");
+    // console.log("ImgItem - props: ", this.originalFile, this.saveFile, this.saveFolder);
+    if(this.originalFile != null){
+      // console.log("HotplaceImgItem.vue - 이미지 파일 있음");
 
-      let sfolder = this.fileInfos[0].saveFolder;
-      let ofile = this.fileInfos[0].originalFile;
-      let sfile = this.fileInfos[0].saveFile;
+      let sfolder = this.saveFolder;
+      let ofile = this.originalFile;
+      let sfile = this.saveFile;
+      console.log(sfolder, ofile, sfile);
 
       getImageHotplace(
         sfolder, ofile, sfile,
         ({ data }) => {
-          // console.log(data);
-          // this.hotplaceImg = require(data);
-          // console.log(this.hotplaceImg);
+          console.log(this.hotplaceImg);
           const url = window.URL.createObjectURL(data);
           this.hotplaceImg = url;
             
@@ -44,11 +46,11 @@ export default {
       );
 
     }else{
-      console.log("HotplaceImgItem - 이미지 파일 없음");
-
+      // console.log("HotplaceImgItem - 이미지 파일 없음");
       this.hotplaceImg = require('../../../assets/img/ssafy_logo.png');
       // console.log(this.hotplaceImg);
     }
+
   },
   methods: {},
 };
@@ -56,7 +58,7 @@ export default {
 
 <style scoped>
 #imgItem {
-  width: 600;
-  height: 400;
+  width: 30rem;
+  height: 20rem;
 }
 </style>

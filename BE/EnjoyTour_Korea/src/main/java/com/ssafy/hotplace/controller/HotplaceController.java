@@ -170,12 +170,43 @@ public class HotplaceController {
 	@ApiOperation(value = "", notes = "핫플레이스를 <b>수정</b>합니다.")
 	@ApiResponses({@ApiResponse(code = 200, message ="핫플 전체 목록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
 	@PutMapping(value = "/{hotplaceNo}")
-	public ResponseEntity<?> hotplaceModify(@RequestBody HotplaceDto hotplaceDto) {
+	public ResponseEntity<?> hotplaceModify(HotplaceDto hotplaceDto,  @RequestPart("thumbNail") List<MultipartFile> files) {
 		logger.debug("hotplaceModify hotplaceDto : {}", hotplaceDto);
+		
 		try {
+//			FileUpload 관련 설정.
+			System.out.println(hotplaceDto);
+			System.out.println(files.get(0).getOriginalFilename());
+			logger.debug("MultipartFile.isEmpty : {}", files.get(0).isEmpty());
+			if (!files.get(0).isEmpty()) {
+//				String realPath = servletContext.getRealPath(upload_path);
+//				String realPath = servletContext.getRealPath("/resources/img");
+				String today = new SimpleDateFormat("yyMMdd").format(new Date());
+				String saveFolder = upload_path + File.separator + today;
+				logger.debug("저장 폴더 : {}", saveFolder);
+				File folder = new File(saveFolder);
+				if (!folder.exists())
+					folder.mkdirs();
+				List<FileInfoDto> fileInfos = new ArrayList<FileInfoDto>();
+				for (MultipartFile mfile : files) {
+					FileInfoDto fileInfoDto = new FileInfoDto();
+					String originalFileName = mfile.getOriginalFilename();
+					if (!originalFileName.isEmpty()) {
+						String saveFileName = UUID.randomUUID().toString()
+								+ originalFileName.substring(originalFileName.lastIndexOf('.'));
+						fileInfoDto.setSaveFolder(today);
+						fileInfoDto.setOriginalFile(originalFileName);
+						fileInfoDto.setSaveFile(saveFileName);
+						logger.debug("원본 파일 이름 : {}, 실제 저장 파일 이름 : {}", mfile.getOriginalFilename(), saveFileName);
+						mfile.transferTo(new File(folder, saveFileName));
+					}
+					fileInfos.add(fileInfoDto);
+				}
+				hotplaceDto.setFileInfos(fileInfos);
+			}
+			
 			hotplaceService.modifyHotplace(hotplaceDto);
-			List<HotplaceDto> list = hotplaceService.listHotplace();
-			return new ResponseEntity<List<HotplaceDto>>(list, HttpStatus.OK);
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
