@@ -27,7 +27,17 @@ function getHotplace(hotplaceNo, success, fail){
 function getImageHotplace(sfolder, ofile, sfile, success, fail){
   console.log("getImageHotplace - axios start");
   console.log("getImageHotplace - image data", sfolder, ofile, sfile);
-  api.get(`/hotplace/display/${sfolder}/${ofile}/${sfile}`).then(success).catch(fail);
+  
+  api.get(`/hotplace/display/${sfolder}/${ofile}/${sfile}`, {responseType: 'blob'}).then(success).catch(fail);
 }
 
-export { listHotplace, writeHotplace, getHotplace, getImageHotplace };
+function modifyHotplace(formData, hotplaceNo, success, fail) {
+  api({
+    method: "PUT",
+    url: `/hotplace/${hotplaceNo}`,
+    headers: { "Content-Type": "multipart/form-data" },
+    data: formData,
+  }).then(success).catch(fail);
+}
+
+export { listHotplace, writeHotplace, getHotplace, getImageHotplace, modifyHotplace };

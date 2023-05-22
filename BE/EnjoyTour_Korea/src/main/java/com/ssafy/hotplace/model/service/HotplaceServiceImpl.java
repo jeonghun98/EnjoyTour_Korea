@@ -67,7 +67,13 @@ public class HotplaceServiceImpl implements HotplaceService {
 
 	@Override
 	public void modifyHotplace(HotplaceDto hotplaceDto) throws Exception {
-		hotplaceMapper.modifyHotplace(hotplaceDto);		
+		hotplaceMapper.deleteFile(hotplaceDto.getHotplaceNo());
+		
+		hotplaceMapper.modifyHotplace(hotplaceDto);
+		List<FileInfoDto> fileInfos = hotplaceDto.getFileInfos();
+		if (fileInfos != null && !fileInfos.isEmpty()) {
+			hotplaceMapper.registerFile(hotplaceDto);
+		}
 	}
 
 	@Override
