@@ -6,6 +6,7 @@
               img-alt="Image"
               img-top
             >
+            <!--               :img-src="hotplaceImg"-->
             <!-- :img-src="require('../../../assets/img/ssafy_logo.png')" -->
               <b-card-text>
                 {{content}}
@@ -62,8 +63,12 @@ export default {
       getImageHotplace(
         sfolder, ofile, sfile,
         ({ data }) => {
-          this.hotplaceImg = "require('" + data + "')";
-          console.log(this.hotplaceImg);
+          console.log(data);
+          // this.hotplaceImg = require(data);
+          // console.log(this.hotplaceImg);
+          const url = window.URL.createObjectURL(data);
+          this.hotplaceImg = url;
+            
         },
         (error) => {
           console.log(error);
@@ -73,8 +78,8 @@ export default {
     }else{
       console.log("HotplaceListItem - 이미지 파일 없음");
 
-      this.hotplaceImg = "require('../../../assets/img/ssafy_logo.png')";
-      console.log(this.hotplaceImg);
+      this.hotplaceImg = require('../../../assets/img/ssafy_logo.png');
+      // console.log(this.hotplaceImg);
     }
 
     
