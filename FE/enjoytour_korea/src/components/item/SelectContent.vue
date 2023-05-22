@@ -46,7 +46,7 @@ export default {
       this.CLEAR_ATTRACTION_LIST();
       this.CLEAR_MARKER_POSITIONS();
     
-      if (this.sidoCode && this.gugunCode && this.contentCode) {
+      if (this.sidoCode && this.gugunCode && this.contentCode != 0) {
         this.getAttractionList({
           sidoCode: this.sidoCode,
           gugunCode: this.gugunCode,

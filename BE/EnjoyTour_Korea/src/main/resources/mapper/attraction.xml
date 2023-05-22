@@ -51,6 +51,21 @@
 		</if>
 	</select>
 	
+	<select id="searchAttractionWordList" parameterType="map" resultMap="getAttractionDto">
+		SELECT * FROM attraction_info ai, attraction_description ad
+		WHERE ai.content_id = ad.content_id
+		<if test="sido != null and sido != ''">
+			AND ai.sido_code = #{sido}
+		</if>
+		<if test="gugun != null and gugun != ''">
+			AND ai.gugun_code = #{gugun}
+		</if>
+		<if test="word != null and word != ''">
+			AND ai.addr1 like concat('%', #{word}, '%')
+		</if>
+	</select>
+	
+	
 	<select id="searchAttraction" parameterType="string" resultMap="getAttractionDto">
 		SELECT * FROM attraction_info ai, attraction_description ad
 		WHERE ai.content_id = ad.content_id
