@@ -9,7 +9,13 @@
       <div class="row" id="plan-item-list">
         <div>
           <h3 style="font-weight: bold">여행경로</h3>
-          <draggable class="list-group" group="planListGroup" :list="planList" :key="planList.length" @change="setPlanMarker">
+          <draggable
+            class="list-group"
+            group="planListGroup"
+            :list="planList"
+            :key="planList.length"
+            @change="setPlanMarker"
+          >
             <div v-if="planList.length == 0">여행경로를 추가해주세요</div>
             <div v-else class="list-group-item" v-for="(atr, index) in planList" :key="index">
               <b-card no-body class="attraction-item overflow-hidden">
@@ -72,8 +78,8 @@ export default {
       map: null,
       markers: [], // 마커를 담는 배열
       lat: null,
-        lon: null,
-      
+      lon: null,
+
       customOverlays: [],
       polyline: null,
 
@@ -84,7 +90,7 @@ export default {
     draggable,
   },
   props: {
-    opt : Boolean,
+    opt: Boolean,
   },
   computed: {
     // ...mapGetters(itemStore, ["getSidoText", "getGugunText", "getContentText"]),
@@ -95,9 +101,9 @@ export default {
       //   "planMarkers"
     ]),
   },
-    watch: {
+  watch: {
     opt() {
-        console.log(this.opt)
+      console.log(this.opt);
     },
     planList() {
       // 오버레이 초기화
@@ -197,8 +203,7 @@ export default {
       }
     },
   },
-  created() {
-  },
+  created() {},
   mounted() {
     if (window.kakao && window.kakao.maps) {
       this.initMap();
@@ -276,7 +281,7 @@ export default {
       }
     },
     setPlanMarker() {
-    //   console.log("setPlanMarker", this.planList);
+      //   console.log("setPlanMarker", this.planList);
       this.CLEAR_PLAN_MARKERS();
       this.SET_PLAN_MARKERS(this.planList);
     },
@@ -286,136 +291,50 @@ export default {
 };
 </script>
 <style>
-.wrap {
-  position: absolute;
-  left: 65px;
-  bottom: -45px;
-  width: 288px;
-  height: 132px;
-  margin-left: -144px;
-  text-align: left;
-  overflow: hidden;
-  font-size: 12px;
-  font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
-  line-height: 1.5;
-}
-.wrap .info {
-  width: 286px;
-  height: 120px;
-  border-radius: 5px;
-  border-bottom: 2px solid #ccc;
-  border-right: 1px solid #ccc;
-  overflow: hidden;
-  background: #fff;
-}
-
-.wrap .info:nth-child(1) {
-  border: 0;
-  box-shadow: 0px 1px 2px #888;
-}
-
-.info .title {
-  padding: 5px 0 0 10px;
-  height: 30px;
-  background: #1bb1ff;
-  border-bottom: 1px solid #ddd;
-  font-size: 18px;
-  font-weight: bold;
-  overflow: hidden;
-}
-
-/* .info .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    color: #888;
-    width: 17px;
-    height: 17px;
-    background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png");
-  }
-  
-  .info .close:hover {
-    cursor: pointer;
-  } */
-
-.info .body {
+#attraction-map {
   position: relative;
-  overflow: hidden;
 }
 
-.info .desc {
-  position: relative;
-  margin: 13px 0 0 90px;
-  height: 75px;
-}
-
-.desc .ellipsis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.desc .desc_marker {
-  color: #1e1f20;
-  font-weight: bold;
-}
-.info .img {
-  position: absolute;
-  top: 6px;
-  left: 5px;
-  width: 73px;
-  height: 71px;
-  border: 1px solid #ddd;
-  color: #888;
-  overflow: hidden;
-}
-
-.info:after {
-  content: "";
-  position: absolute;
-  margin-left: -12px;
-  left: 50%;
-  bottom: 0;
-  width: 22px;
-  height: 12px;
-  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png");
-}
-
-.info .registerHotPlace {
-  color: #5085bb;
-}
-
-.info .addTrack {
-  color: #5085bb;
-}
-
-#plan-item-list {
+#kakaomap {
   width: 100%;
-  height: 80vh;
-  margin: 0;
+  height: 40rem;
 }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.item-title {
+  font-weight: bold;
+}
+
 .list-group {
   height: 73vh;
   overflow: scroll;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   background-color: white;
 }
+
 .list-group::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera*/
+  display: none;
 }
+
 .list-group-item {
   width: 100%;
- /* height: 100px;*/
   padding: 0;
   cursor: pointer;
 }
+
 .list-group-item img {
   height: 100px;
 }
+
 tr {
   height: 100px;
 }
+
 .item-title {
   width: 75%;
   font-size: 1.1rem;
@@ -423,6 +342,7 @@ tr {
   align-items: center;
   text-overflow: ellipsis;
 }
+
 .delete-btn {
   width: 25%;
   width: 60px;
