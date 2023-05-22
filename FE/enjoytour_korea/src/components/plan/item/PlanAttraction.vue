@@ -9,7 +9,7 @@
         @select-content="selectContent"
       ></select-content>
 
-      <b-col class="col-4 p-1">
+      <b-col class="col-4">
         <b-form-input
           id="searchword"
           v-model="word"
@@ -17,14 +17,14 @@
           @keyup.enter="searchAttraction"
         ></b-form-input>
       </b-col>
-      <b-col class="col-2 p-1">
+      <b-col class="col-2">
         <b-button type="button" variant="primary" @click="searchAttraction">검색</b-button>
       </b-col>
-      <b-col class="col-2 p-1">
-        <b-button type="button" variant="primary" @click="optimization">최적화하기</b-button>
+      <b-col class="col-2">
+        <b-button type="button" variant="primary" @click="optimization">최적화</b-button>
       </b-col>
     </b-row>
-      <plan-map :opt = opt></plan-map>
+    <plan-map :opt="opt"></plan-map>
   </div>
 </template>
 
@@ -51,7 +51,7 @@ export default {
       gugunCode: null,
       contentCode: 0,
       word: null,
-      opt : false,
+      opt: false,
     };
   },
   props: {

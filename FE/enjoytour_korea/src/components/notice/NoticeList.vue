@@ -12,30 +12,12 @@
           >
             글쓰기
           </button>
-          <!-- <c:if test="${userinfo.userId eq 'admin'}">
-              <button type="button" id="btn-mv-register" class="btn btn-outline-primary btn-sm">
-                글쓰기
-              </button>
-            </c:if> -->
         </div>
         <div class="col-md-7 offset-5 d-flex justify-content-end">
           <form class="d-flex" id="form-search" @submit="onSearch">
             <input type="hidden" name="action" value="list" />
             <input type="hidden" name="pgno" value="1" />
             <b-select v-model="selected" :options="options"></b-select>
-            <!-- <div class="mt-3">Selected: <strong>{{ selected }}</strong></div> -->
-            <!-- <select
-              name="key"
-              id="key"
-              class="form-select form-select-sm ms-5 me-1 w-50"
-              aria-label="검색조건"
-              v-model = "key"
-            >
-              <option selected>검색조건</option>
-              <option value="noticeno">글번호</option>
-              <option value="title">제목</option>
-              <option value="user_id">작성자</option>
-            </select> -->
             <div class="input-group input-group-sm">
               <input
                 type="text"
@@ -60,71 +42,50 @@
               aria-label="정렬"
               onchange="changeSort()"
             >
-              <!-- <option value="article_no" ${sortvalue == "article_no" ? 'selected="selected"' : '' }>글번호</option>
-                <option value="subject" ${sortvalue == "subject" ? 'selected="selected"' : '' }>제목</option>
-                <option value="user_id" ${sortvalue == "user_id" ? 'selected="selected"' : '' }>작성자</option>
-                <option value="hit" ${sortvalue == "hit" ? 'selected="selected"' : '' }>조회수</option>
-                <option value="register_time" ${sortvalue == "register_time" ? 'selected="selected"' : '' }>작성일</option> -->
+              <!-- 옵션들 추가 -->
             </select>
           </div>
         </div>
       </div>
       <b-row>
         <b-col>
-          <b-table striped hover :items="notices" :fields="fields" @row-clicked="viewNotice">
+          <b-table hover :items="notices" :fields="fields" @row-clicked="viewNotice">
             <template #cell(subject)="data">
               <router-link :to="{ name: 'noticeView', params: { noticeNo: data.item.noticeNo } }">
                 {{ data.item.title }}
               </router-link>
             </template>
+            <template #cell(registerTime)="data">
+                {{ data.item.registerTime |  dateFormat }}
+            </template>
           </b-table>
         </b-col>
       </b-row>
-      <!-- <table class="table table-hover">
-        <thead>
-          <tr class="text-center">
-            <th scope="col">글번호</th>
-            <th scope="col">제목</th>
-            <th scope="col">작성자</th>
-            <th scope="col">조회수</th>
-            <th scope="col">작성일</th>
-          </tr>
-        </thead>
-        <tbody>
-          <notice-list-item v-for="notice in notices" :key="notice.noticeNo" v-bind="notice" />
-        </tbody>
-      </table> -->
     </div>
-    <!-- <div class="row">${navigation.navigator}</div> -->
   </div>
 </template>
 
 <script>
-// import NoticeListItem from "./item/NoticeListItem.vue";
 import { listArticle } from "@/api/notice";
+import moment from "moment";
 
 export default {
   name: "NoticeList",
-  components: {
-    // NoticeListItem,
-  },
   data() {
     return {
       notices: [],
       selected: null,
-      searchWord : null,
-      param : {
+      searchWord: null,
+      param: {
         pg: 1,
         spp: 20,
         key: null,
         word: null,
       },
-    
       options: [
         { value: null, text: "검색조건" },
         { value: "notice_no", text: "글번호" },
         { value: "title", text: "제목" },
-        // { value: 'userId', text: '작성자' },
       ],
       fields: [
         { key: "noticeNo", label: "글번호", tdClass: "tdClass" },
@@ -155,15 +116,15 @@ export default {
       this.param.key = this.selected;
       this.param.word = this.searchWord;
 
-        listArticle(
-          this.param,
-          ({ data }) => {
-            this.notices = data;
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
+      listArticle(
+        this.param,
+        ({ data }) => {
+          this.notices = data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
     viewNotice(notice) {
       this.$router.push({
@@ -172,15 +133,20 @@ export default {
       });
     },
   },
+  filters: {
+    dateFormat(regtime) {
+      return moment(new Date(regtime)).format("yyyy.MM.DD hh:mm:ss");
+    },
+  },
 };
 </script>
 
-<style scope>
+<style scoped>
 .tdClass {
   width: 50px;
   text-align: center;
 }
-.tdSubject {
+.tdTitle {
   width: 300px;
   text-align: left;
 }
