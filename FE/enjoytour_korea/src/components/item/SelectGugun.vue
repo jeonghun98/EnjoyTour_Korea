@@ -62,7 +62,7 @@ export default {
         this.getAttractionList({
           sidoCode: this.sidoCode,
           gugunCode: this.gugunCode,
-          contentCode: '',
+          contentCode: "",
         });
       }
     },

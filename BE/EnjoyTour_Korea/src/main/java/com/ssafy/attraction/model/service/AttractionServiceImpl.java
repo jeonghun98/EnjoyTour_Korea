@@ -35,6 +35,11 @@ public class AttractionServiceImpl implements AttractionService
 	}
 
 	@Override
+	public List<AttractionDto> searchAttractionWordList(Map<String, String> map) throws Exception {
+		return attractionmapper.searchAttractionWordList(map);
+	}
+	
+	@Override
 	public AttractionDto searchAttraction(String contentid) throws Exception {
 		return attractionmapper.searchAttraction(contentid);
 	}

@@ -2,6 +2,9 @@
   <div id="attraction-map">
     <div id="kakaomap" style="width: 100%; height: 40rem"></div>
     <b-modal v-model="modalShow" size="xl" ok-only>
+      <!-- <template #modal-header>
+      <h5 class = "modal-title">관광지 정보</h5>
+      </template> -->
       <attraction-modal></attraction-modal>
     </b-modal>
   </div>
@@ -108,8 +111,9 @@ export default {
               `        <img src="${position[6]}" width ="73" height="70" onerror="this.src='${ssafyImageSrc}'">`+
 						'     </div>' + 
 						'      <div class="desc">' + 
-						'       <div class="ellipsis"> ' + position[5] + '</div>' +       
-						// '       <div class="jibun"> ' + position[5] + '</div>' + 
+            '       <div class="ellipsis"> ' + position[5] + '</div>' +
+            '       <div class="desc_marker"> ' + "마커 클릭시 상세보기" + '</div>' +       
+						// '       <div class="jibun"> ' + position[5] + '</div>' +  
 						// '       <div><a href=" "target="_blank" class="link">홈페이지</a></div>' + 
 						'      </div>' + 
 						'     </div>' + 
@@ -482,6 +486,10 @@ export default {
   white-space: nowrap;
 }
 
+.desc .desc_marker {
+  color: #1e1f20;
+  font-weight: bold;
+}
 .info .img {
   position: absolute;
   top: 6px;

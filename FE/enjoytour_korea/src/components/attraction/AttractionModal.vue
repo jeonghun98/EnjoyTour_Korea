@@ -5,13 +5,13 @@
         <b-col md="6" class="img-container">
           <b-card-img
             class="img align-middle"
-            v-if="atr.firstImage != ''"
-            :src="atr.firstImage"
+            v-if="atr.image1 != ''"
+            :src="atr.image1"
             :alt="atr.title"
           />
           <b-card-img
             class="img align-middle"
-            v-if="atr.firstImage == ''"
+            v-if="atr.image1 == ''"
             :src="require('@/assets/img/ssafy_logo.png')"
             alt="no image"
           />

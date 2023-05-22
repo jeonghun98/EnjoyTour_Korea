@@ -8,16 +8,24 @@ import AppNotice from "@/views/AppNotice";
 import AppPlan from "@/views/AppPlan";
 
 // components
+// notice
 import NoticeList from "@/components/notice/NoticeList";
 import NoticeWrite from "@/components/notice/NoticeWrite";
 import NoticeView from "@/components/notice/NoticeView";
 import NoticeModify from "@/components/notice/NoticeModify";
 
+// hotplace
 import HotplaceList from "@/components/hotplace/HotplaceList";
 import HotplaceWrite from "@/components/hotplace/HotplaceWrite";
 import HotplaceModify from "@/components/hotplace/HotplaceModify";
 import HotplaceView from "@/components/hotplace/HotplaceView";
 import HotplaceDelete from "@/components/hotplace/HotplaceDelete";
+
+// plan
+import PlanList from '@/components/plan/PlanList';
+import PlanModify from '@/components/plan/PlanModify';
+import PlanView from '@/components/plan/PlanView';
+import PlanWrite from '@/components/plan/PlanWrite'
 
 Vue.use(VueRouter);
 
@@ -97,6 +105,29 @@ const routes = [
     path: "/plan",
     name: "plan",
     component: AppPlan,
+    redirect: "/plan/list",
+    children: [
+      {
+        path: "list",
+        name: "planList",
+        component: PlanList,
+      },
+      {
+        path: "write",
+        name: "planWrite",
+        component: PlanWrite,
+      },
+      {
+        path: "view/:planNo",
+        name: "planView",
+        component: PlanView,
+      },
+      {
+        path: "modify/:planNo",
+        name: "planModify",
+        component: PlanModify,
+      },
+    ],
   },
 ];
 

@@ -72,6 +72,21 @@ public class AttractionController extends HttpServlet {
 		return new ResponseEntity<List<AttractionDto>>(attractionservice.searchAttractionList(map), HttpStatus.OK);
 	}
 	
+	@ApiOperation(value = "관광지 리스트 정보(word)", notes = "관광지 리스트 정보(word)를 반환한다.", response = List.class)
+	@GetMapping("/attractionSearchList")
+	public ResponseEntity<?> searchAttractionWordList(
+			@RequestParam("sido") @ApiParam(value = "시도코드.", required = true) String sido,
+			@RequestParam("gugun") @ApiParam(value = "구군코드.", required = true) String gugun,
+			@RequestParam("word") @ApiParam(value = "word.", required = true) String word
+			) throws Exception  {
+		logger.debug("searchAttractionList call");
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("sido", sido);
+		map.put("gugun", gugun);
+		map.put("word", word);
+		return new ResponseEntity<List<AttractionDto>>(attractionservice.searchAttractionWordList(map), HttpStatus.OK);
+	}
+	
 	@ApiOperation(value = "시도 정보", notes = "전국의 시도를 반환한다.", response = List.class)
 	@GetMapping("/sido")
 	public ResponseEntity<List<SidoGugunCodeDto>> sido() throws Exception {
