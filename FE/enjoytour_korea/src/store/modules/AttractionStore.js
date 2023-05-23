@@ -1,6 +1,6 @@
 import { AttractionList, AttractionSearchList, Attraction } from "@/api/attraction.js";
 // import { writePlan, listPlan, getPlan, modifyPlan, deletePlan } from "@/api/plan.js";
-import { listPlan } from "@/api/plan.js";
+import { listPlan, getPlan } from "@/api/plan.js";
 
 const attractionStore = {
   namespaced: true,
@@ -18,7 +18,8 @@ const attractionStore = {
 
     travelList: [], // 여행 계획 목록
 
-    travelPlanNo: 0, // 선택한 기존 여행 계획
+    travelPlanNo: 0, // 선택한 기존 여행 Number
+    travelPlanContent : [], // 선택한 기존 여행 계획
     travelPlan: [], // 선택한 기존 여행 상세 경로
     travelMarkers: [], // 선택한 기존 여행 마커
   },
@@ -46,6 +47,7 @@ const attractionStore = {
           ]);
         });
       }
+      // console.log(state.markerPositions);
     },
 
     SET_PLAN_MARKERS(state, planList) {
@@ -69,10 +71,11 @@ const attractionStore = {
       state.travelList = [];
       if (travelPlanList.length != 0) {
         travelPlanList.forEach((travelPlan) => {
-          let contentList = [];
-          travelPlan.contentIds.forEach((contentId) => {
-            contentList.push(contentId);
-          });
+          // let contentList = [];
+          // travelPlan.contentIds.forEach((contentId) => {
+          //   contentList.push(contentId);
+          // });
+          // console.log("contentList", contentList);
           state.travelList.push({
             planNo: travelPlan.planNo,
             title: travelPlan.title,
@@ -82,45 +85,48 @@ const attractionStore = {
             endDate: travelPlan.endDate,
             planPulic: travelPlan.planPulic,
             grade: travelPlan.grade,
-            contentIds: contentList,
+            // contentIds: contentList,
           });
         });
       }
     },
-    SET_TRAVEL_PLAN(state, plan) {
-      state.travelPlanNo = plan.planNo;
-      state.travelPlan = [];
-      plan.contentIds.forEach((contentId) => {
-        state.travelPlan.push(contentId);
+    
+
+    SET_TRAVEL_PLAN_CONTENT(state, planNo) {
+      state.travelPlanNo = planNo;
+      state.travelPlanContent = [];
+      state.travelList.forEach((travel) => {
+        if (travel.planNo == planNo) {
+          state.travelPlanContent = travel;
+        }
       });
+      console.log("travelPlanContent", state.travelPlanContent);
     },
-    SET_TRAVEL_MARKERS(state) {
-      if (state.travelPlan.length != 0) {
-        state.travelMarkers = [];
-        let params = { contentId: 0 };
-        state.travelPlan.forEach((planItem) => {
-          params.contentId = planItem.contentId;
-          Attraction(
-            params,
-            ({ data }) => {
-              state.travelMarkers.push([
-                data.latitude,
-                data.longitude,
-                data.contentId,
-                data.contenttypeid,
-                data.title,
-                // planItem.planOrder,
-              ]);
-            },
-            (error) => {
-              console.log(error);
-            }
-          );
-        });
-        state.travelMarkers.sort((a, b) => a[5] - b[5]);
-        console.log(state.travelMarkers);
-      }
+    SET_TRAVEL_PLAN(state, data) {
+      state.travelPlan = [];
+      data.forEach((item) => {
+        state.travelPlan.push(item.contentId);
+      });
+      console.log("travelPlan", state.travelPlan);
     },
+    SET_TRAVEL_MARKERS(state, data) {
+      state.travelMarkers = [];
+      data.forEach((item) => {
+        state.travelMarkers.push([
+          item.latitude,
+          item.longitude,
+          item.contentId,
+          item.contenttypeid,
+          item.title,
+          item.addr1,
+          item.image1,
+          item.tel,
+        ]);
+      });
+      state.travelMarkers.sort((a, b) => a[5] - b[5]);
+      console.log("travelMarkers", state.travelMarkers);
+    },
+
 
     CLEAR_MARKER_POSITIONS(state) {
       state.markerPositions = [];
@@ -134,6 +140,9 @@ const attractionStore = {
     CLEAR_TRAVEL_PLAN(state) {
       state.travelPlan = [];
     },
+    CLEAR_TRAVEL_PLAN_CONTENT(state) {
+      state.travelPlanContent = [];
+    },
     CLEAR_TRAVEL_MARKERS(state) {
       state.travelMarkers = [];
     },
@@ -146,25 +155,13 @@ const attractionStore = {
           state.attractions.push({
             addr1: attraction.addr1,
             addr2: attraction.addr2,
-            // areaCode: attraction.areaCode,
-            // bookTour: attraction.bookTour,
-            // cat1: attraction.cat1,
-            // cat2: attraction.cat2,
-            // cat3: attraction.cat3,
             contentId: attraction.contentId,
             contenttypeid: attraction.contenttypeid,
-            // createdTime: attraction.createdTime,
             image1: attraction.image1,
-            // image2: attraction.image2,
             longitude: attraction.longitude,
             latitude: attraction.latitude,
-            // mLevel: attraction.mLevel,
-            // modifiedTime: attraction.modifiedTime,
-            // readCount: attraction.readCount,
-            // sigunguCode: attraction.sigunguCode,
             tel: attraction.tel,
             title: attraction.title,
-            // zipCode: attraction.zipCode,
             overview: attraction.overview,
           });
         });
@@ -174,25 +171,14 @@ const attractionStore = {
       state.attraction = {
         addr1: attraction.addr1,
         addr2: attraction.addr2,
-        // areaCode: attraction.areaCode,
-        // bookTour: attraction.bookTour,
-        // cat1: attraction.cat1,
-        // cat2: attraction.cat2,
-        // cat3: attraction.cat3,
         contentId: attraction.contentId,
         contenttypeid: attraction.contenttypeid,
-        // createdTime: attraction.createdTime,
         image1: attraction.image1,
         image2: attraction.image2,
         longitude: attraction.longitude,
         latitude: attraction.latitude,
-        // mLevel: attraction.mLevel,
-        // modifiedTime: attraction.modifiedTime,
-        // readCount: attraction.readCount,
-        // sigunguCode: attraction.sigunguCode,
         tel: attraction.tel,
         title: attraction.title,
-        // zipCode: attraction.zipCode,
         overview: attraction.overview,
       };
     },
@@ -252,8 +238,8 @@ const attractionStore = {
         }
       );
     },
-    getAttraction({ commit }, contentId) {
-      const params = { contentId: contentId };
+    getAttraction({ commit }, contentid) {
+      const params = { contentId: contentid };
       Attraction(
         params,
         ({ data }) => {
@@ -268,8 +254,21 @@ const attractionStore = {
       listPlan(
         param,
         ({ data }) => {
-          console.log("getTravelList", data);
+          // console.log("getTravelList", data);
           commit("SET_TRAVEL_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    getTravelPlan({ commit }, planNo) {
+      getPlan(
+        planNo,
+        ({ data }) => {
+          // console.log("getTravelPlan", data);
+          commit("SET_TRAVEL_PLAN", data);
+          commit("SET_TRAVEL_MARKERS", data);
         },
         (error) => {
           console.log(error);

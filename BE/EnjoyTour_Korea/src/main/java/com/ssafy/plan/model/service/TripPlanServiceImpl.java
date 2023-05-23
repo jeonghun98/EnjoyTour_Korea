@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.attraction.model.AttractionDto;
 import com.ssafy.notice.model.NoticeParameterDto;
 import com.ssafy.plan.model.TripPlanDto;
 import com.ssafy.plan.model.mapper.TripPlanMapper;
@@ -27,7 +28,7 @@ public class TripPlanServiceImpl implements TripPlanService {
 		tripPlanMapper.writePlan(tripPlanDto);
 		System.out.println("글입력 후 dto : " + tripPlanDto);
 		tripPlanMapper.writeContent(tripPlanDto);
-		tripPlanMapper.authPlan(tripPlanDto);
+//		tripPlanMapper.authPlan(tripPlanDto); -> 친구 추가 할때 넣을 예정
 
 	}
 
@@ -37,9 +38,8 @@ public class TripPlanServiceImpl implements TripPlanService {
 	}
 
 	@Override
-	public TripPlanDto getPlan(int planNo) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<AttractionDto> getPlan(int planNo) throws Exception {
+		return tripPlanMapper.getPlan(planNo);
 	}
 
 	@Override

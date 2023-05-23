@@ -57,7 +57,7 @@ public class AttractionController extends HttpServlet {
 	@ApiOperation(value = "관광지 리스트 정보", notes = "관광지 리스트 정보를 반환한다.", response = List.class)
 	@GetMapping("/attractionList")
 	public ResponseEntity<?> searchAttractionList(
-			@RequestParam("sido") @ApiParam(value = "시도코드.", required = true) String sido,
+			@RequestParam("sido") @ApiParam(value = "시	도코드.", required = true) String sido,
 			@RequestParam("gugun") @ApiParam(value = "구군코드.", required = true) String gugun,
 			@RequestParam("content") @ApiParam(value = "content코드.", required = true) String content
 //			@RequestParam("mapX") @ApiParam(value = "mapX", required = true) Float mapX,

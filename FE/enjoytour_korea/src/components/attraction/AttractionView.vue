@@ -76,50 +76,30 @@ export default {
             image: markerImage,
           });
 
-          // let content =
-          //   `<div class="wrap">` +
-          //   `    <div class="info">` +
-          //   `        <div class="title">` +
-          //   `            ${position[4]}` +
-          //   `        </div>` +
-          //   `        <div class="body">` +
-          //   `            <div class="img">` +
-          //   `               <img src="${position[6]}" width ="73" height="70" onerror="this.src='${ssafyImageSrc}'">` +
-          //   `             </div>` +
-          //   `            <div class="desc">` +
-          //   `                <div class="ellipsis">${position[5]}</div>` +
-          //   `            </div>` +
-          //   `        </div>` +
-          //   `    </div>` +
-          //   `</div>`;
+          let contents =
+            '<div class = "wrap">' +
+            '   <div class="info">' +
+            '    <div class="title" style="background-color:1BB1FF;">' +
+            position[4] +
+            "   </div>" +
+            '    <div class="body">' +
+            '     <div class="img">' +
+            `        <img src="${position[6]}" width ="73" height="70" onerror="this.src='${ssafyImageSrc}'">` +
+            "     </div>" +
+            '      <div class="desc">' +
+            '       <div class="ellipsis"> ' +
+            position[5] +
+            "</div>" +
+            '       <div class="desc_marker"> ' +
+            "마커 클릭시 상세보기" +
+            "</div>" +
+            // '       <div class="jibun"> ' + position[5] + '</div>' +
+            // '       <div><a href=" "target="_blank" class="link">홈페이지</a></div>' +
+            "      </div>" +
+            "     </div>" +
+            "    </div>" +
+            "   </div>";
 
-          // let content = '<div class="overlay_info">';
-          //     content += `    <a href="https://map.kakao.com/?q=${position[4]}" target="_blank"><strong>${position[4]}</strong></a>`;
-          //     content += '    <div class="desc">';
-          //     content += `        <img src="${position[6]}" width ="73" height="70" onerror="this.src='${ssafyImageSrc}'">`;
-          //     content += `        <span class="address">${position[5]}</span>`;
-          //     content += '    </div>';
-          //     content += '</div>';
-          
-          let contents = '<div class = "wrap">' + 
-						'   <div class="info">' + 
-						'    <div class="title" style="background-color:1BB1FF;">' + 
-              position[4] + 
-						'   </div>' + 
-						'    <div class="body">' + 
-						'     <div class="img">' +
-              `        <img src="${position[6]}" width ="73" height="70" onerror="this.src='${ssafyImageSrc}'">`+
-						'     </div>' + 
-						'      <div class="desc">' + 
-            '       <div class="ellipsis"> ' + position[5] + '</div>' +
-            '       <div class="desc_marker"> ' + "마커 클릭시 상세보기" + '</div>' +       
-						// '       <div class="jibun"> ' + position[5] + '</div>' +  
-						// '       <div><a href=" "target="_blank" class="link">홈페이지</a></div>' + 
-						'      </div>' + 
-						'     </div>' + 
-						'    </div>' +    
-            '   </div>';
-            
           let infowindow = new kakao.maps.InfoWindow({
             content: contents,
             position: pos,
@@ -448,7 +428,7 @@ export default {
 .info .title {
   padding: 5px 0 0 10px;
   height: 30px;
-  background: #1BB1FF;
+  background: #1bb1ff;
   border-bottom: 1px solid #ddd;
   font-size: 18px;
   font-weight: bold;

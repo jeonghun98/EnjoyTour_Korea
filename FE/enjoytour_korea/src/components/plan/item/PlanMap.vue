@@ -281,7 +281,7 @@ export default {
       }
     },
     setPlanMarker() {
-        console.log("setPlanMarker", this.planList);
+      console.log("setPlanMarker", this.planList);
       this.CLEAR_PLAN_MARKERS();
       this.SET_PLAN_MARKERS(this.planList);
     },

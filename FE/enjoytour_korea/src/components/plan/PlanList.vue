@@ -86,8 +86,8 @@ export default {
         { key: "title", label: "제목", tdClass: "tdTitle" },
         { key: "userId", label: "작성자", tdClass: "tdClass" },
         { key: "startDate", label: "출발일", tdClass: "tdClass" },
-          { key: "endDate", label: "도착일", tdClass: "tdClass" },
-          { key: "grade", label: "평점", tdClass: "tdClass" },
+        { key: "endDate", label: "도착일", tdClass: "tdClass" },
+        { key: "grade", label: "평점", tdClass: "tdClass" },
       ],
       sortOptions: [
         { value: null, text: "정렬" },
@@ -106,19 +106,23 @@ export default {
     this.loadTravelList();
   },
   methods: {
-    ...mapActions("attractionStore", ["getTravelList"]),
+    ...mapActions("attractionStore", ["getTravelList", "getTravelPlan"]),
     ...mapMutations("attractionStore", [
       "SET_TRAVEL_PLAN",
       "SET_TRAVEL_MARKERS",
+      "SET_TRAVEL_PLAN_CONTENT",
       "CLEAR_TRAVEL_MARKERS",
       "CLEAR_TRAVEL_LIST",
       "CLEAR_TRAVEL_PLAN",
+      "CLEAR_TRAVEL_PLAN_CONTENT",
     ]),
     loadTravelList() {
-      this.CLEAR_TRAVEL_MARKERS();
       this.CLEAR_TRAVEL_LIST();
-      this.CLEAR_TRAVEL_PLAN();
 
+      this.CLEAR_TRAVEL_PLAN();
+      this.CLEAR_TRAVEL_PLAN_CONTENT();
+
+      this.CLEAR_TRAVEL_MARKERS();
       this.param.key = this.serchSelected;
       this.param.word = this.searchWord;
       this.getTravelList(this.param);
@@ -133,17 +137,21 @@ export default {
     },
 
     viewPlan(plan) {
-      console.log("마커 세팅");
+      console.log("planView전 세팅");
       this.CLEAR_TRAVEL_MARKERS();
 
-      //todo
-      //   this.SET_TRAVEL_PLAN(this.travelList[plan.planNo]);
-      //   this.SET_TRAVEL_MARKERS();
+      // this.SET_TRAVEL_PLAN(plan.planNo);
+      // this.SET_TRAVEL_MARKERS();
 
-      this.$router.push({
-        name: "planView",
-        params: { planNo: plan.planNo },
-      });
+      // console.log(plan.planNo);
+      this.SET_TRAVEL_PLAN_CONTENT(plan.planNo);
+      this.getTravelPlan(plan.planNo);
+
+      // todo
+      // this.$router.push({
+      //   name: "planView",
+      //   params: { planNo: plan.planNo },
+      // });
     },
   },
 };
