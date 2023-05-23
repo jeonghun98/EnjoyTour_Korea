@@ -1,31 +1,32 @@
 <template>
   <!-- 전체 글 -->
-  <div class="my-3 p-3 bg-body rounded">
-    <div class="col-lg-12 col-md-10 col-sm-12">
-      <div class="row align-self-center mb-2">
-        <div class="col-md-2 text-start">
+  <div class="my-3 bg-body rounded">
+      <div class="row align-self-center mb-2" 
+    style ="justify-content: space-between;">
+        <div class="text-start">
           <button
             type="button"
             id="btn-mv-register"
-            class="btn btn-outline-primary btn-sm"
+            class="btn btn-primary"
             @click="moveWrite"
           >
             글쓰기
           </button>
         </div>
-        <div class="col-md-7 offset-5 d-flex justify-content-end">
-          <form class="d-flex" id="form-search" @submit="onSearch">
+        <div class="offset-5 d-flex justify-content-end">
+          <form class="d-flex mr-2" id="form-search" @submit="onSearch">
             <input type="hidden" name="action" value="list" />
             <input type="hidden" name="pgno" value="1" />
-            <b-select v-model="selected" :options="options"></b-select>
+            <b-select v-model="serchSelected" :options="searchOptions" class="mr-2"></b-select>
             <div class="input-group input-group-sm">
               <input
                 type="text"
                 name="word"
                 id="word"
-                class="form-control"
+                class="form-control mr-2"
                 placeholder="검색어..."
                 v-model="searchWord"
+                style="height: auto;"
               />
               <button id="btn-search" class="btn btn-dark" type="submit" @submit="onSearch">
                 검색
@@ -35,15 +36,7 @@
           <div>
             <input type="hidden" name="action" value="sort" />
             <input type="hidden" name="pgno" value="1" />
-            <select
-              name="sort-key"
-              id="sort-key"
-              class="form-select form-select-sm ms-1"
-              aria-label="정렬"
-              onchange="changeSort()"
-            >
-              <!-- 옵션들 추가 -->
-            </select>
+            <b-select v-model="sortSelected" :options="sortOptions" class="mr-2"></b-select>
           </div>
         </div>
       </div>
@@ -62,7 +55,6 @@
         </b-col>
       </b-row>
     </div>
-  </div>
 </template>
 
 <script>
@@ -74,15 +66,16 @@ export default {
   data() {
     return {
       notices: [],
-      selected: null,
+      serchSelected: null,
       searchWord: null,
+      sortSelected: null,
       param: {
         pg: 1,
         spp: 20,
         key: null,
         word: null,
       },
-      options: [
+      searchOptions: [
         { value: null, text: "검색조건" },
         { value: "notice_no", text: "글번호" },
         { value: "title", text: "제목" },
@@ -93,6 +86,11 @@ export default {
         { key: "userId", label: "작성자", tdClass: "tdClass" },
         { key: "hit", label: "조회수", tdClass: "tdClass" },
         { key: "registerTime", label: "작성일", tdClass: "tdClass" },
+      ],
+      sortOptions: [
+        { value: null, text: "정렬" },
+        { value: "notice_no", text: "글번호" },
+        { value: "title", text: "제목" },
       ],
     };
   },
@@ -113,7 +111,7 @@ export default {
     },
     onSearch(event) {
       event.preventDefault();
-      this.param.key = this.selected;
+      this.param.key = this.serchSelected;
       this.param.word = this.searchWord;
 
       listArticle(
@@ -142,12 +140,11 @@ export default {
 </script>
 
 <style scoped>
-.tdClass {
-  width: 50px;
-  text-align: center;
+.row {
+    display: flex;
+    flex-wrap: wrap;
 }
-.tdTitle {
-  width: 300px;
-  text-align: left;
+.col {
+    padding: 0px;
 }
 </style>
