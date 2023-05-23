@@ -43,4 +43,8 @@ async function pwdFind(userid, useremail, success, fail) {
   await api.get(`/user/pwdfind/${userid}/${useremail}`).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, join, checkId, update, deleteUser, pwdFind };
+async function sendEmail(user, success, fail){
+  await api.post(`/user/sendEmail`, user).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, join, checkId, update, deleteUser, pwdFind, sendEmail };

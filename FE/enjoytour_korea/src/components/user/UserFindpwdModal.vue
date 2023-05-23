@@ -11,6 +11,7 @@
         ></b-form-input>
       </b-form-group>
       <b-form-group label="이메일:" label-for="useremail">
+        <p>입력한 이메일로 임시 비밀번호가 전송됩니다.</p>
         <b-form-input
           type="text"
           id="useremail"
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-import { pwdFind } from '@/api/member';
+import { sendEmail } from '@/api/member';
 
 export default {
   name: "UserFindpwd",
@@ -40,8 +41,8 @@ export default {
   data() {
     return {
       user: {
-        userid: null,
-        useremail: null,
+        userid: "",
+        useremail: "",
       },
     };
   },
@@ -52,17 +53,15 @@ export default {
     confirm() {
       console.log("비밀번호 찾기 start");
 
-      pwdFind(
-        this.user.userid,
-        this.user.useremail,
+      sendEmail(
+        this.user,
         ({ data }) => {
-          // let msg = "문제가 발생했습니다.";
+          let msg = "문제가 발생했습니다.";
           if (data.message === "success") {
-            // msg = "비밀번호 찾기가 완료되었습니다.";
-            console.log("UserFindpwdModal - ", data);
+            msg = "메일로 임시 비밀번호 발급이 완료되었습니다.";
+            console.log("UserFindpwdModal :sendEmail - ", data);
           }
-          // alert(msg);
-          alert("비밀번호: "+data.userpwd);
+          alert(msg);
 
           this.$refs['modal-findpwd'].hide();
         },

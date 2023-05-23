@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.member.model.MailDto;
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.member.model.service.JwtServiceImpl;
 import com.ssafy.member.model.service.MemberService;
@@ -49,9 +51,9 @@ import io.swagger.annotations.ApiParam;
 public class MemberController {
 //	private static final long serialVersionUID = 1L;
 	
-	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
-	private static final String SUCCESS = "success";
-	private static final String FAIL = "fail";
+	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
+	private final String SUCCESS = "success";
+	private final String FAIL = "fail";
 	
 	@Autowired
 	private JwtServiceImpl jwtService;
@@ -263,6 +265,31 @@ public class MemberController {
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+	
+	 // 이메일 보내기
+	@ApiOperation(value = "임시 비밀번호 발급", notes = "이메일, 아이디 입력 일치시 임시 비밀번호를 메일에 보냄")
+    @Transactional
+    @PostMapping("/sendEmail")
+//    public ResponseEntity<?> sendEmail(@RequestParam("useremail") String useremail){
+//		logger.debug("sendEmail input info : {}", useremail);
+    public ResponseEntity<?> sendEmail(@RequestBody MemberDto memberDto){
+		logger.debug("sendEmail input info : {}", memberDto.toString());
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;	
+		
+		try {
+			MailDto maildto = memberService.createMailAndChangePassword(memberDto.getUseremail());
+	        memberService.mailSend(maildto);
+	        resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+			
+		} catch (Exception e) {
+			logger.error("임시비밀번호 발급실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
 	
 
 	private ResponseEntity<String> exceptionHandling(Exception e) {
