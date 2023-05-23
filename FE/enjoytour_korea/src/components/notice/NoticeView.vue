@@ -1,7 +1,6 @@
 <template>
   <!-- 전체 글 -->
-  <div class="my-3 p-3 bg-body rounded">
-    <div class="col-lg-12 col-md-10 col-sm-12">
+  <div class="my-3 bg-body rounded">
       <div class="row my-2">
         <h4 class="text-secondary fw-bold">{{ notice.noticeNo }}. {{ notice.title }}</h4>
       </div>
@@ -53,7 +52,6 @@
         </div>
       </div>
     </div>
-  </div>
   <!-- 전체 글 end-->
 </template>
 

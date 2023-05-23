@@ -17,10 +17,10 @@
           @keyup.enter="searchAttraction"
         ></b-form-input>
       </b-col>
-      <b-col class="col-2">
+      <b-col class="col-1">
         <b-button type="button" variant="primary" @click="searchAttraction">검색</b-button>
       </b-col>
-      <b-col class="col-2">
+      <b-col class="col-3">
         <b-button type="button" variant="primary" @click="optimization">최적화</b-button>
       </b-col>
     </b-row>
