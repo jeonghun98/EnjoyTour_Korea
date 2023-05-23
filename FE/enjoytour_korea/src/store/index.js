@@ -6,6 +6,7 @@ import createPersistedState from "vuex-persistedstate";
 import NoticeStore from "@/store/modules/NoticeStore";
 import itemStore from "./modules/item/itemStore";
 import attractionStore from "./modules/AttractionStore"
+import memberStore from "@/store/modules/memberStore";
 
 Vue.use(Vuex);
 
@@ -14,6 +15,7 @@ export default new Vuex.Store({
     NoticeStore,
     itemStore,
     attractionStore,
+    memberStore,
   },
   plugins: [
     createPersistedState({

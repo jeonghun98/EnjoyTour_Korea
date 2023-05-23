@@ -37,12 +37,30 @@
           </div>
           <div class="navbar-nav me-auto"></div>
 
+          <!-- 로그인 후 -->
+          <b-navbar-nav class="ml-auto"  v-if="userInfo">
+            <b-nav-item class="align-self-center">
+              {{ userInfo.username }}({{ userInfo.userid }})님 환영합니다.
+          </b-nav-item>
+            <b-nav-item-dropdown right>
+              <template #button-content>
+                <b>{{ userInfo.username }}</b>
+              </template>
+              <b-dropdown-item href="#" v-b-modal.modal-view>
+                마이페이지
+                <user-view-modal></user-view-modal>
+              </b-dropdown-item>
+              <b-dropdown-item href="#" @click.prevent="onClickLogout">
+                로그아웃
+              </b-dropdown-item>
+            </b-nav-item-dropdown>
+          </b-navbar-nav>
           <!-- 로그인 전 -->
-          <b-navbar-nav class="ml-auto">
+          <b-navbar-nav class="ml-auto" v-else>
             <!-- <b-navbar-nav class="ml-auto" v-if="userInfo"> -->
             <b-nav-item-dropdown right>
               <template #button-content>
-                <b>사용자</b>
+                <b>비회원</b>
               </template>
               <b-dropdown-item href="#" v-b-modal.modal-join>
                 회원가입
@@ -52,83 +70,8 @@
                 로그인
                 <user-login-modal></user-login-modal>
               </b-dropdown-item>
-              <b-dropdown-item href="#">
-                로그아웃
-              </b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
-          <!-- <c:if test="${empty userinfo}">
-          <ul class="navbar-nav mb-2 mb-lg-0 before-login" style="display: flex">
-            <li class="nav-item">
-              <a
-                id="login"
-                class="nav-link dropdown-item active btn btn-primary btn-dark"
-                type="button"
-                aria-current="page"
-                data-bs-toggle="modal"
-                data-bs-target="#login-modal"
-                >로그인</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link dropdown-item active btn btn-primary btn-dark"
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#register-modal"
-                >회원가입</a
-              >
-            </li>
-          </ul>
-        </c:if> -->
-
-          <!-- 로그인 후-->
-          <!-- <c:if test="${not empty userinfo}">
-          <ul class="navbar-nav mb-2 mb-lg-0 after-login" style="display: flex">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="${root}/user/logout">로그아웃</a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link active"
-                type="button"
-                aria-current="page"
-                data-bs-toggle="modal"
-                data-bs-target="#mypage-modal"
-                href="#"
-                >마이페이지</a
-              >
-            </li>
-            <c:if test="${userinfo.userId eq '관리자'}">
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  관리자
-                </a>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a
-                      class="dropdown-item btn btn-primary"
-                      type="button"
-                      data-bs-toggle="modal"
-                      data-bs-target="#pollModal"
-                      href="#"
-                      >회원정보보기</a
-                    >
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#">회원정보관리</a>
-                  </li>
-                </ul>
-              </li>
-            </c:if>
-          </ul>
-        </c:if> -->
         </div>
       </div>
     </nav>
@@ -167,12 +110,18 @@
 <script>
 import UserJoinModal from '../user/UserJoinModal.vue';
 import UserLoginModal from "../user/UserLoginModal.vue";
+import UserViewModal from '../user/UserViewModal.vue';
+
+import { mapState, mapGetters, mapActions } from "vuex";
+
+const memberStore = "memberStore";
 
 export default {
   name: "TheNav",
   components: {
     UserLoginModal,
     UserJoinModal,
+    UserViewModal,
   },
   data() {
     return {
@@ -181,7 +130,28 @@ export default {
     };
   },
   created() {},
-  methods: {},
+  computed: {
+    ...mapState(memberStore, ["isLogin", "userInfo"]),
+    ...mapGetters(["checkUserInfo"]),
+  },
+  methods: {
+    ...mapActions(memberStore, ["userLogout"]),
+    // ...mapMutations(memberStore, ["SET_IS_LOGIN", "SET_USER_INFO"]),
+    onClickLogout() {
+      // this.SET_IS_LOGIN(false);
+      // this.SET_USER_INFO(null);
+      // sessionStorage.removeItem("access-token");
+      // if (this.$route.path != "/") this.$router.push({ name: "main" });
+      console.log(this.userInfo.userid);
+      //vuex actions에서 userLogout 실행(Backend에 저장 된 리프레시 토큰 없애기
+      //+ satate에 isLogin, userInfo 정보 변경)
+      // this.$store.dispatch("userLogout", this.userInfo.userid);
+      this.userLogout(this.userInfo.userid);
+      sessionStorage.removeItem("access-token"); //저장된 토큰 없애기
+      sessionStorage.removeItem("refresh-token"); //저장된 토큰 없애기
+      if (this.$route.path != "/") this.$router.push({ name: "main" });
+    },
+  },
 };
 </script>
 
