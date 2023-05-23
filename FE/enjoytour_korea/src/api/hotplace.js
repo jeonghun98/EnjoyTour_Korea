@@ -40,4 +40,8 @@ function modifyHotplace(formData, hotplaceNo, success, fail) {
   }).then(success).catch(fail);
 }
 
-export { listHotplace, writeHotplace, getHotplace, getImageHotplace, modifyHotplace };
+function deleteHotplace(hotplaceNo, success, fail) {
+  api.delete(`/hotplace/${hotplaceNo}`).then(success).catch(fail);
+}
+
+export { listHotplace, writeHotplace, getHotplace, getImageHotplace, modifyHotplace, deleteHotplace };

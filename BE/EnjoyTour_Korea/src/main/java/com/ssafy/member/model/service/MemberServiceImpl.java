@@ -57,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void saveRefreshToken(String userId, String refreshToken) throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("user_id", userId);
+		map.put("userid", userId);
 		map.put("token", refreshToken);
 		memberMapper.saveRefreshToken(map);
 		
@@ -71,7 +71,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void deleteRefreshToken(String userId) throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("user_id", userId);
+		map.put("userid", userId);
 		map.put("token", null);
 		memberMapper.deleteRefreshToken(map);
 		

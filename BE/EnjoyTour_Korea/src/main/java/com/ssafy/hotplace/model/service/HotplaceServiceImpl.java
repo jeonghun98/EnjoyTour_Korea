@@ -67,7 +67,7 @@ public class HotplaceServiceImpl implements HotplaceService {
 
 	@Override
 	public void modifyHotplace(HotplaceDto hotplaceDto) throws Exception {
-		hotplaceMapper.deleteFile(hotplaceDto.getHotplaceNo());
+//		hotplaceMapper.deleteFile(hotplaceDto.getHotplaceNo());
 		
 		hotplaceMapper.modifyHotplace(hotplaceDto);
 		List<FileInfoDto> fileInfos = hotplaceDto.getFileInfos();
@@ -80,12 +80,16 @@ public class HotplaceServiceImpl implements HotplaceService {
 	@Transactional
 	public void deleteHotplace(int hotplaceNo, String path) throws Exception {
 		List<FileInfoDto> fileList = hotplaceMapper.fileInfoList(hotplaceNo);
-		hotplaceMapper.deleteFile(hotplaceNo);
-		hotplaceMapper.deleteHotplace(hotplaceNo);
-		for(FileInfoDto fileInfoDto : fileList) {
-			File file = new File(path + File.separator + fileInfoDto.getSaveFolder() + File.separator + fileInfoDto.getSaveFile());
-			file.delete();
+		if (fileList != null && !fileList.isEmpty()) {
+			System.out.println("deleteHotplace   "+fileList.toString());
+			hotplaceMapper.deleteFile(hotplaceNo);
+			for(FileInfoDto fileInfoDto : fileList) {
+				File file = new File(path + File.separator + fileInfoDto.getSaveFolder() + File.separator + fileInfoDto.getSaveFile());
+				file.delete();
+			}
 		}
+		hotplaceMapper.deleteHotplace(hotplaceNo);
+
 	}
 
 //	@Override

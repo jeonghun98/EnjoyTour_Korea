@@ -2,47 +2,58 @@ package com.ssafy.member.model;
 
 public class MemberDto {
 
-	private String userId;
-	private String userPw;
-	private String userName;
-	private String userEmail;
-	private String userPhone;
-	public String getUserId() {
-		return userId;
+	private String userid;
+	private String userpw;
+	private String username;
+	private String useremail;
+	private String userphone;
+	
+	public String getUserid() {
+		return userid;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
-	public String getUserPw() {
-		return userPw;
+
+	public String getUserpw() {
+		return userpw;
 	}
-	public void setUserPw(String userPw) {
-		this.userPw = userPw;
+
+	public void setUserpw(String userpw) {
+		this.userpw = userpw;
 	}
-	public String getUserName() {
-		return userName;
+
+	public String getUsername() {
+		return username;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
-	public String getUserEmail() {
-		return userEmail;
+
+	public String getUseremail() {
+		return useremail;
 	}
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+
+	public void setUseremail(String useremail) {
+		this.useremail = useremail;
 	}
-	public String getUserPhone() {
-		return userPhone;
+
+	public String getUserphone() {
+		return userphone;
 	}
-	public void setUserPhone(String userPhone) {
-		this.userPhone = userPhone;
+
+	public void setUserphone(String userphone) {
+		this.userphone = userphone;
 	}
+
 	@Override
 	public String toString() {
-		return "MemberDto [userId=" + userId + ", userPw=" + userPw + ", userName=" + userName + ", userEmail="
-				+ userEmail + ", userPhone=" + userPhone + "]";
+		return "MemberDto [userid=" + userid + ", userpw=" + userpw + ", username=" + username + ", useremail="
+				+ useremail + ", userphone=" + userphone + "]";
 	}
-	
+
 	
 	
 }

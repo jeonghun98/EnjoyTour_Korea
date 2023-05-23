@@ -221,8 +221,8 @@ public class HotplaceController {
 		logger.debug("hotplaceDelete hotplaceDto : {}", hotplaceNo);
 		try {
 			hotplaceService.deleteHotplace(hotplaceNo, upload_path);
-			List<HotplaceDto> list = hotplaceService.listHotplace();
-			return new ResponseEntity<List<HotplaceDto>>(list, HttpStatus.OK);
+//			List<HotplaceDto> list = hotplaceService.listHotplace();
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}

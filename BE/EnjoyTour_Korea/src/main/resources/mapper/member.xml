@@ -5,8 +5,8 @@
 <mapper namespace="com.ssafy.member.model.mapper.MemberMapper">
     
     <resultMap type="memberDto" id="member">
-        <result column="user_id" property="userId"/>
-        <result column="user_pw" property="userPw"/>
+        <result column="user_id" property="userid"/>
+        <result column="user_pw" property="userpw"/>
    <!--       <result column="user_name" property="userName"/>
         <result column="user_email" property="userEmail"/>
         <result column="user_phone" property="userPhone"/>-->
@@ -15,43 +15,43 @@
     <resultMap type="memberDto" id="memberDetail" extends="member">
        <!--   <result column="user_id" property="userId"/>
         <result column="user_pw" property="userPw"/>-->
-        <result column="user_name" property="userName"/>
-        <result column="user_email" property="userEmail"/>
-        <result column="user_phone" property="userPhone"/>
+        <result column="user_name" property="username"/>
+        <result column="user_email" property="useremail"/>
+        <result column="user_phone" property="userphone"/>
     </resultMap>
     
     <select id="idCheck" parameterType="String" resultType="int">
         select count(user_id)
         from enjoytrip.member
-        where user_id = #{userId}
+        where user_id = #{userid}
     </select>
     
     <select id="pwdFind" parameterType="map" resultMap="memberDetail">
         select user_pw
         from enjoytrip.member
-        where user_id = #{userId} and user_email = #{userEmail}
+        where user_id = #{userid} and user_email = #{useremail}
     </select>
     
     <insert id="joinMember" parameterType="memberDto">
         insert into enjoytrip.member (user_id, user_pw, user_name, user_email, user_phone)
-        values (#{userId}, #{userPw}, #{userName}, #{userEmail}, #{userPhone})
+        values (#{userid}, #{userpw}, #{username}, #{useremail}, #{userphone})
     </insert>
     
     <!-- 로그인 -->
     <select id="loginMember" parameterType="memberDto" resultMap="memberDetail">
         select user_id, user_pw, user_name, user_email, user_phone 
         from enjoytrip.member 
-        where user_id = #{userId} and user_pw = #{userPw}
+        where user_id = #{userid} and user_pw = #{userpw}
     </select>
     
     <delete id="deleteMember" parameterType="String">
-        delete from enjoytrip.member where user_id = #{userId}
+        delete from enjoytrip.member where user_id = #{userid}
     </delete>
     
     <update id="updateMember" parameterType="memberDto">
         update enjoytrip.member 
-        set user_pw = #{userPw}, user_email = #{userEmail} 
-        where user_id = #{userId}
+        set user_pw = #{userpw}, user_email = #{useremail} 
+        where user_id = #{userid}
     </update>
     
     <!-- 로그인 회원 정보 호출 -->
@@ -65,19 +65,19 @@
     	<select id="getRefreshToken" parameterType="string" resultType="string">
 		select token
 		from enjoytrip.member 
-		where user_id = #{userId}
+		where user_id = #{userid}
 	</select>
 	
 	<update id="saveRefreshToken" parameterType="map">
 		update enjoytrip.member 
 		set token = #{token}
-		where user_id = #{user_id}
+		where user_id = #{userid}
 	</update>
 	
 	<update id="deleteRefreshToken" parameterType="map">
 		update enjoytrip.member 
 		set token = #{token, jdbcType=VARCHAR}
-		where user_id = #{user_id}
+		where user_id = #{userid}
 	</update>
 	
     

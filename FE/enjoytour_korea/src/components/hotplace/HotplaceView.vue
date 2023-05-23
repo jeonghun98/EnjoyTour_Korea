@@ -11,7 +11,7 @@
         <button
             type="button"
             id="btn-move-list"
-            class="btn btn-outline-primary mb-3 mr-3"
+            class="btn btn-outline-primary mt-3 mb-3 mr-3"
             @click="moveListHotplace"
           >
             목록
@@ -19,7 +19,7 @@
         <button
             type="button"
             id="btn-move-list"
-            class="btn btn-outline-primary mb-3 mr-3"
+            class="btn btn-outline-primary mt-3 mb-3 mr-3"
             @click="modifyHotplace"
           >
             글수정
@@ -27,7 +27,7 @@
         <button
             type="button"
             id="btn-move-list"
-            class="btn btn-outline-primary mb-3 mr-3"
+            class="btn btn-outline-primary mt-3 mb-3 mr-3"
             @click="deleteHotplace"
           >
             글삭제
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { getHotplace } from '@/api/hotplace';
+import { getHotplace, deleteHotplace } from '@/api/hotplace';
 import HotplaceImgItemVue from './item/HotplaceImgItem.vue';
 
 export default {
@@ -127,7 +127,26 @@ export default {
       });
     },
     deleteHotplace(){
-      alert("핫플레이스 삭제 이동")
+      // alert("핫플레이스 삭제 이동")
+      if (confirm("정말로 삭제하시겠습니까?")) {
+        let param = this.$route.params.hotplaceNo;
+
+        deleteHotplace(
+          param,
+          ({ data }) => {
+            let msg = "삭제 처리시 문제가 발생했습니다.";
+            if (data === "success") {
+              msg = "삭제가 완료되었습니다.";
+            }
+            alert(msg);
+            this.$router.push({ name: "hotplaceList" });
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      }
+
     },
   },
 };
