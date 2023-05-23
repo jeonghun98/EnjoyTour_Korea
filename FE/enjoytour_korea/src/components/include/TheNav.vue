@@ -70,6 +70,7 @@
               <b-dropdown-item href="#" v-b-modal.modal-login>
                 로그인
                 <user-login-modal></user-login-modal>
+                <user-findpwd-modal></user-findpwd-modal>
               </b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
@@ -113,9 +114,9 @@ import UserJoinModal from '../user/UserJoinModal.vue';
 import UserLoginModal from "../user/UserLoginModal.vue";
 import UserViewModal from '../user/UserViewModal.vue';
 import UserModifyModal from '../user/UserModifyModal.vue';
+import UserFindpwdModal from '../user/UserFindpwdModal.vue';
 
 import { mapState, mapGetters, mapActions } from "vuex";
-
 
 const memberStore = "memberStore";
 
@@ -126,6 +127,7 @@ export default {
     UserJoinModal,
     UserViewModal,
     UserModifyModal,
+    UserFindpwdModal,
   },
   data() {
     return {

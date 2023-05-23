@@ -51,7 +51,9 @@
           ref="userphone"
           v-model="user.userphone"
           required
-          placeholder="전화번호 입력...."
+          placeholder=" - 를 제외하고 입력해주세요"
+          type="text"
+          @keyup="getPhoneMask()"
         ></b-form-input>
         <!-- <div class="mt-2">Value: {{ user.userpwd }}</div> -->
       </b-form-group>
@@ -66,7 +68,6 @@
 </template>
 
 <script>
-
 
 import { join, checkId } from '@/api/member';
 export default {
@@ -96,10 +97,10 @@ export default {
   watch: {
     // 아이디 입력 변화에 따른 검사
     "user.userid": function () {
-      if (this.user.length < 5 || this.user.length > 16) {
+      if (this.user.userid.length < 5 || this.user.userid.length > 16) {
         this.idCheckMsg = "아이디는 5자 이상 16자 이하 입니다.";
         this.idCheckBool = false;
-      } else {
+      } else {        
         checkId(this.user.userid, ({ data }) => {
           if (data == 0) {
             this.idCheckMsg = this.user.userid + "는 사용할 수 있습니다.";
@@ -189,6 +190,10 @@ export default {
           console.log(error);
         }
       );
+    },
+    getPhoneMask(){
+      // 전화번호 하이픈 제거 (만약 붙였을 시에,)
+      this.user.userphone = this.user.userphone.replace(/[^0-9]/g, '');
     },
   },
 };
