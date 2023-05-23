@@ -5,16 +5,17 @@ import java.util.List;
 
 public class TripPlanDto {
 	private int planNo;
+	private String userId;
 	private String title;
 	private String content;
 	private int grade;
 	private String startDate;
 	private String endDate;
-	private List<Integer> contentId;
+	private List<Integer> contentIds;
 	private boolean planPulic;
 	
 	public TripPlanDto() {
-		contentId = new ArrayList<Integer>();
+		contentIds = new ArrayList<Integer>();
 	}
 
 	public int getPlanNo() {
@@ -24,7 +25,14 @@ public class TripPlanDto {
 	public void setPlanNo(int planNo) {
 		this.planNo = planNo;
 	}
-
+	
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	
 	public String getTitle() {
 		return title;
 	}
@@ -65,14 +73,12 @@ public class TripPlanDto {
 		this.endDate = endDate;
 	}
 
-	public List<Integer> getContentId() {
-		return contentId;
+	public List<Integer> getContentIds() {
+		return contentIds;
 	}
 
-	public void setContentId(List<Integer> contentId) {
-		for(Integer i : contentId) {
-			contentId.add(i);
-		}
+	public void setContentIds(List<Integer> contentIds) {
+		this.contentIds = contentIds;
 	}
 
 	public boolean isPlanPulic() {
@@ -86,7 +92,7 @@ public class TripPlanDto {
 	@Override
 	public String toString() {
 		return "TripPlanDto [planNo=" + planNo + ", title=" + title + ", content=" + content + ", grade=" + grade
-				+ ", startDate=" + startDate + ", endDate=" + endDate + ", contentId=" + contentId.toString() + ", planPulic="
+				+ ", startDate=" + startDate + ", endDate=" + endDate + ", contentId=" + contentIds.toString() + ", planPulic="
 				+ planPulic + "]";
 	}
 

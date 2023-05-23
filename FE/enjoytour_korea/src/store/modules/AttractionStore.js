@@ -1,4 +1,6 @@
 import { AttractionList, AttractionSearchList, Attraction } from "@/api/attraction.js";
+// import { writePlan, listPlan, getPlan, modifyPlan, deletePlan } from "@/api/plan.js";
+import { listPlan } from "@/api/plan.js";
 
 const attractionStore = {
   namespaced: true,
@@ -7,16 +9,18 @@ const attractionStore = {
     latitude: 37.5013068,
     longitude: 127.0396597,
     markerPositions: [],
-    planMarkers: [], // 선택 중인 여행 계획 마커
 
-    travelList: [], // 기존 여행 계획 목록
-    travelPlanId: 0, // 선택한 기존 여행 계획
-    travelPlan: [], // 선택한 기존 여행 상세 경로
-    travelMarkers: [], // 선택한 기존 여행 마커
+    planMarkers: [], // 선택 중인 여행 계획 마커
 
     // attraction data
     attractions: [],
     attraction: null,
+
+    travelList: [], // 여행 계획 목록
+
+    travelPlanNo: 0, // 선택한 기존 여행 계획
+    travelPlan: [], // 선택한 기존 여행 상세 경로
+    travelMarkers: [], // 선택한 기존 여행 마커
   },
   getters: {},
   mutations: {
@@ -33,7 +37,7 @@ const attractionStore = {
           state.markerPositions.push([
             attraction.latitude,
             attraction.longitude,
-            attraction.contentid,
+            attraction.contentId,
             attraction.contenttypeid,
             attraction.title,
             attraction.addr1,
@@ -41,8 +45,7 @@ const attractionStore = {
             attraction.tel,
           ]);
         });
-        }
-        // console.log(state.markerPositions);
+      }
     },
 
     SET_PLAN_MARKERS(state, planList) {
@@ -51,7 +54,7 @@ const attractionStore = {
           state.planMarkers.push([
             planItem.latitude,
             planItem.longitude,
-            planItem.contentid,
+            planItem.contentId,
             planItem.contenttypeid,
             planItem.title,
             planItem.addr1,
@@ -61,57 +64,64 @@ const attractionStore = {
         });
       }
     },
-    // SET_TRAVEL_LIST(state, travelPlanList) {
-    //   state.travelList = [];
-    //   if (travelPlanList.length != 0) {
-    //     travelPlanList.forEach((travelPlan) => {
-    //       let detailList = [];
-    //       travelPlan.planDetailList.forEach((detail) => {
-    //         detailList.push(detail);
-    //       });
 
-    //       state.travelList.push({
-    //         planId: travelPlan.planId,
-    //         title: travelPlan.title,
-    //         content: travelPlan.content,
-    //         userId: travelPlan.userId,
-    //         planTime: travelPlan.planTime,
-    //         planDetailList: detailList,
-    //       });
-    //     });
-    //   }
-    // },
-    // SET_TRAVEL_PLAN(state, plan) {
-    //   state.travelPlanId = plan.planId;
-    //   state.travelPlan = [];
-    //   plan.planDetailList.forEach((detail) => {
-    //     state.travelPlan.push(detail);
-    //   });
-    // },
-    // SET_TRAVEL_MARKERS(state) {
-    //   if (state.travelPlan.length != 0) {
-    //     state.travelMarkers = [];
-    //     state.travelPlan.forEach((planItem) => {
-    //       http
-    //         .get(`/attraction/view/${planItem.contentId}`)
-    //         .then(({ data }) => {
-    //           state.travelMarkers.push([
-    //             data.mapY,
-    //             data.mapX,
-    //             data.contentId,
-    //             data.contentTypeId,
-    //             data.title,
-    //             planItem.planOrder,
-    //           ]);
-    //         })
-    //         .catch((error) => {
-    //           console.log(error);
-    //         });
-    //     });
-    //     state.travelMarkers.sort((a, b) => a[5] - b[5]);
-    //     console.log(state.travelMarkers);
-    //   }
-    // },
+    SET_TRAVEL_LIST(state, travelPlanList) {
+      state.travelList = [];
+      if (travelPlanList.length != 0) {
+        travelPlanList.forEach((travelPlan) => {
+          let contentList = [];
+          travelPlan.contentIds.forEach((contentId) => {
+            contentList.push(contentId);
+          });
+          state.travelList.push({
+            planNo: travelPlan.planNo,
+            title: travelPlan.title,
+            content: travelPlan.content,
+            userId: travelPlan.userId,
+            startDate: travelPlan.startDate,
+            endDate: travelPlan.endDate,
+            planPulic: travelPlan.planPulic,
+            grade: travelPlan.grade,
+            contentIds: contentList,
+          });
+        });
+      }
+    },
+    SET_TRAVEL_PLAN(state, plan) {
+      state.travelPlanNo = plan.planNo;
+      state.travelPlan = [];
+      plan.contentIds.forEach((contentId) => {
+        state.travelPlan.push(contentId);
+      });
+    },
+    SET_TRAVEL_MARKERS(state) {
+      if (state.travelPlan.length != 0) {
+        state.travelMarkers = [];
+        let params = { contentId: 0 };
+        state.travelPlan.forEach((planItem) => {
+          params.contentId = planItem.contentId;
+          Attraction(
+            params,
+            ({ data }) => {
+              state.travelMarkers.push([
+                data.latitude,
+                data.longitude,
+                data.contentId,
+                data.contenttypeid,
+                data.title,
+                // planItem.planOrder,
+              ]);
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+        });
+        state.travelMarkers.sort((a, b) => a[5] - b[5]);
+        console.log(state.travelMarkers);
+      }
+    },
+
     CLEAR_MARKER_POSITIONS(state) {
       state.markerPositions = [];
     },
@@ -132,7 +142,7 @@ const attractionStore = {
     SET_ATTRACTION_LIST(state, attractionList) {
       console.log("검색된 관광지 개수 : " + attractionList.length);
       if (attractionList.length != 0) {
-          attractionList.forEach((attraction) => {
+        attractionList.forEach((attraction) => {
           state.attractions.push({
             addr1: attraction.addr1,
             addr2: attraction.addr2,
@@ -141,7 +151,7 @@ const attractionStore = {
             // cat1: attraction.cat1,
             // cat2: attraction.cat2,
             // cat3: attraction.cat3,
-            contentid: attraction.contentid,
+            contentId: attraction.contentId,
             contenttypeid: attraction.contenttypeid,
             // createdTime: attraction.createdTime,
             image1: attraction.image1,
@@ -158,7 +168,7 @@ const attractionStore = {
             overview: attraction.overview,
           });
         });
-        }
+      }
     },
     SET_ATTRACTION(state, attraction) {
       state.attraction = {
@@ -169,7 +179,7 @@ const attractionStore = {
         // cat1: attraction.cat1,
         // cat2: attraction.cat2,
         // cat3: attraction.cat3,
-        contentid: attraction.contentid,
+        contentId: attraction.contentId,
         contenttypeid: attraction.contenttypeid,
         // createdTime: attraction.createdTime,
         image1: attraction.image1,
@@ -209,8 +219,8 @@ const attractionStore = {
       };
       AttractionList(
         params,
-          ({ data }) => {
-              console.log(data);
+        ({ data }) => {
+          console.log(data);
           commit("SET_MARKER_POSITIONS", data);
           commit("SET_ATTRACTION_LIST", data);
         },
@@ -223,7 +233,7 @@ const attractionStore = {
       if (attr.doIdx == null) attr.doIdx = "null";
       if (attr.sigunguIdx == null) attr.sigunguIdx = "null";
       if (attr.word == "") attr.word = "null";
-      
+
       const params = {
         sido: attr.sidoCode,
         gugun: attr.gugunCode,
@@ -232,8 +242,8 @@ const attractionStore = {
 
       AttractionSearchList(
         params,
-          ({ data }) => {
-              // console.log(data);
+        ({ data }) => {
+          // console.log(data);
           commit("SET_MARKER_POSITIONS", data);
           commit("SET_ATTRACTION_LIST", data);
         },
@@ -242,30 +252,30 @@ const attractionStore = {
         }
       );
     },
-      getAttraction({ commit }, contentId) {
-        const params = {contentid : contentId};
-          Attraction(
-            params,
-            ({ data }) => {
-                commit("SET_ATTRACTION", data);
-            },
-            (error) => {
-              console.log(error);
-            }
-          );
+    getAttraction({ commit }, contentId) {
+      const params = { contentId: contentId };
+      Attraction(
+        params,
+        ({ data }) => {
+          commit("SET_ATTRACTION", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
-    // getTravelList({ commit }) {
-    //   http
-    //     .get(`/plan/list`)
-    //     .then(({ data }) => {
-    //       if (data.message === "success") {
-    //         commit("SET_TRAVEL_LIST", data.list);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // },
+    getTravelList({ commit }, param) {
+      listPlan(
+        param,
+        ({ data }) => {
+          console.log("getTravelList", data);
+          commit("SET_TRAVEL_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
   },
 };
 

@@ -40,8 +40,8 @@ public class AttractionServiceImpl implements AttractionService
 	}
 	
 	@Override
-	public AttractionDto searchAttraction(String contentid) throws Exception {
-		return attractionmapper.searchAttraction(contentid);
+	public AttractionDto searchAttraction(String contentId) throws Exception {
+		return attractionmapper.searchAttraction(contentId);
 	}
 	
 	@Override

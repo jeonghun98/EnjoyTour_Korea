@@ -5,7 +5,7 @@
 <mapper namespace="com.ssafy.attraction.model.mapper.AttractionMapper">
 
 	<resultMap type="attractionDto" id="getAttractionDto">
-		<result column="content_id" property="contentid"/>
+		<result column="content_id" property="contentId"/>
 		<result column="content_type_id" property="contenttypeid"/>
 		<result column="title" property="title"/>
 		<result column="addr1" property="addr1"/>
@@ -69,7 +69,7 @@
 	<select id="searchAttraction" parameterType="string" resultMap="getAttractionDto">
 		SELECT * FROM attraction_info ai, attraction_description ad
 		WHERE ai.content_id = ad.content_id
-		AND ai.content_id = #{contentid}
+		AND ai.content_id = #{contentId}
 	</select>
 	
 		<select id="getSido" resultMap="getsidoGugunCodeDto">

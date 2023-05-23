@@ -48,7 +48,7 @@
                           <b-button
                             class="delete-btn"
                             variant="danger"
-                            @click="deleteItem(atr.contentid)"
+                            @click="deleteItem(atr.contentId)"
                           >
                             삭제
                           </b-button>
@@ -188,7 +188,7 @@ export default {
 
           // // 마커 클릭 이벤트
           kakao.maps.event.addListener(marker, "click", () => {
-            this.getAttraction(position.contentid);
+            this.getAttraction(position.contentId);
             this.map.panTo(new kakao.maps.LatLng(position.latitude, position.longitude));
             this.planList.push(position);
             // console.log("push", this.planList);
@@ -271,9 +271,9 @@ export default {
       this.polyline.setMap(this.map);
     },
 
-    deleteItem(contentid) {
+    deleteItem(contentId) {
       for (let i = 0; i < this.planList.length; i++) {
-        if (this.planList[i].contentid === contentid) {
+        if (this.planList[i].contentId === contentId) {
           this.planList.splice(i, 1);
           i--;
           break;

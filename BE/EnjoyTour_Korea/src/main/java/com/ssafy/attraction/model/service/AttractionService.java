@@ -11,7 +11,7 @@ public interface AttractionService {
 //	void insertAttraction(AttractionDto attractionDto) throws Exception;
 	List<AttractionDto> searchAttractionList(Map<String, String> map) throws Exception;
 	List<AttractionDto> searchAttractionWordList(Map<String, String> map) throws Exception;
-	AttractionDto searchAttraction(String contentid) throws Exception;
+	AttractionDto searchAttraction(String contentId) throws Exception;
 	List<SidoGugunCodeDto> getSido() throws Exception;
 	List<SidoGugunCodeDto> getGugunInSido(String sido) throws Exception;
 	List<AttractionDto> getAttractionInGugun(String gugun) throws Exception;
