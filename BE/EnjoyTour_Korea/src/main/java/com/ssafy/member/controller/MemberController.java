@@ -43,9 +43,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-//@Controller
 @RequestMapping("/user")
-@Api("회원 컨트롤러 REST API")
+@Api(tags= {"회원 관리"})
 public class MemberController {
 //	private static final long serialVersionUID = 1L;
 	
@@ -196,6 +195,24 @@ public class MemberController {
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
+	}
+	
+	@ApiOperation(value = "회원 정보 수정", notes = "DB에서 회원 정보를 업데이트 시켜준다.")
+	@PutMapping("/update")
+	public ResponseEntity<?> update(@RequestBody MemberDto memberDto) {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		logger.debug("modify member info : {}", memberDto);
+		try {
+			memberService.updateMember(memberDto);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			logger.error("회원정보 수정 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
 

@@ -29,4 +29,9 @@ async function checkId(userId, success, fail) {
   await api.get(`/user/idcheck/${userId}`).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, join, checkId };
+async function update(user, success, fail) {
+  api.defaults.headers["refresh-token"] = sessionStorage.getItem("refresh-token"); //axios header에 refresh-token 셋팅
+  await api.put(`/user/update`, user).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, join, checkId, update };

@@ -49,6 +49,7 @@
               <b-dropdown-item href="#" v-b-modal.modal-view>
                 마이페이지
                 <user-view-modal></user-view-modal>
+                <user-modify-modal></user-modify-modal>
               </b-dropdown-item>
               <b-dropdown-item href="#" @click.prevent="onClickLogout">
                 로그아웃
@@ -111,8 +112,10 @@
 import UserJoinModal from '../user/UserJoinModal.vue';
 import UserLoginModal from "../user/UserLoginModal.vue";
 import UserViewModal from '../user/UserViewModal.vue';
+import UserModifyModal from '../user/UserModifyModal.vue';
 
 import { mapState, mapGetters, mapActions } from "vuex";
+
 
 const memberStore = "memberStore";
 
@@ -122,6 +125,7 @@ export default {
     UserLoginModal,
     UserJoinModal,
     UserViewModal,
+    UserModifyModal,
   },
   data() {
     return {

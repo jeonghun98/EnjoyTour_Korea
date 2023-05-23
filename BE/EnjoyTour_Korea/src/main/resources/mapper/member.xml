@@ -50,7 +50,7 @@
     
     <update id="updateMember" parameterType="memberDto">
         update enjoytrip.member 
-        set user_pw = #{userpw}, user_email = #{useremail} 
+        set user_pw = #{userpw}, user_email = #{useremail}, user_name = #{username}, user_phone = #{userphone} 
         where user_id = #{userid}
     </update>
     
