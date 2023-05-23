@@ -153,7 +153,8 @@ export default {
         },
         (error) => {
           console.log(error);
-        });
+        }
+      );
     },
     moveList() {
       this.$router.push({ name: "planList" });

@@ -36,76 +36,99 @@ public class AttractionDto {
 //	private String mlevel;
 //	private String modifiedtime;
 //	private String sigungucode;
+	
+	@Override
+	public String toString() {
+		return "AttractionDto [image1=" + image1 + ", image2=" + image2 + ", contentId=" + contentId
+				+ ", contenttypeid=" + contenttypeid + ", title=" + title + ", addr1=" + addr1 + ", addr2=" + addr2
+				+ ", overview=" + overview + ", latitude=" + latitude + ", longitude=" + longitude + "]";
+	}
+
 	public String getImage1() {
 		return image1;
 	}
+
 	public void setImage1(String image1) {
 		this.image1 = image1;
 	}
+
 	public String getImage2() {
 		return image2;
 	}
+
 	public void setImage2(String image2) {
 		this.image2 = image2;
 	}
-	public int getContentid() {
+
+	public int getContentId() {
 		return contentId;
 	}
-	public void setContentid(int contentId) {
+
+	public void setContentId(int contentId) {
 		this.contentId = contentId;
 	}
+
 	public int getContenttypeid() {
 		return contenttypeid;
 	}
+
 	public void setContenttypeid(int contenttypeid) {
 		this.contenttypeid = contenttypeid;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getAddr1() {
 		return addr1;
 	}
+
 	public void setAddr1(String addr1) {
 		this.addr1 = addr1;
 	}
+
 	public String getAddr2() {
 		return addr2;
 	}
+
 	public void setAddr2(String addr2) {
 		this.addr2 = addr2;
 	}
+
 	public String getOverview() {
 		return overview;
 	}
+
 	public void setOverview(String overview) {
 		this.overview = overview;
 	}
+
 	public float getLatitude() {
 		return latitude;
 	}
+
 	public void setLatitude(float latitude) {
 		this.latitude = latitude;
 	}
+
 	public float getLongitude() {
 		return longitude;
 	}
+
 	public void setLongitude(float longitude) {
 		this.longitude = longitude;
 	}
+
 	public String getTel() {
 		return tel;
 	}
+
 	public void setTel(String tel) {
 		this.tel = tel;
-	}
-	@Override
-	public String toString() {
-		return "AttractionDto [image1=" + image1 + ", image2=" + image2 + ", contentid=" + contentId
-				+ ", contenttypeid=" + contenttypeid + ", title=" + title + ", addr1=" + addr1 + ", addr2=" + addr2
-				+ ", overview=" + overview + ", latitude=" + latitude + ", longitude=" + longitude + "]";
 	}
 }

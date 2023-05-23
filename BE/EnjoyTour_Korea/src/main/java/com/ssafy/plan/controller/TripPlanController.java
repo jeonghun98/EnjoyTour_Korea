@@ -12,14 +12,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ssafy.attraction.model.AttractionDto;
 import com.ssafy.notice.model.NoticeDto;
 import com.ssafy.notice.model.NoticeParameterDto;
 import com.ssafy.plan.model.TripPlanDto;
@@ -64,8 +67,18 @@ public class TripPlanController{
 	@ApiResponses({@ApiResponse(code = 200, message ="plan 전체 목록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
 	@GetMapping
 	public ResponseEntity<List<TripPlanDto>> tripPlanList(@ApiParam(value = "plan 얻기위한 부가정보.", required = false) NoticeParameterDto noticeParameterDto) throws Exception {
-		logger.info("noticeList - 호출");
+		logger.info("tripPlanList - 호출");
 		return new ResponseEntity<List<TripPlanDto>>(tripPlanService.listPlan(noticeParameterDto), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "해당 plan 정보", notes = "plan 정보를 반환한다.")
+	@ApiResponses({@ApiResponse(code = 200, message ="plan 전체 목록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
+	@GetMapping("/{planNo}")
+	public ResponseEntity<List<AttractionDto>> searchPlan(
+			@PathVariable("planNo") @ApiParam(value = "planNo", required = true) int planNo
+			) throws Exception {
+		logger.debug("searchPlan planNo : ", planNo);
+		return new ResponseEntity<List<AttractionDto>>(tripPlanService.getPlan(planNo), HttpStatus.OK);
 	}
 	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
