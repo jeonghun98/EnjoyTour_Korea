@@ -1,64 +1,38 @@
 <template>
-  <b-modal  id="modal-view" ref="modal-view" title="회원가입" hide-footer>
-    <b-form class="text-left" @submit="onSubmit" @reset="onReset">
-      <b-form-group label="아이디:" label-for="userid"
-        >
-        <b-form-input
-          id="userid"
-          ref="userid"
-          value="userinfo.userid"
-          readonly
-        ></b-form-input>
-        <!-- <div class="mt-2">Value: {{ user.userid }}</div> -->
-      </b-form-group>
-      <!-- <b-form-group label="비밀번호:" label-for="userpwd">
-        <b-form-input
-          type="password"
-          id="userpwd"
-          ref="userpwd"
-          value="userinfo.userpw"
-          required
-          readonly
-        ></b-form-input> -->
-        <!-- <div class="mt-2">Value: {{ user.userpwd }}</div> -->
-      <!-- </b-form-group> -->
-      <b-form-group label="이름:" label-for="username">
-        <b-form-input
-          id="username"
-          ref="username"
-          value="userinfo.username"
-          required
-        ></b-form-input>
-        <!-- <div class="mt-2">Value: {{ user.userpwd }}</div> -->
-      </b-form-group>
-      <b-form-group label="이메일:" label-for="useremail">
-        <b-form-input
-          id="useremail"
-          ref="useremail"
-          value="userinfo.useremail"
-          readonly
-        ></b-form-input>
-      </b-form-group>
-        <b-form-group label="전화번호:" label-for="userphone">
-        <b-form-input
-          id="userphone"
-          ref="userphone"
-          value="userinfo.userphone"
-          readonly
-        ></b-form-input>
-        <!-- <div class="mt-2">Value: {{ user.userpwd }}</div> -->
-      </b-form-group>
+  <b-modal id="modal-view" ref="modal-view" title="마이페이지" hide-footer no-stacking>
+    <b-form id="form-view" method="" action="">
+      <div class="mb-3">
+        아이디:
+        <span class="float-end" id="mypage-id">{{ userInfo.userid }}</span>
+      </div>
+      <div class="mb-3">
+        이름:
+        <span class="float-end" id="mypage-name">{{ userInfo.username }}</span>
+      </div>
+      <div class="mb-3">
+        전화번호:
+        <span class="float-end" id="mypage-age">{{ userInfo.userphone }}</span>
+      </div>
+      <div class="mb-3">
+        이메일:
+        <span class="float-end" id="mypage-email">{{
+          userInfo.useremail
+        }}</span>
+      </div>
 
       <b-form-row>
-          <b-button type="button" variant="primary" class="ml-auto">
-            회원정보 수정
-          </b-button>
-          <b-button type="button" variant="primary" class="ml-auto">
-            회원 탈퇴
-          </b-button>
-          <b-button type="button" variant="primary" class="ml-auto" @click="cancel">
-            닫기
-          </b-button>
+        <b-button
+          type="button"
+          variant="outline-primary"
+          class="ml-auto"
+          v-b-modal.modal-modify
+        >
+          수정하기
+          
+        </b-button>
+        <b-button type="button" variant="outline-danger" class="ml-1">
+          탈퇴하기
+        </b-button>
       </b-form-row>
     </b-form>
   </b-modal>
@@ -71,18 +45,18 @@ const memberStore = "memberStore";
 
 export default {
   name: "UserView",
-  components: {},
+  components: {
+  },
   data() {
     return {
       // isLoginError: false,
-      // user: {
-      //   userid: "",
-      //   userpw: "",
-      //   username: "",
-      //   useremail: "",
-      //   userphone: "",
-      // },
-
+      user: {
+        userid: "",
+        userpw: "",
+        username: "",
+        useremail: "",
+        userphone: "",
+      },
     };
   },
   created() {},
@@ -90,10 +64,6 @@ export default {
     ...mapState(memberStore, ["userInfo"]),
   },
   methods: {
-    cancel(){
-      console.log("닫기");
-      this.$refs['modal-view'].hide();
-    },
   },
 };
 </script>
