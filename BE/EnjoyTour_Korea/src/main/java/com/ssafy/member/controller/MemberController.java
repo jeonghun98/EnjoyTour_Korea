@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.member.model.MailDto;
 import com.ssafy.member.model.MemberDto;
 import com.ssafy.member.model.service.JwtServiceImpl;
 import com.ssafy.member.model.service.MemberService;
@@ -48,9 +51,9 @@ import io.swagger.annotations.ApiParam;
 public class MemberController {
 //	private static final long serialVersionUID = 1L;
 	
-	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
-	private static final String SUCCESS = "success";
-	private static final String FAIL = "fail";
+	private final Logger logger = LoggerFactory.getLogger(MemberController.class);
+	private final String SUCCESS = "success";
+	private final String FAIL = "fail";
 	
 	@Autowired
 	private JwtServiceImpl jwtService;
@@ -215,83 +218,79 @@ public class MemberController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
-
-//	@GetMapping("/pwdfind")
-//	@ResponseBody
-//	public String pwdfind(@RequestParam(name = "userid") String userId, @RequestParam(name = "email") String email) throws Exception {
-//		System.out.println("pwdfind함수 파라미터 "+userId+" "+email);
-//		Map<String, String> map = new HashMap<String, String>();
-//		map.put("userId", userId);
-//		map.put("userEmail", email);
-//		MemberDto memberDto = memberService.pwdFind(map);
-//		System.out.println("MemberController - pwdfind 함수"+memberDto.toString());
-//		String pwd = memberDto.getUserPw();
-//		System.out.println("pwd:"+pwd);
-//		return pwd;
-//	}
-//	
-//	@PostMapping("/update")
-//	public String update(@RequestParam(name = "mypage_pwd") String pwd, @RequestParam(name = "mypage_email") String email,
-//			HttpServletRequest request, HttpServletResponse response) throws Exception{
-//		
-//		
-//		HttpSession session = request.getSession();
-//		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-//		
-//		if (memberDto != null) {
-//			String userId = memberDto.getUserId();
-//			String userPhone = memberDto.getUserPhone();
-//			String userName = memberDto.getUserName();
-//			String useremail = memberDto.getUserEmail();
-//			String userPw = memberDto.getUserPw();
-//			
-//			MemberDto memberDto_set = new MemberDto();
-//			memberDto_set.setUserPw(userPw);
-//			if(pwd.length() != 0)
-//				memberDto_set.setUserPw(pwd);
-//			
-//			memberDto_set.setUserEmail(useremail);
-//			if(email.length() != 0)
-//				memberDto_set.setUserEmail(email);
-//
-//			memberDto_set.setUserId(userId);
-//			
-//			try {
-//				memberService.updateMember(memberDto_set);
-//				memberDto_set.setUserPhone(userPhone);
-//				memberDto_set.setUserName(userName);
-//				memberDto_set.setUserPw("");
-//				
-//				session.setAttribute("userinfo", memberDto_set); // session userinfo update
-//				
-//				return "redirect:/";
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				request.setAttribute("msg", "유저 정보 업데이트 중 에러 발생!!!");
-//				return "redirect:/";
-//			}
-//		} else
-//			return "redirect:/index";
-//	}
-//	
-//	@GetMapping("/delete")
-//	public String delete(HttpServletRequest request, HttpServletResponse response) throws Exception{
-//		HttpSession session = request.getSession();
-//		MemberDto memberDto = (MemberDto) session.getAttribute("userinfo");
-//		if (memberDto != null) {
-//			String userId = memberDto.getUserId();
-//			
-//			try {
-//				memberService.deleteMember(userId);
-//				session.invalidate();
-//				return "redirect:/";
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				return "redirect:/";
-//			}
-//		} else
-//			return "redirect:/";
-//	}
+	@ApiOperation(value = "회원 탈퇴", notes = "DB에서 회원 정보를 업데이트 시켜준다.")
+	@DeleteMapping("/delete/{userid}")
+	public ResponseEntity<?> delete(@PathVariable("userid") String userid) {
+		logger.debug("delete memberDto info : {}", userid);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			memberService.deleteMember(userid);
+			resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			logger.error("회원정보 수정 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+	
+	@ApiOperation(value = "비밀번호 찾기", notes = "이메일, 아이디 입력 일치시 비밀번호 반환")
+	@GetMapping("/pwdfind/{userid}/{useremail}")
+	public ResponseEntity<?> pwdfind(@PathVariable("userid") String userId, @PathVariable("useremail") String userEmail) {
+		logger.debug("find password input info : {}", userId, userEmail);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("userid", userId);
+			map.put("useremail", userEmail);
+			MemberDto memberDto2 = memberService.pwdFind(map);
+			if(memberDto2 != null) {
+				logger.debug("입력 받은 정보와 일치하는 계정 존재");
+				String pwd = memberDto2.getUserpw();
+				resultMap.put("message", SUCCESS);
+				resultMap.put("userpwd", pwd);
+				status = HttpStatus.ACCEPTED;
+			}else {
+				logger.debug("입력 받은 정보와 일치하는 계정이 존재하지 않음");
+				resultMap.put("message", "NO_CONTENT");
+				status = HttpStatus.NO_CONTENT;	
+			}
+		} catch (Exception e) {
+			logger.error("비밀번호 찾기 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+	
+	 // 이메일 보내기
+	@ApiOperation(value = "임시 비밀번호 발급", notes = "이메일, 아이디 입력 일치시 임시 비밀번호를 메일에 보냄")
+    @Transactional
+    @PostMapping("/sendEmail")
+//    public ResponseEntity<?> sendEmail(@RequestParam("useremail") String useremail){
+//		logger.debug("sendEmail input info : {}", useremail);
+    public ResponseEntity<?> sendEmail(@RequestBody MemberDto memberDto){
+		logger.debug("sendEmail input info : {}", memberDto.toString());
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;	
+		
+		try {
+			MailDto maildto = memberService.createMailAndChangePassword(memberDto.getUseremail());
+	        memberService.mailSend(maildto);
+	        resultMap.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+			
+		} catch (Exception e) {
+			logger.error("임시비밀번호 발급실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+	
 
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();

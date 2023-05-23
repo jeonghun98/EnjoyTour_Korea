@@ -24,4 +24,8 @@ public interface MemberMapper {
 	Object getRefreshToken(String userid) throws Exception; // 리프레쉬 토큰 호출
 	void deleteRefreshToken(Map<String, String> map) throws Exception; // 리프레쉬 토큰 삭제
 	
+	// SMTP 관련
+	String findByMemberEmail(String useremail);
+	void updatePassword(Map<String, String> map);
+	
 }
