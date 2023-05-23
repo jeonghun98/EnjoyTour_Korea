@@ -191,7 +191,7 @@ export default {
             this.getAttraction(position.contentid);
             this.map.panTo(new kakao.maps.LatLng(position.latitude, position.longitude));
             this.planList.push(position);
-            console.log("push", this.planList);
+            // console.log("push", this.planList);
           });
           return marker;
         });
@@ -263,7 +263,7 @@ export default {
         map: this.map,
         path: positions, // 선을 구성하는 좌표배열
         strokeWeight: 3, // 두께
-        strokeColor: "#FF4444", // 색깔
+        strokeColor: "#1BB1FF", // 색깔
         strokeOpacity: 0.9, // 불투명도(1에서 0 사이의 값, 0: 투명)
         strokeStyle: "solid", // 스타일
       });
@@ -281,7 +281,7 @@ export default {
       }
     },
     setPlanMarker() {
-      //   console.log("setPlanMarker", this.planList);
+        console.log("setPlanMarker", this.planList);
       this.CLEAR_PLAN_MARKERS();
       this.SET_PLAN_MARKERS(this.planList);
     },
