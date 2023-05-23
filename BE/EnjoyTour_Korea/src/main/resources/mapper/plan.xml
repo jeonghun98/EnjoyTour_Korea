@@ -6,6 +6,7 @@
 
 	<resultMap type="TripPlanDto" id="tripplan">
 		<result column="plan_no" property="planNo"/>
+		<result column="user_id" property="userId"/>
 		<result column="plan_title" property="title"/>
 		<result column="plan_content" property="content"/>
 		<result column="plan_grade" property="grade"/>
@@ -21,5 +22,38 @@
 			select last_insert_id()
 		</selectKey>
 	</insert>
+	
+	<insert id="writeContent" parameterType="TripPlanDto">
+		insert into plan_attraction (plan_no, content_id)
+		values
+		<foreach collection="contentIds" item="contentId" separator=" , ">
+			(#{planNo}, #{contentId})
+		</foreach>
+	</insert>
+	
+	<insert id="authPlan" parameterType="TripPlanDto">
+		insert into auth_plan (user_id, plan_no)
+		values (#{userId}, #{planNo})
+	</insert>
+	
+	<sql id="search">
+		<if test="word != null and word != ''">
+			<if test="key == 'title'">
+				where notice_title like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'title'">
+				where ${key} = #{word}
+			</if>
+		</if>
+	</sql>
+	
+	<select id="listPlan" parameterType="map" resultMap="tripplan">
+		select p.plan_no, a.user_id, p.plan_title, p.plan_content, p.plan_start_date, p.plan_end_date, p.plan_grade
+		from plan p, auth_plan a
+		where p.plan_no = a.plan_no
+		<include refid="search"></include>
+		order by plan_no desc
+		limit #{start}, #{spp}
+	</select>
 	
 </mapper>

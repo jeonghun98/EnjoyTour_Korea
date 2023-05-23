@@ -10,7 +10,7 @@ public class AttractionDto {
 //	private List<String> images = new ArrayList<>();
 	private String image1;
 	private String image2;
-	private int contentid;
+	private int contentId;
 	private int contenttypeid;
 	private String title;
 	private String addr1;
@@ -49,10 +49,10 @@ public class AttractionDto {
 		this.image2 = image2;
 	}
 	public int getContentid() {
-		return contentid;
+		return contentId;
 	}
-	public void setContentid(int contentid) {
-		this.contentid = contentid;
+	public void setContentid(int contentId) {
+		this.contentId = contentId;
 	}
 	public int getContenttypeid() {
 		return contenttypeid;
@@ -104,7 +104,7 @@ public class AttractionDto {
 	}
 	@Override
 	public String toString() {
-		return "AttractionDto [image1=" + image1 + ", image2=" + image2 + ", contentid=" + contentid
+		return "AttractionDto [image1=" + image1 + ", image2=" + image2 + ", contentid=" + contentId
 				+ ", contenttypeid=" + contenttypeid + ", title=" + title + ", addr1=" + addr1 + ", addr2=" + addr2
 				+ ", overview=" + overview + ", latitude=" + latitude + ", longitude=" + longitude + "]";
 	}

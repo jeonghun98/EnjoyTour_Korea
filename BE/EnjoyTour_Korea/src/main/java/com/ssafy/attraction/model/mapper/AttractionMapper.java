@@ -13,7 +13,7 @@ public interface AttractionMapper {
 //	void insertAttraction(AttractionDto attractionDto) throws SQLException;
 	List<AttractionDto> searchAttractionList(Map<String, String> map) throws Exception;
 	List<AttractionDto> searchAttractionWordList(Map<String, String> map) throws Exception;
-	AttractionDto searchAttraction(String contentid) throws Exception;
+	AttractionDto searchAttraction(String contentId) throws Exception;
 	List<SidoGugunCodeDto> getSido() throws SQLException;
 	List<SidoGugunCodeDto> getGugunInSido(String sido) throws SQLException;
 	List<AttractionDto> getAttractionInGugun(String gugun) throws SQLException;

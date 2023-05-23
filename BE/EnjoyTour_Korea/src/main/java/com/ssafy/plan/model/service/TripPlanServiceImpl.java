@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.notice.model.NoticeParameterDto;
 import com.ssafy.plan.model.TripPlanDto;
 import com.ssafy.plan.model.mapper.TripPlanMapper;
 
@@ -22,13 +23,17 @@ public class TripPlanServiceImpl implements TripPlanService {
 	@Override
 	@Transactional
 	public void writePlan(TripPlanDto tripPlanDto) throws Exception {
+		System.out.println("글입력 전 dto : " + tripPlanDto);
 		tripPlanMapper.writePlan(tripPlanDto);
+		System.out.println("글입력 후 dto : " + tripPlanDto);
+		tripPlanMapper.writeContent(tripPlanDto);
+		tripPlanMapper.authPlan(tripPlanDto);
 
 	}
 
 	@Override
-	public List<TripPlanDto> listPlan() throws Exception {
-		return tripPlanMapper.listPlan();
+	public List<TripPlanDto> listPlan(NoticeParameterDto noticeParameterDto) throws Exception {
+		return tripPlanMapper.listPlan(noticeParameterDto);
 	}
 
 	@Override

@@ -47,10 +47,10 @@ public class AttractionController extends HttpServlet {
 	@ApiOperation(value = "관광지 정보", notes = "관광지 정보를 반환한다.")
 	@GetMapping
 	public ResponseEntity<?> searchAttraction(
-			@RequestParam("contentid") @ApiParam(value = "contentid.", required = true) String contentid
+			@RequestParam("contentId") @ApiParam(value = "contentId.", required = true) String contentId
 			) throws Exception {
 		logger.debug("searchAttractionList call");
-		return new ResponseEntity<AttractionDto>(attractionservice.searchAttraction(contentid), HttpStatus.OK);
+		return new ResponseEntity<AttractionDto>(attractionservice.searchAttraction(contentId), HttpStatus.OK);
 	}
 	
 	
