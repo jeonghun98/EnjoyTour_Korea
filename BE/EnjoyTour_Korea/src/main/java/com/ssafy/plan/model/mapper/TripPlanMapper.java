@@ -17,7 +17,12 @@ public interface TripPlanMapper {
 	void authPlan(TripPlanDto tripPlanDto) throws Exception;
 	
 	List<TripPlanDto> listPlan(NoticeParameterDto noticeParameterDto) throws SQLException;
+	List<TripPlanDto> mylistPlan(String userId) throws SQLException;
 	List<AttractionDto> getPlan(int planNo) throws SQLException;
 	void modifyPlan(TripPlanDto planNo) throws SQLException;
+	
+	
 	void deletePlan(int planNo) throws SQLException;
+	void deletePlanAttraction(int planNo) throws SQLException;
+	void deleteAuthPlan(int planNo) throws SQLException;
 }

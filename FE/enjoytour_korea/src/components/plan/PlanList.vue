@@ -126,6 +126,7 @@ export default {
       this.CLEAR_TRAVEL_MARKERS();
       this.param.key = this.serchSelected;
       this.param.word = this.searchWord;
+      this.param.userId = null;
       this.getTravelList(this.param);
     },
 
@@ -151,7 +152,7 @@ export default {
       // todo
       this.$router.push({
         name: "planView",
-        params: { planNo: plan.planNo },
+        params: { planNo: plan.planNo, type : "plan" },
       });
     },
   },

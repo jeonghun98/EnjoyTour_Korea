@@ -22,7 +22,7 @@
           >
             목록
           </b-button>
-          <span v-if="userInfo.userid === hotplace.userId">
+          <span v-if="userInfo != null && userInfo.userid === hotplace.userId">
             <b-button
               type="button"
               id="btn-move-list"

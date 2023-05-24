@@ -6,6 +6,7 @@ import AppAttraction from "@/views/AppAttraction";
 import AppHotplace from "@/views/AppHotplace";
 import AppNotice from "@/views/AppNotice";
 import AppPlan from "@/views/AppPlan";
+import AppMyPlan from "@/views/AppMyPlan";
 
 // components
 // notice
@@ -21,10 +22,13 @@ import HotplaceModify from "@/components/hotplace/HotplaceModify";
 import HotplaceView from "@/components/hotplace/HotplaceView";
 
 // plan
-import PlanList from '@/components/plan/PlanList';
-import PlanModify from '@/components/plan/PlanModify';
-import PlanView from '@/components/plan/PlanView';
-import PlanWrite from '@/components/plan/PlanWrite'
+import PlanList from "@/components/plan/PlanList";
+import PlanModify from "@/components/plan/PlanModify";
+import PlanView from "@/components/plan/PlanView";
+import PlanWrite from "@/components/plan/PlanWrite";
+
+//myplan
+import MyPlanList from "@/components/myplan/MyPlanList";
 
 import store from "@/store";
 
@@ -44,7 +48,7 @@ const onlyAuthUser = async (to, from, next) => {
   if (!checkToken || checkUserInfo === null) {
     alert("로그인이 필요한 페이지입니다");
     // next({ name: "login" });
-    router.push({ name: "home" });
+    // router.push({ name: "home" });
   } else {
     console.log("로그인 했다!!!!!!!!!!!!!.");
     next();
@@ -82,7 +86,7 @@ const routes = [
       {
         path: "view/:hotplaceNo",
         name: "hotplaceView",
-        beforeEnter: onlyAuthUser,
+        // beforeEnter: onlyAuthUser,
         component: HotplaceView,
       },
       {
@@ -131,6 +135,34 @@ const routes = [
         path: "list",
         name: "planList",
         component: PlanList,
+      },
+      {
+        path: "write",
+        name: "planWrite",
+        component: PlanWrite,
+      },
+      {
+        path: "view/:planNo",
+        name: "planView",
+        component: PlanView,
+      },
+      {
+        path: "modify/:planNo",
+        name: "planModify",
+        component: PlanModify,
+      },
+    ],
+  },
+  {
+    path: "/myplan",
+    name: "myplan",
+    component: AppMyPlan,
+    redirect: "/myplan/list",
+    children: [
+      {
+        path: "list",
+        name: "myplanList",
+        component: MyPlanList,
       },
       {
         path: "write",

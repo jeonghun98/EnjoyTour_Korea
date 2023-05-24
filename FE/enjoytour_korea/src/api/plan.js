@@ -17,6 +17,10 @@ function listPlan(param, success, fail) {
   api.get(`/plan`, { params: param }).then(success).catch(fail);
 }
 
+function mylistPlan(param, success, fail) {
+  api.get(`/plan/myplan/${param.userId}`).then(success).catch(fail);
+}
+
 function getPlan(planNo, success, fail) {
   api.get(`/plan/${planNo}`).then(success).catch(fail);
 }
@@ -29,4 +33,4 @@ function deletePlan(planNo, success, fail) {
   api.delete(`/plan/${planNo}`).then(success).catch(fail);
 }
 
-export { writePlan, listPlan, getPlan, modifyPlan, deletePlan };
+export { mylistPlan, writePlan, listPlan, getPlan, modifyPlan, deletePlan };

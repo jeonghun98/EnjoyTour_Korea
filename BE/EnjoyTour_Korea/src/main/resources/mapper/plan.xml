@@ -77,4 +77,26 @@
 		and ai.content_id in (select content_id from plan_attraction where plan_no = #{planNo});
 	</select>
 	
+	<select id="mylistPlan" parameterType="string" resultMap="tripplan">
+		select plan_no, user_id, plan_title, plan_content, plan_start_date, plan_end_date, plan_grade
+		from plan p
+		where user_id = #{userId}
+		order by plan_no desc
+	</select>
+	
+	<delete id="deletePlan" parameterType="int">
+		delete from plan
+		where plan_no = #{planNo}
+	</delete>
+	
+	<delete id="deletePlanAttraction" parameterType="int">
+		delete from plan_attraction
+		where plan_no = #{planNo}
+	</delete>
+	
+	<delete id="deleteAuthPlan" parameterType="int">
+		delete from auth_plan
+		where plan_no = #{planNo}
+	</delete>
+	
 </mapper>

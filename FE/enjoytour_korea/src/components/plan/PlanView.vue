@@ -36,8 +36,42 @@
             </table>
           </div>
         </b-row>
-      </b-col>
 
+        <b-row>
+        <b-col>
+          <b-button
+            type="button"
+            variant="outline-primary"
+            id="btn-move-list"
+            class="btn mt-3 mb-3 mr-3"
+            @click="moveListPlan"
+          >
+            목록
+          </b-button>
+          <span v-if="userInfo != null && userInfo.userid === travelPlanContent.userId">
+            <b-button
+              type="button"
+              id="btn-move-list"
+              variant="outline-success"
+              class="btn mt-3 mb-3 mr-3"
+              @click="moveModifyPlan"
+            >
+              글수정
+            </b-button>
+            <b-button
+              type="button"
+              id="btn-move-list"
+              variant="outline-danger"
+              class="btn mt-3 mb-3 mr-auto"
+              @click="deletePlan"
+            >
+              글삭제
+            </b-button>
+          </span>
+        </b-col>
+      </b-row>
+
+      </b-col>
       <b-col>
         <b-row>
           <b-navbar toggleable="lg">
@@ -80,15 +114,6 @@
                           <strong>{{ index + 1 }}번</strong><br />
                           {{ trm[4] }}
                         </td>
-                        <!-- <td>
-                    <b-button
-                      class="delete-btn"
-                      variant="danger"
-                      @click="deletePlan"
-                    >
-                      삭제
-                    </b-button>
-                  </td> -->
                       </tr>
                     </table>
                   </b-col>
@@ -122,19 +147,27 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import { deletePlan } from "@/api/plan";
 const attractionStore = "attractionStore";
+const memberStore = "memberStore";
 
 export default {
   name: "PlanView",
   components: {},
   data() {
-    return {};
+    return {
+    };
+  },
+  props: {
+    type: { type: String },
   },
   computed: {
     ...mapState(attractionStore, ["travelPlanContent", "travelPlan", "travelMarkers"]),
+    ...mapState(memberStore, ["userInfo"]),
   },
   watch: {},
-  mounted() {},
+  mounted() {
+  },
   methods: {
     ...mapActions(attractionStore, ["getPosition"]),
 
@@ -144,8 +177,11 @@ export default {
         longitude: lon,
       });
     },
-    moveList() {
-      this.$router.push({ name: "planList" });
+    moveListPlan() {
+      if(this.$route.params.type === "plan")
+        this.$router.push({ name: "planList" });
+      if(this.$route.params.type === "myplan")
+        this.$router.push({ name: "myplanList" });
     },
     moveModifyPlan() {
       this.$router.replace({
@@ -155,25 +191,23 @@ export default {
     },
 
     deletePlan() {
-      let param = this.$route.params.planNo;
-      console.log(param);
-      // if (confirm("정말로 삭제하시겠습니까?")) {
-      //   let param = this.$route.params.noticeNo;
-      //   deleteArticle(
-      //     param,
-      //     ({ data }) => {
-      //       let msg = "삭제 처리시 문제가 발생했습니다.";
-      //       if (data === "success") {
-      //         msg = "삭제가 완료되었습니다.";
-      //       }
-      //       alert(msg);
-      //       this.$router.push({ name: "noticeList" });
-      //     },
-      //     (error) => {
-      //       console.log(error);
-      //     }
-      //   );
-      // }
+      if (confirm("정말로 삭제하시겠습니까?")) {
+        let param = this.$route.params.planNo;
+        deletePlan(
+          param,
+          ({ data }) => {
+            let msg = "삭제 처리시 문제가 발생했습니다.";
+            if (data === "success") {
+              msg = "삭제가 완료되었습니다.";
+            }
+            alert(msg);
+            this.$router.push({ name: "planList" });
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      }
     },
   },
 };
