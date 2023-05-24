@@ -12,10 +12,17 @@ public class TripPlanDto {
 	private String startDate;
 	private String endDate;
 	private List<Integer> contentIds;
-	private boolean planPulic;
+	private boolean planPublic;
 	
 	public TripPlanDto() {
 		contentIds = new ArrayList<Integer>();
+	}
+
+	@Override
+	public String toString() {
+		return "TripPlanDto [planNo=" + planNo + ", userId=" + userId + ", title=" + title + ", content=" + content
+				+ ", grade=" + grade + ", startDate=" + startDate + ", endDate=" + endDate + ", contentIds="
+				+ contentIds + ", planPublic=" + planPublic + "]";
 	}
 
 	public int getPlanNo() {
@@ -25,14 +32,15 @@ public class TripPlanDto {
 	public void setPlanNo(int planNo) {
 		this.planNo = planNo;
 	}
-	
+
 	public String getUserId() {
 		return userId;
 	}
+
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -81,20 +89,13 @@ public class TripPlanDto {
 		this.contentIds = contentIds;
 	}
 
-	public boolean isPlanPulic() {
-		return planPulic;
+	public boolean isPlanPublic() {
+		return planPublic;
 	}
 
-	public void setPlanPulic(boolean planPulic) {
-		this.planPulic = planPulic;
+	public void setPlanPublic(boolean planPublic) {
+		this.planPublic = planPublic;
 	}
-
-	@Override
-	public String toString() {
-		return "TripPlanDto [planNo=" + planNo + ", title=" + title + ", content=" + content + ", grade=" + grade
-				+ ", startDate=" + startDate + ", endDate=" + endDate + ", contentId=" + contentIds.toString() + ", planPulic="
-				+ planPulic + "]";
-	}
-
+	
 	
 }

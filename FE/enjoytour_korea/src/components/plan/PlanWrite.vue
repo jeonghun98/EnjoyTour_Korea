@@ -3,11 +3,11 @@
     <plan-attraction></plan-attraction>
     <b-row>
       <b-col class="col-3 p-1">
-        <b-button type="button" variant="primary" @click="openModal">여행코스 작성</b-button>
+        <b-button type="button" variant="primary" @click="openModal">여행계획 작성</b-button>
       </b-col>
     </b-row>
 
-    <b-modal v-model="modalShow" title="여행코스 작성하기" hide-footer>
+    <b-modal v-model="modalShow" title="여행계획 작성하기" hide-footer>
       <b-form>
         <b-form-group id="input-group-title" label="계획 이름:" label-for="title">
           <b-form-input
@@ -136,7 +136,7 @@ export default {
         content: this.content,
         startDate: this.start_date,
         endDate: this.end_date,
-        planPulic: this.checked,
+        planPublic: this.checked,
         // userId: this.userInfo.userId,
         contentIds: List,
       };
