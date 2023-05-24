@@ -52,14 +52,15 @@ export default {
         this.markers.forEach((marker) => marker.setMap(null));
       }
       const positions = markerPositions.map(
-        (position) => new kakao.maps.LatLng(position[0], position[1])
+        (position) => new kakao.maps.LatLng(position.latitude, position.longitude)
       );
       if (markerPositions.length > 0) {
         this.markers = markerPositions.map((position) => {
-          var pos = new kakao.maps.LatLng(position[0], position[1]);
+          var pos = new kakao.maps.LatLng(position.latitude, position.longitude);
 
           var imageSrc;
-          if (position[3] != null) imageSrc = require(`@/assets/img/icon_${position[3]}.png`);
+          if (position.contenttypeid != null)
+            imageSrc = require(`@/assets/img/icon_${position.contenttypeid}.png`);
           else imageSrc = require("@/assets/img/ssafy_logo.png");
 
           const ssafyImageSrc = require("@/assets/img/ssafy_logo.png");
@@ -80,15 +81,15 @@ export default {
             '<div class = "wrap">' +
             '   <div class="info">' +
             '    <div class="title" style="background-color:1BB1FF;">' +
-            position[4] +
+            position.title +
             "   </div>" +
             '    <div class="body">' +
             '     <div class="img">' +
-            `        <img src="${position[6]}" width ="73" height="70" onerror="this.src='${ssafyImageSrc}'">` +
+            `        <img src="${position.image1}" width ="73" height="70" onerror="this.src='${ssafyImageSrc}'">` +
             "     </div>" +
             '      <div class="desc">' +
             '       <div class="ellipsis"> ' +
-            position[5] +
+            position.addr1 +
             "</div>" +
             '       <div class="desc_marker"> ' +
             "마커 클릭시 상세보기" +
@@ -125,8 +126,8 @@ export default {
 
           // // 마커 클릭 이벤트
           kakao.maps.event.addListener(marker, "click", () => {
-            this.getAttraction(position[2]);
-            this.map.panTo(new kakao.maps.LatLng(position[0], position[1]));
+            this.getAttraction(position.contentId);
+            this.map.panTo(new kakao.maps.LatLng(position.latitude, position.longitude));
             this.modalShow = !this.modalShow;
           });
           return marker;

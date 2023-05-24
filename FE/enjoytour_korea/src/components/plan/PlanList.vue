@@ -7,7 +7,12 @@
   <div class="my-3 bg-body rounded">
     <div class="row align-self-center mb-2" style="justify-content: space-between">
       <div class="text-start">
-        <button type="button" id="btn-mv-register" class="btn btn-primary" @click="moveWrite">
+        <button
+          type="button"
+          id="btn-mv-register"
+          class="btn btn-outline-primary"
+          @click="moveWrite"
+        >
           글쓰기
         </button>
       </div>
@@ -152,7 +157,7 @@ export default {
       // todo
       this.$router.push({
         name: "planView",
-        params: { planNo: plan.planNo, type : "plan" },
+        params: { planNo: plan.planNo, type: "plan" },
       });
     },
   },

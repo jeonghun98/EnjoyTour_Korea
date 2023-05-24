@@ -12,6 +12,6 @@ public interface TripPlanService {
 	List<TripPlanDto> listPlan(NoticeParameterDto noticeParameterDto) throws Exception;
 	List<TripPlanDto> mylistPlan(String userId) throws Exception;
 	List<AttractionDto> getPlan(int planNo) throws Exception;
-	void modifyPlan(TripPlanDto planNo) throws Exception;
+	void modifyPlan(TripPlanDto tripPlanDto) throws Exception;
 	void deletePlan(int planNo) throws Exception;
 }

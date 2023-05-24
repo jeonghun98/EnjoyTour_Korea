@@ -13,14 +13,13 @@ import com.ssafy.plan.model.TripPlanDto;
 @Mapper
 public interface TripPlanMapper {
 	void writePlan(TripPlanDto tripPlanDto) throws SQLException;
-	void writeContent(TripPlanDto tripPlanDto) throws Exception;
+	void writePlanAttraction(TripPlanDto tripPlanDto) throws Exception;
 	void authPlan(TripPlanDto tripPlanDto) throws Exception;
 	
 	List<TripPlanDto> listPlan(NoticeParameterDto noticeParameterDto) throws SQLException;
 	List<TripPlanDto> mylistPlan(String userId) throws SQLException;
 	List<AttractionDto> getPlan(int planNo) throws SQLException;
-	void modifyPlan(TripPlanDto planNo) throws SQLException;
-	
+	void modifyPlan(TripPlanDto tripPlanDto) throws SQLException;
 	
 	void deletePlan(int planNo) throws SQLException;
 	void deletePlanAttraction(int planNo) throws SQLException;

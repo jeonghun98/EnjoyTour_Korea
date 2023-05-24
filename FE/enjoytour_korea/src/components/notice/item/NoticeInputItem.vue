@@ -19,21 +19,31 @@
           </textarea>
         </div>
         <div class="col-auto text-center">
-          <button type="submit" id="btn-inform-register" class="btn btn-outline-primary mb-3"
-          v-if="this.type === 'write'">
+          <button
+            type="submit"
+            id="btn-inform-register"
+            class="btn btn-outline-primary mt-3 mb-3 mr-3"
+            v-if="this.type === 'write'"
+          >
             글작성
           </button>
-          
+
           <button
             type="submit"
             id="btn-modify"
-            class="btn btn-outline-primary mb-3"
+            class="btn btn-outline-success mt-3 mb-3 mr-3"
             @submit="onSubmit"
-            v-else >
+            v-else
+          >
             글수정
           </button>
-          <button type="reset" class="btn btn-outline-danger mb-3">초기화</button>
-          <button type="button" id="btn-list" class="btn btn-outline-danger mb-3" @click="moveList">
+          <button type="reset" class="btn btn-outline-danger mt-3 mb-3 mr-3">초기화</button>
+          <button
+            type="button"
+            id="btn-list"
+            class="btn btn-outline-primary mt-3 mb-3 mr-3"
+            @click="moveList"
+          >
             글목록
           </button>
         </div>
@@ -45,15 +55,20 @@
 
 <script>
 import { writeArticle, modifyArticle, getArticle } from "@/api/notice";
+import { mapState } from "vuex";
+const memberStore = "memberStore";
 
 export default {
   name: "NoticeInputItem",
   components: {},
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
+  },
   data() {
     return {
       notice: {
         noticeNo: 0,
-        userId: "ssafy",
+        userId: "",
         title: "",
         content: "",
       },
@@ -84,11 +99,10 @@ export default {
 
       let err = true;
       let msg = "";
-      !this.notice.userId &&
-        ((msg = "작성자 입력해주세요"), (err = false), this.$refs.userId.focus());
-      err &&
-        !this.notice.title &&
-        ((msg = "제목 입력해주세요"), (err = false), this.$refs.title.focus());
+      // !this.notice.userId &&
+      //   ((msg = "작성자 입력해주세요"), (err = false), this.$refs.userId.focus());
+      // err &&
+      !this.notice.title && ((msg = "제목 입력해주세요"), (err = false), this.$refs.title.focus());
       err &&
         !this.notice.content &&
         ((msg = "내용 입력해주세요"), (err = false), this.$refs.content.focus());
@@ -103,7 +117,7 @@ export default {
     },
     WriteNotice() {
       let param = {
-        userId: this.notice.userId,
+        userId: this.userInfo.userid,
         title: this.notice.title,
         content: this.notice.content,
       };
@@ -124,10 +138,10 @@ export default {
     },
     modifyNotice() {
       let param = {
-          noticeNo: this.notice.noticeNo,
-          userId: this.notice.userId,
-          title: this.notice.title,
-          content: this.notice.content,
+        noticeNo: this.notice.noticeNo,
+        userId: this.notice.userId,
+        title: this.notice.title,
+        content: this.notice.content,
       };
       modifyArticle(
         param,
