@@ -12,7 +12,7 @@
 		<result column="plan_grade" property="grade"/>
 		<result column="plan_start_date" property="startDate"/>
 		<result column="plan_end_date" property="endDate"/>
-		<result column="plan_pulic" property="planPulic"/>
+		<result column="plan_public" property="planPublic"/>
 	</resultMap>
 	
 	<resultMap type="attractionDto" id="getAttractionDto">
@@ -30,8 +30,8 @@
 	</resultMap>
 	
 	<insert id="writePlan" parameterType="TripPlanDto">
-		insert into plan (plan_title, user_id, plan_content, plan_start_date, plan_end_date)
-		values (#{title}, #{userId}, #{content}, #{startDate}, #{endDate})
+		insert into plan (plan_title, user_id, plan_content, plan_start_date, plan_end_date, plan_public)
+		values (#{title}, #{userId}, #{content}, #{startDate}, #{endDate}, #{planPublic})
 		<selectKey resultType="int" keyProperty="planNo" order="AFTER">
 			select last_insert_id()
 		</selectKey>
@@ -64,6 +64,7 @@
 	<select id="listPlan" parameterType="map" resultMap="tripplan">
 		select plan_no, user_id, plan_title, plan_content, plan_start_date, plan_end_date, plan_grade
 		from plan p
+		where plan_public = true
 		<include refid="search"></include>
 		order by plan_no desc
 		limit #{start}, #{spp}

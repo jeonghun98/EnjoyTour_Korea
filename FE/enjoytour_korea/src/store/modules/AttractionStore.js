@@ -19,8 +19,8 @@ const attractionStore = {
     travelList: [], // 여행 계획 목록
 
     travelPlanNo: 0, // 선택한 기존 여행 Number
-    travelPlanContent : [], // 선택한 기존 여행 계획
-    travelPlan: [], // 선택한 기존 여행 상세 경로
+    travelPlanContent: [], // 선택한 기존 여행 계획
+    travelPlan: [], // 선택한 기존 여행 모든 contentId
     travelMarkers: [], // 선택한 기존 여행 마커
   },
   getters: {},
@@ -90,7 +90,6 @@ const attractionStore = {
         });
       }
     },
-    
 
     SET_TRAVEL_PLAN_CONTENT(state, planNo) {
       state.travelPlanNo = planNo;
@@ -126,7 +125,6 @@ const attractionStore = {
       state.travelMarkers.sort((a, b) => a[5] - b[5]);
       console.log("travelMarkers", state.travelMarkers);
     },
-
 
     CLEAR_MARKER_POSITIONS(state) {
       state.markerPositions = [];
@@ -262,8 +260,8 @@ const attractionStore = {
         }
       );
     },
-    getTravelPlan({ commit }, planNo) {
-      getPlan(
+    async getTravelPlan({ commit }, planNo) {
+      await getPlan(
         planNo,
         ({ data }) => {
           // console.log("getTravelPlan", data);
