@@ -37,7 +37,7 @@ export default {
       getImageHotplace(
         sfolder, ofile, sfile,
         ({ data }) => {
-          console.log(this.hotplaceImg);
+          // console.log(this.hotplaceImg);
           const url = window.URL.createObjectURL(data);
           this.hotplaceImg = url;
             

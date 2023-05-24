@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     moveWrite() {
-        alert("핫플 write 이동");
+        // alert("핫플 write 이동");
         this.$router.push({ name: "hotplaceWrite" });
     },
   },
