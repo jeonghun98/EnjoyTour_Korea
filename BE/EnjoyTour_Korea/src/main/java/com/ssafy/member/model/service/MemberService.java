@@ -3,6 +3,7 @@ package com.ssafy.member.model.service;
 import java.sql.SQLException;
 import java.util.Map;
 
+import com.ssafy.member.model.MailDto;
 import com.ssafy.member.model.MemberDto;
 
 public interface MemberService {
@@ -20,4 +21,11 @@ public interface MemberService {
 	void saveRefreshToken(String userId, String refreshToken) throws Exception; // 리프레쉬 토큰 저장
 	Object getRefreshToken(String userId) throws Exception; // 리프레쉬 토큰 호출
 	void deleteRefreshToken(String userId) throws Exception; // 리프레쉬 토큰 삭제
+	
+	// SMTP 관련
+	public MailDto createMailAndChangePassword(String useremail) throws Exception;
+	public void updatePassword(String str, String useremail) throws Exception;
+	public String getTempPassword() throws Exception;
+	public void mailSend(MailDto mailDto) throws Exception;
+	public void updatePassWord(String userid, String userpw);
 }

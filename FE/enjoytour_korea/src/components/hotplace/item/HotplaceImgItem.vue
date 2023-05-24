@@ -15,6 +15,7 @@ export default {
     originalFile: String,
     saveFile: String,
     saveFolder: String,
+    fileInfo: Array,
   },
   data() {
     return {
@@ -23,7 +24,8 @@ export default {
     };
   },
   created() {
-    // console.log("ImgItem - props: ", this.originalFile, this.saveFile, this.saveFolder);
+    console.log("ImgItem - props: ", this.fileInfo);
+    console.log("ImgItem - props: ", this.originalFile, this.saveFile, this.saveFolder);
     if(this.originalFile != null){
       // console.log("HotplaceImgItem.vue - 이미지 파일 있음");
 
@@ -58,7 +60,8 @@ export default {
 
 <style scoped>
 #imgItem {
-  width: 30rem;
-  height: 20rem;
+  width: 25rem;
+  height: 15rem;
+  /* object-fit: cover; */
 }
 </style>

@@ -9,6 +9,7 @@
         method="POST"
         action=""
         enctype="multipart/form-data"
+        :file-name-formatter="formatNames"
         @submit="onSubmit"
         @reset="onReset"
       >
@@ -73,18 +74,20 @@
           ></textarea>
         </div>
         <div class="col-auto text-center">
-          <button
+          <b-button
             type="submit"
             id="btn-inform-register"
-            class="btn btn-outline-primary mb-3 mr-3"
+            variant="outline-success"
+            class="mb-3 mr-3"
             v-if="this.type === 'write'"
           >
             등록
-          </button>
+          </b-button>
           <button
             type="submit"
             id="btn-inform-register"
-            class="btn btn-outline-primary mb-3 mr-3"
+            variant="outline-success"
+            class="mb-3 mr-3"
             v-else
           >
             수정
@@ -97,7 +100,7 @@
           >
             목록
           </button>
-          <b-button type="reset" variant="danger" class="btn mb-3"
+          <b-button type="reset" variant="outline-danger" class="btn mb-3"
             >초기화</b-button
           >
         </div>
@@ -108,6 +111,9 @@
 
 <script>
 import { writeHotplace, getHotplace, getImageHotplace, modifyHotplace } from "@/api/hotplace";
+import { mapState } from "vuex";
+
+const memberStore = "memberStore";
 
 export default {
   name: "HotplaceInputItem",
@@ -119,7 +125,7 @@ export default {
     return {
       hotplace: {
         hotplaceNo: 0,
-        userId: "ssafy",
+        userId: "",
         img: "",
         title: "",
         date: "",
@@ -130,7 +136,12 @@ export default {
       isUserid: false,
     };
   },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
+  },
   created() {
+    this.hotplace.userId = this.userInfo.userid;
+
     if (this.type === "modify") {
       let param = this.$route.params.hotplaceNo;
 
@@ -288,6 +299,9 @@ export default {
       alert("핫플레이스 목록 이동");
       this.$router.push({ name: "hotplaceList" });
     },
+    formatNames(files) {
+        return files.length === 1 ? files[0].name : `${files.length} files selected`
+      }
   },
 };
 </script>

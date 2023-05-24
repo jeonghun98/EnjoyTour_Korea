@@ -1,12 +1,16 @@
 <template>
-  <b-modal  id="modal-modify" ref="modal-modify" title="회원정보 수정" hide-footer>
+  <b-modal
+    id="modal-modify"
+    ref="modal-modify"
+    title="회원정보 수정"
+    hide-footer
+  >
     <b-form class="text-left" @submit="onSubmit" @reset="onReset">
-      <b-form-group label="아이디:" label-for="userid"
-        >
+      <b-form-group label="아이디:" label-for="userid">
         <b-form-input
           id="userid"
           ref="userid"
-          v-model="userInfo.userid"
+          v-model="user.userid"
           required
           readonly
         ></b-form-input>
@@ -16,7 +20,7 @@
           type="password"
           id="userpwd"
           ref="userpwd"
-          v-model="userInfo.userpw"
+          v-model="user.userpw"
           required
           placeholder="비밀번호 입력...."
         ></b-form-input>
@@ -25,7 +29,7 @@
         <b-form-input
           id="username"
           ref="username"
-          v-model="userInfo.username"
+          v-model="user.username"
           required
           placeholder="이름 입력...."
         ></b-form-input>
@@ -34,37 +38,33 @@
         <b-form-input
           id="useremail"
           ref="useremail"
-          v-model="userInfo.useremail"
+          v-model="user.useremail"
           required
           placeholder="이메일 입력...."
         ></b-form-input>
       </b-form-group>
-        <b-form-group label="전화번호 입력:" label-for="userphone">
+      <b-form-group label="전화번호 입력:" label-for="userphone">
         <b-form-input
           id="userphone"
           ref="userphone"
-          v-model="userInfo.userphone"
+          v-model="user.userphone"
           required
           placeholder="전화번호 입력...."
         ></b-form-input>
       </b-form-group>
 
       <b-form-row>
-          <b-button type="submit" variant="primary" class="ml-auto">
-            수정하기
-          </b-button>
-          <b-button type="reset" variant="primary" class="ml-1">
-            취소
-          </b-button>
+        <b-button type="submit" variant="primary" class="ml-auto">
+          수정하기
+        </b-button>
+        <b-button type="reset" variant="primary" class="ml-1"> 취소 </b-button>
       </b-form-row>
     </b-form>
   </b-modal>
 </template>
 
 <script>
-
-
-import { update } from '@/api/member';
+import { update } from "@/api/member";
 import { mapState } from "vuex";
 
 export default {
@@ -76,11 +76,10 @@ export default {
       user: {
         userid: "",
         userpw: "",
-        username:"",
+        username: "",
         useremail: "",
         userphone: "",
       },
-
     };
   },
   created() {
@@ -93,8 +92,7 @@ export default {
   computed: {
     ...mapState("memberStore", ["userInfo"]),
   },
-  watch: {
-  },
+  watch: {},
   methods: {
     onSubmit(event) {
       event.preventDefault();
@@ -102,7 +100,7 @@ export default {
     },
     onReset(event) {
       event.preventDefault();
-      this.$refs['modal-modify'].hide();
+      this.$refs["modal-modify"].hide();
     },
     checkValue() {
       // 입력값 체크하기
@@ -138,8 +136,16 @@ export default {
       else this.modifyUser();
     },
     modifyUser() {
-      console.log(`회원정보수정: ${this.user.userid}, ${this.user.userpw}, ${this.user.username}, ${this.user.useremail}, ${this.user.userphone}`);
-  
+      console.log(
+        `회원정보수정: ${this.user.userid}, ${this.user.userpw}, ${this.user.username}, ${this.user.useremail}, ${this.user.userphone}`
+      );
+
+      this.userInfo.username = this.user.username;
+      this.userInfo.userpw = this.user.userpw;
+      this.userInfo.userid = this.user.userid;
+      this.userInfo.useremail = this.user.useremail;
+      this.userInfo.userphone = this.user.userphone;
+
       let user = {
         username: this.user.username,
         userid: this.user.userid,
@@ -147,7 +153,7 @@ export default {
         useremail: this.user.useremail,
         userphone: this.user.userphone,
       };
-      console.log("UserModifyModal: "+user);
+      console.log("UserModifyModal: " + user);
       update(
         user,
         ({ data }) => {
@@ -157,7 +163,7 @@ export default {
             console.log("UserJoinModal - ", data);
           }
           alert(msg);
-          this.$refs['modal-modify'].hide();
+          this.$refs["modal-modify"].hide();
         },
         (error) => {
           console.log(error);

@@ -1,5 +1,5 @@
 <template>
-  <b-modal  id="modal-login" ref="modal-login" title="로그인" hide-footer>
+  <b-modal  id="modal-login" ref="modal-login" title="로그인" hide-footer no-stacking>
     <b-form class="text-left">
       <b-alert show variant="danger" v-if="isLoginError">아이디 또는 비밀번호를 확인하세요.</b-alert>
       <b-form-group label="아이디:" label-for="userid">
@@ -31,7 +31,7 @@
           <b-button type="button" variant="outline-primary" class="ml-1">
             아이디 찾기
           </b-button>
-          <b-button type="button" variant="outline-primary" class="ml-1">
+          <b-button type="button" variant="outline-primary" class="ml-1" v-b-modal.modal-findpwd>
             비밀번호 찾기
           </b-button>
           <b-button type="button" variant="danger" class="ml-1" @click="cancel"> 취소 </b-button>
