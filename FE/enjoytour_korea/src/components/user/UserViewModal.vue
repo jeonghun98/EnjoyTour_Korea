@@ -5,6 +5,7 @@
     title="마이페이지"
     hide-footer
     no-stacking
+    v-if="userInfo"
   >
     <b-form id="form-view" method="" action="">
       <div class="mb-3">

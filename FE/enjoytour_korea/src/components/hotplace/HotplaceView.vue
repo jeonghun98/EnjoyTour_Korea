@@ -5,75 +5,86 @@
     <b-col>
       <b-row>
         <!-- <hotplace-img-item-vue v-for="fileInfo in hotplace.fileInfos" :key="fileInfo.originalFile"></hotplace-img-item-vue> -->
-        <hotplace-img-item-vue v-for="(fileInfo, index) in hotplace.fileInfos" :key="index" v-bind="fileInfo"></hotplace-img-item-vue>
+        <hotplace-img-item-vue
+          v-for="(fileInfo, index) in hotplace.fileInfos"
+          :key="index"
+          v-bind="fileInfo"
+        ></hotplace-img-item-vue>
       </b-row>
       <b-row>
-        <button
+        <b-col>
+          <b-button
             type="button"
+            variant="outline-primary"
             id="btn-move-list"
-            class="btn btn-outline-primary mt-3 mb-3 mr-3"
+            class="btn mt-3 mb-3 mr-3"
             @click="moveListHotplace"
           >
             목록
-        </button>
-        <button
+          </b-button>
+        </b-col>
+        <b-col v-if="userInfo.userid === hotplace.userId">
+          <b-button
             type="button"
             id="btn-move-list"
-            class="btn btn-outline-primary mt-3 mb-3 mr-3"
+            variant="outline-success"
+            class="btn mt-3 mb-3 mr-3"
             @click="modifyHotplace"
           >
             글수정
-        </button>
-        <button
+          </b-button>
+          <b-button
             type="button"
             id="btn-move-list"
-            class="btn btn-outline-primary mt-3 mb-3 mr-3"
+            variant="outline-danger"
+            class="btn mt-3 mb-3 mr-auto"
             @click="deleteHotplace"
           >
             글삭제
-        </button>
+          </b-button>
+        </b-col>
       </b-row>
     </b-col>
     <!-- 핫플 정보, 위치 -->
     <b-col>
       <b-row>
-        <form id="form-view" method="" action="">
-        <div class="mb-3 mt-3">
-          <label for="title" class="form-label">핫플이름</label>
-          <input
-            type="text"
-            class="form-control"
-            id="title"
-            name="title"
-            placeholder="핫플이름.."
-            v-model="hotplace.title"
-            readonly
-          />
-        </div>
-        <div class="mb-3">
-          <label for="date" class="form-label">다녀온 날짜</label>
-          <input
-            type="date"
-            class="form-control"
-            id="date"
-            name="date"
-            value="2023-03-27"
-            v-model="hotplace.date"
-            readonly
-          />
-        </div>
-        <div class="mb-3">
-          <label for="content" class="form-label">핫플 상세설명</label>
-          <textarea
-            class="form-control"
-            id="content"
-            name="content"
-            rows="7"
-            v-model="hotplace.content"
-            readonly
-          ></textarea>
-        </div>
-      </form>
+        <form id="form-view" method="" action="" style="width: 100%">
+          <div class="mb-3 mt-3">
+            <label for="title" class="form-label">핫플이름</label>
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              name="title"
+              placeholder="핫플이름.."
+              v-model="hotplace.title"
+              readonly
+            />
+          </div>
+          <div class="mb-3">
+            <label for="date" class="form-label">다녀온 날짜</label>
+            <input
+              type="date"
+              class="form-control"
+              id="date"
+              name="date"
+              value="2023-03-27"
+              v-model="hotplace.date"
+              readonly
+            />
+          </div>
+          <div class="mb-3">
+            <label for="content" class="form-label">핫플 상세설명</label>
+            <textarea
+              class="form-control"
+              id="content"
+              name="content"
+              rows="7"
+              v-model="hotplace.content"
+              readonly
+            ></textarea>
+          </div>
+        </form>
       </b-row>
       <b-row>
         <!-- map start -->
@@ -87,11 +98,14 @@
 </template>
 
 <script>
-import { getHotplace, deleteHotplace } from '@/api/hotplace';
-import HotplaceImgItemVue from './item/HotplaceImgItem.vue';
+import { getHotplace, deleteHotplace } from "@/api/hotplace";
+import HotplaceImgItemVue from "./item/HotplaceImgItem.vue";
+import { mapState } from "vuex";
+
+const memberStore = "memberStore";
 
 export default {
-  name: 'HotplaceView',
+  name: "HotplaceView",
   components: {
     HotplaceImgItemVue,
   },
@@ -100,6 +114,9 @@ export default {
       hotplace: {},
       hotplaceImg: "",
     };
+  },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
   },
   created() {
     let param = this.$route.params.hotplaceNo;
@@ -116,17 +133,17 @@ export default {
   },
   methods: {
     moveListHotplace() {
-      alert("핫플레이스 목록 이동")
-      this.$router.push({ name: "hotplaceList" })
+      alert("핫플레이스 목록 이동");
+      this.$router.push({ name: "hotplaceList" });
     },
     modifyHotplace() {
-      alert("핫플레이스 수정 이동")
+      alert("핫플레이스 수정 이동");
       this.$router.replace({
         name: "hotplaceModify",
         params: { hotplaceNo: this.hotplace.hotplaceNo },
       });
     },
-    deleteHotplace(){
+    deleteHotplace() {
       // alert("핫플레이스 삭제 이동")
       if (confirm("정말로 삭제하시겠습니까?")) {
         let param = this.$route.params.hotplaceNo;
@@ -146,7 +163,6 @@ export default {
           }
         );
       }
-
     },
   },
 };
@@ -154,8 +170,8 @@ export default {
 
 <style scoped>
 #map {
-  width: 100%; 
-  height: 30rem; 
+  width: 100%;
+  height: 30rem;
   background-color: lightgray;
 }
 </style>
