@@ -2,7 +2,7 @@
   <div class="row p-1">
     <div>
     <button type="button" id="btn-mv-register" class="btn btn-outline-primary btn-sm mr-1"
-          @click="moveWrite">
+          @click="moveWrite" v-if="userInfo">
                 핫플 등록하기
           </button>
     </div>
@@ -22,6 +22,9 @@
 <script>
 import { listHotplace } from "@/api/hotplace";
 import HotplaceListItem from './item/HotplaceListItem.vue';
+import { mapState } from "vuex";
+
+const memberStore = "memberStore";
 
 export default {
   name: "HotplaceList",
@@ -43,6 +46,9 @@ export default {
         console.log(error);
       }
     );
+  },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
   },
   methods: {
     moveWrite() {

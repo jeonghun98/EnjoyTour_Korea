@@ -5,6 +5,8 @@
               :img-src="hotplaceImg"
               img-alt="Image"
               img-top
+              style="max-width: 20rem;"
+              class="mb-2 "
             >
             <!--               :img-src="hotplaceImg"-->
             <!-- :img-src="require('../../../assets/img/ssafy_logo.png')" -->
