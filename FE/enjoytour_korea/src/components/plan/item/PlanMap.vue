@@ -20,7 +20,13 @@
             @change="setPlanMarker"
           >
             <div v-if="planList.length == 0">여행경로를 추가해주세요</div>
-            <div v-else class="list-group-item" v-for="(atr, index) in planList" :key="index" @click="showModal(atr.contentId)">
+            <div
+              v-else
+              class="list-group-item"
+              v-for="(atr, index) in planList"
+              :key="index"
+              @click="showModal(atr.contentId)"
+            >
               <b-card no-body class="attraction-item overflow-hidden">
                 <b-row no-gutters>
                   <b-col md="4" class="m-auto">
@@ -94,19 +100,14 @@ export default {
   },
   components: {
     draggable,
-    AttractionModal
+    AttractionModal,
   },
   props: {
     opt: Boolean,
   },
   computed: {
     // ...mapGetters(itemStore, ["getSidoText", "getGugunText", "getContentText"]),
-    ...mapState(attractionStore, [
-      "latitude",
-      "longitude",
-      "attractions",
-      //   "planMarkers"
-    ]),
+    ...mapState(attractionStore, ["latitude", "longitude", "attractions", "planMarkers"]),
   },
   watch: {
     opt() {
@@ -230,6 +231,8 @@ export default {
   },
   created() {
     this.modalShow = false;
+    this.planList = this.planMarkers;
+    console.log();
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -237,7 +240,6 @@ export default {
     } else {
       this.loadScript();
     }
-    this.CLEAR_PLAN_MARKERS();
   },
   methods: {
     ...mapMutations(attractionStore, [
@@ -286,8 +288,7 @@ export default {
       if (this.modalShow) {
         this.modalShow = false;
         this.CLEAR_ATTRACTION();
-      }
-      else {
+      } else {
         this.CLEAR_ATTRACTION();
         this.getAttraction(id);
         this.modalShow = true;

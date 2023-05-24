@@ -37,7 +37,7 @@
 		</selectKey>
 	</insert>
 	
-	<insert id="writeContent" parameterType="TripPlanDto">
+	<insert id="writePlanAttraction" parameterType="TripPlanDto">
 		insert into plan_attraction (plan_no, content_id)
 		values
 		<foreach collection="contentIds" item="contentId" separator=" , ">
@@ -62,7 +62,7 @@
 	</sql>
 	
 	<select id="listPlan" parameterType="map" resultMap="tripplan">
-		select plan_no, user_id, plan_title, plan_content, plan_start_date, plan_end_date, plan_grade
+		select plan_no, user_id, plan_title, plan_content, plan_start_date, plan_end_date, plan_grade, plan_public
 		from plan p
 		where plan_public = true
 		<include refid="search"></include>
@@ -78,7 +78,7 @@
 	</select>
 	
 	<select id="mylistPlan" parameterType="string" resultMap="tripplan">
-		select plan_no, user_id, plan_title, plan_content, plan_start_date, plan_end_date, plan_grade
+		select plan_no, user_id, plan_title, plan_content, plan_start_date, plan_end_date, plan_grade, plan_public
 		from plan p
 		where user_id = #{userId}
 		order by plan_no desc
@@ -98,5 +98,12 @@
 		delete from auth_plan
 		where plan_no = #{planNo}
 	</delete>
+	
+	<update id="modifyPlan" parameterType="TripPlanDto">
+		update plan
+		set plan_title = #{title}, plan_content = #{content}, plan_public = #{planPublic},
+		plan_start_date = #{startDate}, plan_end_date = #{endDate}
+		where plan_no = #{planNo}
+	</update>
 	
 </mapper>

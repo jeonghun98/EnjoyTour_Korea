@@ -28,34 +28,34 @@
             caption="한국 여행지"
             text="지역과 관광지 유형에 따라 여행지를 검색해보세요"
             :img-src="require('../assets/img/korea4.jpg')"
-          ><b-button
-                variant="outline-secondary"
-                class="btn-outline-secondary"
-                @click="moveAttraction"
-                >더보기</b-button
-              ></b-carousel-slide>
+            ><b-button
+              variant="outline-secondary"
+              class="btn-outline-secondary"
+              @click="moveAttraction"
+              >더보기</b-button
+            ></b-carousel-slide
+          >
 
           <b-carousel-slide
             caption="모두의 여행계획"
             text="여행 계획을 세우고 다른 사람들과 공유해보세요"
             :img-src="require('../assets/img/korea3.jpg')"
-          ><b-button
-                variant="outline-secondary"
-                class="btn-outline-secondary"
-                @click="movePlan"
-                >더보기</b-button
-              ></b-carousel-slide>
+            ><b-button variant="outline-secondary" class="btn-outline-secondary" @click="movePlan"
+              >더보기</b-button
+            ></b-carousel-slide
+          >
 
           <b-carousel-slide
             caption="핫플 자랑하기"
             text="자신이 다녀온 핫플레이스의 경험을 나누어주세요"
             :img-src="require('../assets/img/korea3.jpg')"
-          ><b-button
-                variant="outline-secondary"
-                class="btn-outline-secondary"
-                @click="moveHotplace"
-                >더보기</b-button
-              ></b-carousel-slide>
+            ><b-button
+              variant="outline-secondary"
+              class="btn-outline-secondary"
+              @click="moveHotplace"
+              >더보기</b-button
+            ></b-carousel-slide
+          >
         </b-carousel>
       </section>
 
@@ -91,9 +91,7 @@
         <b-col class="col-lg-9 col-12">
           <!-- 카드 -->
           <div class="container" id="custom-cards">
-            <div
-              class="row row-cols-3 row-cols-lg-3 align-items-stretch g-4 py-5"
-            >
+            <div class="row row-cols-3 row-cols-lg-3 align-items-stretch g-4 py-5">
               <div class="col mb-1">
                 <div
                   class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
@@ -101,9 +99,7 @@
                     background-image: url('https://images.squarespace-cdn.com/content/v1/586ebc34d482e9c69268b69a/1624387036637-3HYG08Z0XZEG4KALHROR/image-asset.png?format=750w');
                   "
                 >
-                  <div
-                    class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
-                  >
+                  <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
                     <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">서울</h2>
                   </div>
                 </div>
@@ -115,9 +111,7 @@
                     background-image: url('https://images.squarespace-cdn.com/content/v1/586ebc34d482e9c69268b69a/1624387216622-W0X3QWQKO4N7J3PPSLIR/20201230201102636_L212Z69O.png?format=750w');
                   "
                 >
-                  <div
-                    class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
-                  >
+                  <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
                     <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">제주</h2>
                   </div>
                 </div>
@@ -130,13 +124,10 @@
                   "
                 >
                   <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
-                    <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">
-                      보성
-                    </h2>
+                    <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">보성</h2>
                   </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </b-col>
@@ -154,17 +145,17 @@ export default {
     };
   },
   methods: {
-    moveAttraction(){
+    moveAttraction() {
       this.$router.replace({
         name: "Attraction",
       });
     },
-    movePlan(){
+    movePlan() {
       this.$router.replace({
         name: "plan",
       });
     },
-    moveHotplace(){
+    moveHotplace() {
       this.$router.replace({
         name: "hotplace",
       });
@@ -188,7 +179,7 @@ export default {
 .divider {
   width: 55%;
   margin: 2rem auto;
-  border-top: 0.5rem solid #59b3f7;
+  /* border-top: 0.5rem solid #59b3f7; */
 }
 .align-self-center {
   align-self: center !important;

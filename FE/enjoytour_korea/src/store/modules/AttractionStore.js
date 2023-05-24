@@ -35,16 +35,16 @@ const attractionStore = {
     SET_MARKER_POSITIONS(state, attractionList) {
       if (attractionList.length != 0) {
         attractionList.forEach((attraction) => {
-          state.markerPositions.push([
-            attraction.latitude,
-            attraction.longitude,
-            attraction.contentId,
-            attraction.contenttypeid,
-            attraction.title,
-            attraction.addr1,
-            attraction.image1,
-            attraction.tel,
-          ]);
+          state.markerPositions.push({
+            latitude: attraction.latitude,
+            longitude: attraction.longitude,
+            contentId: attraction.contentId,
+            contenttypeid: attraction.contenttypeid,
+            title: attraction.title,
+            addr1: attraction.addr1,
+            image1: attraction.image1,
+            tel: attraction.tel,
+          });
         });
       }
       // console.log(state.markerPositions);
@@ -53,16 +53,26 @@ const attractionStore = {
     SET_PLAN_MARKERS(state, planList) {
       if (planList.length != 0) {
         planList.forEach((planItem) => {
-          state.planMarkers.push([
-            planItem.latitude,
-            planItem.longitude,
-            planItem.contentId,
-            planItem.contenttypeid,
-            planItem.title,
-            planItem.addr1,
-            planItem.image1,
-            planItem.tel,
-          ]);
+          state.planMarkers.push({
+            latitude: planItem.latitude,
+            longitude: planItem.longitude,
+            contentId: planItem.contentId,
+            contenttypeid: planItem.contenttypeid,
+            title: planItem.title,
+            addr1: planItem.addr1,
+            image1: planItem.image1,
+            tel: planItem.tel,
+          });
+        });
+      }
+    },
+
+    SET_PLAN_MARKERS_MODIFY(state, planList) {
+      if (planList.length != 0) {
+        planList.forEach((planItem) => {
+          state.planMarkers.push(
+            planItem
+          );
         });
       }
     },
@@ -83,7 +93,7 @@ const attractionStore = {
             userId: travelPlan.userId,
             startDate: travelPlan.startDate,
             endDate: travelPlan.endDate,
-            planPulic: travelPlan.planPulic,
+            planPublic: travelPlan.planPublic,
             grade: travelPlan.grade,
             // contentIds: contentList,
           });
@@ -111,16 +121,16 @@ const attractionStore = {
     SET_TRAVEL_MARKERS(state, data) {
       state.travelMarkers = [];
       data.forEach((item) => {
-        state.travelMarkers.push([
-          item.latitude,
-          item.longitude,
-          item.contentId,
-          item.contenttypeid,
-          item.title,
-          item.addr1,
-          item.image1,
-          item.tel,
-        ]);
+        state.travelMarkers.push({
+          latitude: item.latitude,
+          longitude: item.longitude,
+          contentId: item.contentId,
+          contenttypeid: item.contenttypeid,
+          title: item.title,
+          addr1: item.addr1,
+          image1: item.image1,
+          tel: item.tel,
+        });
       });
       state.travelMarkers.sort((a, b) => a[5] - b[5]);
       console.log("travelMarkers", state.travelMarkers);
@@ -255,6 +265,7 @@ const attractionStore = {
           param,
           ({ data }) => {
             commit("SET_TRAVEL_LIST", data);
+            // console.log("getTravelList", data);
           },
           (error) => {
             console.log(error);
@@ -265,6 +276,7 @@ const attractionStore = {
           param,
           ({ data }) => {
             commit("SET_TRAVEL_LIST", data);
+            // console.log("getTravelList", data);
           },
           (error) => {
             console.log(error);
@@ -272,8 +284,8 @@ const attractionStore = {
         );
       }
     },
-    async getTravelPlan({ commit }, planNo) {
-      await getPlan(
+    getTravelPlan({ commit }, planNo) {
+      getPlan(
         planNo,
         ({ data }) => {
           // console.log("getTravelPlan", data);

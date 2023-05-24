@@ -1,9 +1,9 @@
 <template>
   <div>
     <nav class="navbar navbar-expand-lg bg-body">
-      <div class="container pe-1 ps-1 mt-3">
+      <div class="container pe-1 ps-1 mt-3 fluid='xl'" style="justify-content: center">
         <router-link :to="{ name: 'home' }">
-        <b-card-img :src="require('@/assets/img/skt.png')"> ET </b-card-img>
+          <b-card-img :src="require('@/assets/img/skt.png')"> ET </b-card-img>
         </router-link>
       </div>
     </nav>
@@ -28,7 +28,6 @@
             <b-nav-item to="/hotplace" exact exact-active-class="active"
               ><b>핫플자랑하기</b></b-nav-item
             >
-
             <!-- 로그인 후 -->
             <b-nav-item class="align-self-center" v-if="userInfo">
               {{ userInfo.username }}({{ userInfo.userid }})님 환영합니다.
@@ -64,7 +63,6 @@
                 </b-dropdown-item>
               </b-nav-item-dropdown>
             </b-navbar-nav>
-
           </b-nav>
           <!-- <button
           class="navbar-toggler"
@@ -144,4 +142,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+/* .router-link-active {
+  background: #fcd5ce;
+} */
+
+.router-link-exact-active {
+  color: #000000;
+}
+</style>

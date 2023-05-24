@@ -1,60 +1,59 @@
 <template>
   <!-- 전체 글 -->
   <div class="my-3 bg-body rounded">
-      <div class="row align-self-center mb-2" 
-    style ="justify-content: space-between;">
-        <div class="text-start">
-          <button
-            type="button"
-            id="btn-mv-register"
-            class="btn btn-primary"
-            @click="moveWrite"
-          >
-            글쓰기
-          </button>
-        </div>
-        <div class="offset-5 d-flex justify-content-end">
-          <form class="d-flex mr-2" id="form-search" @submit="onSearch">
-            <input type="hidden" name="action" value="list" />
-            <input type="hidden" name="pgno" value="1" />
-            <b-select v-model="serchSelected" :options="searchOptions" class="mr-2"></b-select>
-            <div class="input-group input-group-sm">
-              <input
-                type="text"
-                name="word"
-                id="word"
-                class="form-control mr-2"
-                placeholder="검색어..."
-                v-model="searchWord"
-                style="height: auto;"
-              />
-              <button id="btn-search" class="btn btn-dark" type="submit" @submit="onSearch">
-                검색
-              </button>
-            </div>
-          </form>
-          <div>
-            <input type="hidden" name="action" value="sort" />
-            <input type="hidden" name="pgno" value="1" />
-            <b-select v-model="sortSelected" :options="sortOptions" class="mr-2"></b-select>
+    <div class="row align-self-center mb-2" style="justify-content: space-between">
+      <div class="text-start">
+        <button
+          type="button"
+          id="btn-mv-register"
+          class="btn btn-outline-primary"
+          @click="moveWrite"
+        >
+          글쓰기
+        </button>
+      </div>
+      <div class="offset-5 d-flex justify-content-end">
+        <form class="d-flex mr-2" id="form-search" @submit="onSearch">
+          <input type="hidden" name="action" value="list" />
+          <input type="hidden" name="pgno" value="1" />
+          <b-select v-model="serchSelected" :options="searchOptions" class="mr-2"></b-select>
+          <div class="input-group input-group-sm">
+            <input
+              type="text"
+              name="word"
+              id="word"
+              class="form-control mr-2"
+              placeholder="검색어..."
+              v-model="searchWord"
+              style="height: auto"
+            />
+            <button id="btn-search" class="btn btn-dark" type="submit" @submit="onSearch">
+              검색
+            </button>
           </div>
+        </form>
+        <div>
+          <input type="hidden" name="action" value="sort" />
+          <input type="hidden" name="pgno" value="1" />
+          <b-select v-model="sortSelected" :options="sortOptions" class="mr-2"></b-select>
         </div>
       </div>
-      <b-row>
-        <b-col>
-          <b-table hover :items="notices" :fields="fields" @row-clicked="viewNotice">
-            <template #cell(subject)="data">
-              <router-link :to="{ name: 'noticeView', params: { noticeNo: data.item.noticeNo } }">
-                {{ data.item.title }}
-              </router-link>
-            </template>
-            <template #cell(registerTime)="data">
-                {{ data.item.registerTime |  dateFormat }}
-            </template>
-          </b-table>
-        </b-col>
-      </b-row>
     </div>
+    <b-row>
+      <b-col>
+        <b-table hover :items="notices" :fields="fields" @row-clicked="viewNotice">
+          <template #cell(subject)="data">
+            <router-link :to="{ name: 'noticeView', params: { noticeNo: data.item.noticeNo } }">
+              {{ data.item.title }}
+            </router-link>
+          </template>
+          <template #cell(registerTime)="data">
+            {{ data.item.registerTime | dateFormat }}
+          </template>
+        </b-table>
+      </b-col>
+    </b-row>
+  </div>
 </template>
 
 <script>
@@ -141,10 +140,10 @@ export default {
 
 <style scoped>
 .row {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 .col {
-    padding: 0px;
+  padding: 0px;
 }
 </style>

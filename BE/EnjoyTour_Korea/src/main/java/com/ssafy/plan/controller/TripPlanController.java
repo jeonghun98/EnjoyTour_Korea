@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -97,6 +98,17 @@ public class TripPlanController{
 		tripPlanService.deletePlan(planNo);
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	}
+	
+
+	@ApiOperation(value = "plan 글수정", notes = "수정할 plan 정보를 입력한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+	@PutMapping
+	public ResponseEntity<String> modifiyPlan(@RequestBody TripPlanDto tripPlanDto) throws Exception {
+		logger.info("noticePlan - 호출 {}", tripPlanDto);
+		
+		tripPlanService.modifyPlan(tripPlanDto);
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+	}
+
 	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();
