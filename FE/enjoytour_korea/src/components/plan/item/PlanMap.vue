@@ -5,6 +5,9 @@
         <div id="kakaomap" style="width: 100%; height: 40rem"></div>
       </div>
     </b-col>
+    <b-modal v-model="modalShow" size="xl" ok-only>
+      <attraction-modal></attraction-modal>
+    </b-modal>
     <b-col>
       <div class="row" id="plan-item-list">
         <div>
@@ -17,7 +20,7 @@
             @change="setPlanMarker"
           >
             <div v-if="planList.length == 0">여행경로를 추가해주세요</div>
-            <div v-else class="list-group-item" v-for="(atr, index) in planList" :key="index">
+            <div v-else class="list-group-item" v-for="(atr, index) in planList" :key="index" @click="showModal(atr.contentId)">
               <b-card no-body class="attraction-item overflow-hidden">
                 <b-row no-gutters>
                   <b-col md="4" class="m-auto">
@@ -70,6 +73,7 @@
 import { mapState, mapActions, mapMutations } from "vuex";
 const attractionStore = "attractionStore";
 import draggable from "vuedraggable";
+import AttractionModal from "@/components/attraction/AttractionModal.vue";
 
 export default {
   name: "PlanMap",
@@ -84,10 +88,13 @@ export default {
       polyline: null,
 
       planList: [],
+
+      modalShow: false,
     };
   },
   components: {
     draggable,
+    AttractionModal
   },
   props: {
     opt: Boolean,
@@ -153,6 +160,7 @@ export default {
             '   <div class="info">' +
             '    <div class="title" style="background-color:1BB1FF;">' +
             position.title +
+            '   <div id="close"></div>' +
             "   </div>" +
             '    <div class="body">' +
             '     <div class="img">' +
@@ -176,6 +184,23 @@ export default {
             content: contents,
             position: pos,
           });
+
+          // let check = false;
+          // kakao.maps.event.addListener(marker, "click", () => {
+          //   if (!check) {
+          //     infowindow.open(this.map, marker);
+          //     check = true;
+          //   }
+          //   else {
+          //     infowindow.close();
+          //     check = false;
+          //   }
+          // });
+
+          // // let check = false;
+          // kakao.maps.event.addListener(marker, "click", () => {
+          //   infowindow.open(this.map, marker);
+          // });
 
           // 마커 mouseover 이벤트
           kakao.maps.event.addListener(marker, "mouseover", () => {
@@ -203,7 +228,9 @@ export default {
       }
     },
   },
-  created() {},
+  created() {
+    this.modalShow = false;
+  },
   mounted() {
     if (window.kakao && window.kakao.maps) {
       this.initMap();
@@ -254,6 +281,17 @@ export default {
         "&autoload=false&libraries=services";
       document.head.appendChild(script);
       script.onload = () => kakao.maps.load(this.initMap);
+    },
+    showModal(id) {
+      if (this.modalShow) {
+        this.modalShow = false;
+        this.CLEAR_ATTRACTION();
+      }
+      else {
+        this.CLEAR_ATTRACTION();
+        this.getAttraction(id);
+        this.modalShow = true;
+      }
     },
     makeLine(positions) {
       if (this.polyline != null) {

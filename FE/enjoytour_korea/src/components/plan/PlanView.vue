@@ -1,162 +1,204 @@
-<!-- <template>
-    <div>  
-      <b-row v-model="modalShow" title="여행코스 작성하기">
-        <b-form>
-          <b-form-group id="input-group-title" label="계획 이름:" label-for="title">
-            <b-form-input
-              id="title"
-              ref="title"
-              v-model="title"
-              placeholder=""
-              required
-            ></b-form-input>
-          </b-form-group>
-  
-          <b-form-group id="input-group-content" label="계획 상세:" label-for="content">
-            <b-form-textarea
-              id="content"
-              ref="content"
-              v-model="content"
-              placeholder=""
-              rows="6"
-              max-rows="15"
-            ></b-form-textarea>
-          </b-form-group>
-  
-          <label for="start-datepicker">출발일: </label>
-          <b-form-datepicker id="start_date" v-model="start_date" class="mb-2" ref="start_date" />
-  
-          <label for="end-datepicker">도착일: </label>
-          <b-form-datepicker id="end_date" v-model="end_date" class="mb-2" ref="end_date" />
-  
-          <b-form-checkbox
-            v-model="checked"
-            name="check-button"
-            switch
-            class="float-right mr-3 ml-3 mt-1"
-            size="lg"
-            style="font-weight: bold"
-          >
-            모두 공개
-          </b-form-checkbox>
-  
-          <b-button type="button" @click="onSubmit" variant="primary">작성하기</b-button>
-          <b-button type="reset" class="ml-2" @click="onReset" variant="danger">초기화</b-button>
-        </b-form>
-      </b-row>
-      <b-row>
-        <b-col class="col-3 p-1">
-          <b-button type="button" variant="primary" @click="openModal">여행코스 작성</b-button>
-        </b-col>
-      </b-row>
-    </div>
-  </template>
-  
-  <script>
-  import PlanAttraction from "./item/PlanAttraction.vue";
-  import { mapState, mapActions } from "vuex";
-  const attractionStore = "attractionStore";
-  
-  import { writePlan } from "@/api/plan";
-  
-  export default {
-    name: "PlanView",
-    components: {
-      PlanAttraction,
+<template>
+  <div id="travel-info" v-if="travelPlanContent">
+    <b-row class="mt-3">
+      <b-col>
+        <b-row>
+          <b-navbar toggleable="lg">
+            <b-navbar-brand class="ms-3">
+              <h3>여행계획 상세보기</h3>
+            </b-navbar-brand>
+          </b-navbar>
+        </b-row>
+
+        <b-row class = "mr-2">
+          <div id="travel-info-item">
+            <table class="table table-hover">
+              <tr>
+                <td>제목</td>
+                <td>{{ travelPlanContent.title }}</td>
+              </tr>
+              <tr>
+                <td>작성자</td>
+                <td>{{ travelPlanContent.userId }}</td>
+              </tr>
+              <tr>
+                <td>출발일</td>
+                <td>{{ travelPlanContent.startDate }}</td>
+              </tr>
+              <tr>
+                <td>도착일</td>
+                <td>{{ travelPlanContent.endDate }}</td>
+              </tr>
+              <tr>
+                <td>내용</td>
+                <td>{{ travelPlanContent.content }}</td>
+              </tr>
+            </table>
+          </div>
+        </b-row>
+      </b-col>
+
+      <b-col>
+        <b-row>
+          <b-navbar toggleable="lg">
+            <b-navbar-brand class="ms-3">
+              <h3>여행 경로</h3>
+            </b-navbar-brand>
+          </b-navbar>
+        </b-row>
+        <b-row>
+          <table class="table table-hover">
+            <div
+              class="list-group-item"
+              v-for="(trm, index) in travelMarkers"
+              :key="index"
+              @click="movePan(trm[0], trm[1])"
+            >
+              <b-card no-body class="attraction-item overflow-hidden">
+                <b-row no-gutters>
+                  <b-col md="4" class="m-auto">
+                    <b-card-img
+                      class="img align-middle"
+                      v-if="trm[6] != ''"
+                      :src="trm[6]"
+                      :alt="trm[4]"
+                    />
+                    <b-card-img
+                      class="img align-middle"
+                      v-if="trm[6] == ''"
+                      :src="require('@/assets/img/ssafy_logo.png')"
+                      alt="no image"
+                    />
+                  </b-col>
+                  <b-col md="8" class="m-auto pl-3">
+                    <table>
+                      <tr>
+                        <td v-if="trm[4].length > 15" class="item-title">
+                          <strong>{{ index + 1 }}번</strong><br />{{ trm[4].substr(0, 15) }}...
+                        </td>
+                        <td v-if="trm[4].length <= 15" class="item-title">
+                          <strong>{{ index + 1 }}번</strong><br />
+                          {{ trm[4] }}
+                        </td>
+                        <!-- <td>
+                    <b-button
+                      class="delete-btn"
+                      variant="danger"
+                      @click="deletePlan"
+                    >
+                      삭제
+                    </b-button>
+                  </td> -->
+                      </tr>
+                    </table>
+                  </b-col>
+                </b-row>
+              </b-card>
+            </div>
+          </table>
+        </b-row>
+      </b-col>
+    </b-row>
+  </div>
+  <!-- <table class="table table-hover">
+        <tr
+          v-for="(trm, index) in travelMarkers"
+          :key="index"
+          @click="movePan(trm[0], trm[1])"
+        >
+          <td>
+            <strong>{{ index + 1 }}번</strong>
+          </td>
+          <td v-if="trm[4].length > 25">
+            <strong>{{ trm[4].substr(0, 25) }}</strong
+            >...
+          </td>
+          <td v-if="trm[4].length <= 25">
+            <strong>{{ trm[4] }}</strong>
+          </td>
+        </tr>
+      </table> -->
+</template>
+
+<script>
+import { mapState, mapActions } from "vuex";
+const attractionStore = "attractionStore";
+
+export default {
+  name: "PlanView",
+  components: {},
+  data() {
+    return {};
+  },
+  computed: {
+    ...mapState(attractionStore, ["travelPlanContent", "travelPlan", "travelMarkers"]),
+  },
+  watch: {},
+  mounted() {},
+  methods: {
+    ...mapActions(attractionStore, ["getPosition"]),
+
+    movePan(lat, lon) {
+      this.getPosition({
+        latitude: lat,
+        longitude: lon,
+      });
     },
-    data() {
-      return {
-        modalShow: false,
-  
-        title: "",
-        content: "",
-        start_date: "",
-        end_date: "",
-        checked: false,
-      };
+    moveList() {
+      this.$router.push({ name: "planList" });
     },
-    computed: {
-      ...mapState(attractionStore, ["planMarkers"]),
+    moveModifyPlan() {
+      this.$router.replace({
+        name: "planModify",
+        params: { planNo: this.travelPlanNo },
+      });
     },
-  
-    watch: {},
-    methods: {
-      ...mapActions(attractionStore, ["postPlan"]),
-  
-      openModal() {
-        console.log(this.planMarkers);
-        console.log(this.planMarkers.length);
-        if (this.planMarkers.length == 0) {
-          alert("여행 경로를 선택해주세요!");
-        } else {
-          this.modalShow = !this.modalShow;
-        }
-      },
-      onSubmit() {
-        this.checkValue();
-      },
-  
-      onReset(event) {
-        event.preventDefault();
-        this.title = "";
-        this.content = "";
-        this.start_date = "";
-        this.end_date = "";
-        this.checked = false;
-      },
-      checkValue() {
-        let err = true;
-        let msg = "";
-  
-        !this.title && ((msg = "제목을 입력해주세요"), (err = false), this.$refs.title.focus());
-        err &&
-          !this.content &&
-          ((msg = "내용을 입력해주세요"), (err = false), this.$refs.content.focus());
-        err &&
-          !this.start_date &&
-          ((msg = "출발일을 입력해주세요"), (err = false), this.$refs.start_date.focus());
-        err &&
-          !this.end_date &&
-          ((msg = "출발일을 입력해주세요"), (err = false), this.$refs.end_date.focus());
-  
-        if (!err) alert(msg);
-        else this.doWritePlan();
-      },
-      doWritePlan() {
-        let List = [];
-        console.log(this.planMarkers);
-        this.planMarkers.forEach((item) => {
-          List.push(item[2]);
-        });
-  
-        let planList = {
-          title: this.title,
-          content: this.content,
-          startDate: this.start_date,
-          endDate: this.end_date,
-          planPulic: this.checked,
-          // userId: this.userInfo.userId,
-          contentIds: List,
-        };
-        console.log(planList);
-        writePlan(
-          planList,
-          ({ data }) => {
-            let msg = "등록 처리시 문제가 발생했습니다.";
-            if (data === "success") {
-              msg = "등록이 완료되었습니다.";
-            }
-            alert(msg);
-            this.moveList();
-          },
-          (error) => {
-            console.log(error);
-          });
-      },
-      moveList() {
-        this.$router.push({ name: "planList" });
-      },
+
+    deletePlan() {
+      let param = this.$route.params.planNo;
+      console.log(param);
+      // if (confirm("정말로 삭제하시겠습니까?")) {
+      //   let param = this.$route.params.noticeNo;
+      //   deleteArticle(
+      //     param,
+      //     ({ data }) => {
+      //       let msg = "삭제 처리시 문제가 발생했습니다.";
+      //       if (data === "success") {
+      //         msg = "삭제가 완료되었습니다.";
+      //       }
+      //       alert(msg);
+      //       this.$router.push({ name: "noticeList" });
+      //     },
+      //     (error) => {
+      //       console.log(error);
+      //     }
+      //   );
+      // }
     },
-  };
-  </script>
-   -->
+  },
+};
+</script>
+
+<style>
+h3 {
+  margin: 0;
+}
+
+/* #travel-info {
+  width: 100%;
+  height: 95vh;
+  margin: 0;
+  text-align: center;
+} */
+
+#travel-info-item {
+  width: 100%;
+  height: 90%;
+  overflow: auto;
+}
+
+tr {
+  background-color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+}
+</style>

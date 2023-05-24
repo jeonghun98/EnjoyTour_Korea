@@ -58,6 +58,7 @@
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
 // import PlanListItem from "./item/PlanListItem.vue";
+const attractionStore = "attractionStore";
 
 export default {
   name: "PlanList",
@@ -97,7 +98,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("attractionStore", ["travelList"]),
+    ...mapState(attractionStore, ["travelList"]),
   },
   created() {
     this.loadTravelList();
@@ -106,8 +107,8 @@ export default {
     this.loadTravelList();
   },
   methods: {
-    ...mapActions("attractionStore", ["getTravelList", "getTravelPlan"]),
-    ...mapMutations("attractionStore", [
+    ...mapActions(attractionStore, ["getTravelList", "getTravelPlan"]),
+    ...mapMutations(attractionStore, [
       "SET_TRAVEL_PLAN",
       "SET_TRAVEL_MARKERS",
       "SET_TRAVEL_PLAN_CONTENT",
@@ -148,10 +149,10 @@ export default {
       this.getTravelPlan(plan.planNo);
 
       // todo
-      // this.$router.push({
-      //   name: "planView",
-      //   params: { planNo: plan.planNo },
-      // });
+      this.$router.push({
+        name: "planView",
+        params: { planNo: plan.planNo },
+      });
     },
   },
 };
