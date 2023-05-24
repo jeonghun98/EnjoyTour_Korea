@@ -22,26 +22,26 @@
           >
             목록
           </b-button>
-        </b-col>
-        <b-col v-if="userInfo.userid === hotplace.userId">
-          <b-button
-            type="button"
-            id="btn-move-list"
-            variant="outline-success"
-            class="btn mt-3 mb-3 mr-3"
-            @click="modifyHotplace"
-          >
-            글수정
-          </b-button>
-          <b-button
-            type="button"
-            id="btn-move-list"
-            variant="outline-danger"
-            class="btn mt-3 mb-3 mr-auto"
-            @click="deleteHotplace"
-          >
-            글삭제
-          </b-button>
+          <span v-if="userInfo.userid === hotplace.userId">
+            <b-button
+              type="button"
+              id="btn-move-list"
+              variant="outline-success"
+              class="btn mt-3 mb-3 mr-3"
+              @click="modifyHotplace"
+            >
+              글수정
+            </b-button>
+            <b-button
+              type="button"
+              id="btn-move-list"
+              variant="outline-danger"
+              class="btn mt-3 mb-3 mr-auto"
+              @click="deleteHotplace"
+            >
+              글삭제
+            </b-button>
+          </span>
         </b-col>
       </b-row>
     </b-col>
@@ -133,11 +133,11 @@ export default {
   },
   methods: {
     moveListHotplace() {
-      alert("핫플레이스 목록 이동");
+      // alert("핫플레이스 목록 이동");
       this.$router.push({ name: "hotplaceList" });
     },
     modifyHotplace() {
-      alert("핫플레이스 수정 이동");
+      // alert("핫플레이스 수정 이동");
       this.$router.replace({
         name: "hotplaceModify",
         params: { hotplaceNo: this.hotplace.hotplaceNo },

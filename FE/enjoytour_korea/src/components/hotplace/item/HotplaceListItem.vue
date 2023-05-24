@@ -54,10 +54,9 @@ export default {
     };
   },
   created() {
-    console.log("HotplaceListItem : ", this.hotplaceNo);
+    // console.log("HotplaceListItem : ", this.hotplaceNo);
     if(this.fileInfos != null){
-      console.log("HotplaceListItem - 이미지 파일 있음");
-
+      // console.log("HotplaceListItem - 이미지 파일 있음");
       let sfolder = this.fileInfos[0].saveFolder;
       let ofile = this.fileInfos[0].originalFile;
       let sfile = this.fileInfos[0].saveFile;
@@ -65,7 +64,7 @@ export default {
       getImageHotplace(
         sfolder, ofile, sfile,
         ({ data }) => {
-          console.log(data);
+          // console.log(data);
           // this.hotplaceImg = require(data);
           // console.log(this.hotplaceImg);
           const url = window.URL.createObjectURL(data);
@@ -78,8 +77,7 @@ export default {
       );
 
     }else{
-      console.log("HotplaceListItem - 이미지 파일 없음");
-
+      // console.log("HotplaceListItem - 이미지 파일 없음");
       this.hotplaceImg = require('../../../assets/img/ssafy_logo.png');
       // console.log(this.hotplaceImg);
     }
@@ -102,4 +100,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.card-img, .card-img-top {
+    height: 190px;
+    border-top-left-radius: calc(0.25rem - 1px);
+    border-top-right-radius: calc(0.25rem - 1px);
+}
+</style>
