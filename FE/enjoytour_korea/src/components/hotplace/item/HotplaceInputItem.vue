@@ -1,5 +1,5 @@
 <template>
-  <b-row>
+  <b-row class = "mt-3">
     <b-col>
       <div id="map"></div>
     </b-col>
@@ -263,7 +263,7 @@ export default {
       );
     },
     modifyHotplace() {
-      alert("핫플레이스 수정");
+      // alert("핫플레이스 수정");
       console.log(this.hotplace);
 
       const formData = new FormData();
@@ -296,7 +296,7 @@ export default {
       );
     },
     moveListHotplace() {
-      alert("핫플레이스 목록 이동");
+      // alert("핫플레이스 목록 이동");
       this.$router.push({ name: "hotplaceList" });
     },
     formatNames(files) {

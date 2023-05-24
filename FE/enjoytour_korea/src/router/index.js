@@ -19,7 +19,6 @@ import HotplaceList from "@/components/hotplace/HotplaceList";
 import HotplaceWrite from "@/components/hotplace/HotplaceWrite";
 import HotplaceModify from "@/components/hotplace/HotplaceModify";
 import HotplaceView from "@/components/hotplace/HotplaceView";
-import HotplaceDelete from "@/components/hotplace/HotplaceDelete";
 
 // plan
 import PlanList from '@/components/plan/PlanList';
@@ -91,12 +90,6 @@ const routes = [
         name: "hotplaceModify",
         beforeEnter: onlyAuthUser,
         component: HotplaceModify,
-      },
-      {
-        path: "delete/:hotplaceNo",
-        name: "hotplaceDelete",
-        beforeEnter: onlyAuthUser,
-        component: HotplaceDelete,
       },
     ],
   },
