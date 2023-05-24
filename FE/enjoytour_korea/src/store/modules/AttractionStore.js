@@ -1,6 +1,6 @@
 import { AttractionList, AttractionSearchList, Attraction } from "@/api/attraction.js";
 // import { writePlan, listPlan, getPlan, modifyPlan, deletePlan } from "@/api/plan.js";
-import { listPlan, getPlan } from "@/api/plan.js";
+import { listPlan, getPlan, mylistPlan } from "@/api/plan.js";
 
 const attractionStore = {
   namespaced: true,
@@ -249,16 +249,28 @@ const attractionStore = {
       );
     },
     getTravelList({ commit }, param) {
-      listPlan(
-        param,
-        ({ data }) => {
-          // console.log("getTravelList", data);
-          commit("SET_TRAVEL_LIST", data);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+      if (param.userId) {
+        // console.log(param.userId);
+        mylistPlan(
+          param,
+          ({ data }) => {
+            commit("SET_TRAVEL_LIST", data);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      } else {
+        listPlan(
+          param,
+          ({ data }) => {
+            commit("SET_TRAVEL_LIST", data);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      }
     },
     async getTravelPlan({ commit }, planNo) {
       await getPlan(

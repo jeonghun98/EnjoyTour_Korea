@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,9 +59,17 @@ public class TripPlanController{
 			) throws Exception {
 
 		logger.debug("tripPlanWrite tripPlanDto : {}", tripPlanDto);
-		tripPlanDto.setUserId("ssafy");
 		tripPlanService.writePlan(tripPlanDto);
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "myplan 글목록", notes = "나의 plan 정보를 반환한다.", response = List.class)
+	@ApiResponses({@ApiResponse(code = 200, message ="plan 전체 목록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
+	@GetMapping("/myplan/{userId}")
+	public ResponseEntity<List<TripPlanDto>> mytripPlanList(
+			@PathVariable("userId") @ApiParam(value = "userId.", required = true) String userId) throws Exception {
+		logger.info("tripPlanList - 호출");
+		return new ResponseEntity<List<TripPlanDto>>(tripPlanService.mylistPlan(userId), HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "plan 글목록", notes = "모든 plan 정보를 반환한다.", response = List.class)
@@ -79,6 +88,14 @@ public class TripPlanController{
 			) throws Exception {
 		logger.debug("searchPlan planNo : ", planNo);
 		return new ResponseEntity<List<AttractionDto>>(tripPlanService.getPlan(planNo), HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "plan 글삭제", notes = "글번호에 해당하는 plan의 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+	@DeleteMapping("/{planNo}")
+	public ResponseEntity<String> deletePlan(@PathVariable("planNo") @ApiParam(value = "살제할 글의 글번호.", required = true) int planNo) throws Exception {
+		logger.info("deletePlan - 호출");
+		tripPlanService.deletePlan(planNo);
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	}
 	
 	private ResponseEntity<String> exceptionHandling(Exception e) {

@@ -50,8 +50,14 @@ public class TripPlanServiceImpl implements TripPlanService {
 
 	@Override
 	public void deletePlan(int planNo) throws Exception {
-		// TODO Auto-generated method stub
+		tripPlanMapper.deletePlanAttraction(planNo);
+		tripPlanMapper.deleteAuthPlan(planNo);
+		tripPlanMapper.deletePlan(planNo);
+	}
 
+	@Override
+	public List<TripPlanDto> mylistPlan(String userId) throws Exception {
+		return tripPlanMapper.mylistPlan(userId);
 	}
 
 }

@@ -31,11 +31,13 @@
         </b-form-group>
 
         <label for="start-datepicker">출발일: </label>
-        <b-form-datepicker id="start_date" v-model="start_date" class="mb-2" ref="start_date" />
+        <b-form-datepicker
+        id="start_date" v-model="start_date" class="mb-2" ref="start_date" />
 
         <label for="end-datepicker">도착일: </label>
         <b-form-datepicker id="end_date" v-model="end_date" class="mb-2" ref="end_date" />
 
+        
         <b-form-checkbox
           v-model="checked"
           name="check-button"
@@ -58,6 +60,7 @@
 import PlanAttraction from "./item/PlanAttraction.vue";
 import { mapState, mapActions } from "vuex";
 const attractionStore = "attractionStore";
+const memberStore = "memberStore";
 
 import { writePlan } from "@/api/plan";
 
@@ -79,8 +82,8 @@ export default {
   },
   computed: {
     ...mapState(attractionStore, ["planMarkers"]),
+    ...mapState(memberStore, ["userInfo"]),
   },
-
   watch: {},
   methods: {
     ...mapActions(attractionStore, ["postPlan"]),
@@ -110,6 +113,8 @@ export default {
       let err = true;
       let msg = "";
 
+      // console.log(this.userInfo);
+
       !this.title && ((msg = "제목을 입력해주세요"), (err = false), this.$refs.title.focus());
       err &&
         !this.content &&
@@ -137,7 +142,7 @@ export default {
         startDate: this.start_date,
         endDate: this.end_date,
         planPublic: this.checked,
-        // userId: this.userInfo.userId,
+        userId: this.userInfo.userid,
         contentIds: List,
       };
       console.log(planList);

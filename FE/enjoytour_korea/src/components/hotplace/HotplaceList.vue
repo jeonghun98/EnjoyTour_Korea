@@ -2,7 +2,7 @@
   <div class="row p-1">
     <div>
     <button type="button" id="btn-mv-register" class="btn btn-outline-primary btn-sm mr-1"
-          @click="moveWrite" v-if="userInfo">
+          @click="moveWrite">
                 핫플 등록하기
           </button>
     </div>
