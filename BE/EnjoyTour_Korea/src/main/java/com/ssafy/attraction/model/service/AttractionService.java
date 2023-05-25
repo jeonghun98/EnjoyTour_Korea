@@ -15,4 +15,5 @@ public interface AttractionService {
 	List<SidoGugunCodeDto> getSido() throws Exception;
 	List<SidoGugunCodeDto> getGugunInSido(String sido) throws Exception;
 	List<AttractionDto> getAttractionInGugun(String gugun) throws Exception;
+	List<AttractionDto> searchRandomAttractionList() throws Exception;
 }

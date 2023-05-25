@@ -3,7 +3,15 @@
     <!-- {{hotplace.hotplaceNo}}번 핫플레이스 상세보기 화면입니다 -->
     <!-- 핫플레이스 이미지 -->
     <b-col>
-      <b-row>
+      <b-row
+        style="
+          display: flex;
+          flex-wrap: wrap;
+          margin-right: -15px;
+          margin-left: -15px;
+          justify-content: center;
+        "
+      >
         <!-- <hotplace-img-item-vue v-for="fileInfo in hotplace.fileInfos" :key="fileInfo.originalFile"></hotplace-img-item-vue> -->
         <hotplace-img-item-vue
           v-for="(fileInfo, index) in hotplace.fileInfos"

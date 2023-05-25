@@ -102,6 +102,13 @@ public class AttractionController extends HttpServlet {
 		return new ResponseEntity<List<SidoGugunCodeDto>>(attractionservice.getGugunInSido(sido), HttpStatus.OK);
 	}
 	
+	@ApiOperation(value = "관광지 랜덤 정보", notes = "관광지 정보를 랜덤으로 반환한다.")
+	@GetMapping("/attractionRandomList")
+	public ResponseEntity<?> searchRandomAttractionList() throws Exception {
+		logger.debug("searchRandomAttractionList call");
+		return new ResponseEntity<List<AttractionDto>>(attractionservice.searchRandomAttractionList(), HttpStatus.OK);
+	}
+	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();
 		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
