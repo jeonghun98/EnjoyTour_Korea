@@ -37,9 +37,7 @@
             caption="모두의 여행계획"
             text="여행 계획을 세우고 다른 사람들과 공유해보세요"
             :img-src="require('../assets/img/korea2.png')"
-            ><b-button variant="outline-light" @click="movePlan"
-              >더보기</b-button
-            ></b-carousel-slide
+            ><b-button variant="outline-light" @click="movePlan">더보기</b-button></b-carousel-slide
           >
           <b-carousel-slide
             caption="핫플 자랑하기"
@@ -90,19 +88,15 @@
                   <b-card
                     no-body
                     class="overflow-hidden"
-                    style="
-                      max-width: 300px;
-                      height: 200px;
-                      object-fit: cover;
-                    "
+                    style="max-width: 300px; height: 200px; object-fit: cover"
                   >
                     <b-card-img
                       :src="attractions[0].image1"
                       alt="Image"
                       class="rounded-0"
                       style="object-fit: cover; height: 100%"
-                    ></b-card-img> 
-                    </b-card>
+                    ></b-card-img>
+                  </b-card>
                 </b-row>
                 <b-row class="overflow-hidden mt-2">
                   <b-col class="col-lg-1"></b-col>
@@ -117,7 +111,7 @@
                   <b-col class="col-lg-1"></b-col>
                 </b-row>
               </b-col>
-              
+
               <b-col>
                 <b-row>
                   <b-card
@@ -132,7 +126,7 @@
                       style="object-fit: cover; height: 100%"
                     ></b-card-img>
                   </b-card>
-                </b-row> 
+                </b-row>
                 <b-row class="overflow-hidden mt-2">
                   <b-col class="col-lg-1"></b-col>
                   <b-col class="col-lg-10">
@@ -146,7 +140,7 @@
                   <b-col class="col-lg-1"></b-col>
                 </b-row>
               </b-col>
-              
+
               <b-col>
                 <b-row>
                   <b-card

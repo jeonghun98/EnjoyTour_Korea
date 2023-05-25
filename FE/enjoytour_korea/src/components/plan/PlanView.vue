@@ -1,7 +1,6 @@
 <template>
   <div id="travel-info" v-if="travelPlanContent">
-    
-    <b-col class ="mt-3">
+    <b-col class="mt-3">
       <div id="attraction-map">
         <div id="kakaomap" style="width: 100%; height: 40rem"></div>
       </div>
@@ -46,34 +45,31 @@
 
         <b-row>
           <b-col>
-            <b-button
+            <button
               type="button"
-              variant="outline-primary"
               id="btn-move-list"
-              class="btn mt-3 mb-3 mr-3"
+              class="btn btn-outline-primary mt-3 mb-3 mr-3"
               @click="moveListPlan"
             >
               목록
-            </b-button>
+            </button>
             <span v-if="userInfo != null && userInfo.userid === travelPlanContent.userId">
-              <b-button
+              <button
                 type="button"
                 id="btn-move-list"
-                variant="outline-success"
-                class="btn mt-3 mb-3 mr-3"
+                class="btn btn-outline-success mt-3 mb-3 mr-3"
                 @click="moveModifyPlan"
               >
                 글수정
-              </b-button>
-              <b-button
+              </button>
+              <button
                 type="button"
                 id="btn-move-list"
-                variant="outline-danger"
-                class="btn mt-3 mb-3 mr-auto"
+                class="btn btn-outline-danger mt-3 mb-3 mr-3"
                 @click="deletePlan"
               >
                 글삭제
-              </b-button>
+              </button>
             </span>
           </b-col>
         </b-row>
@@ -170,7 +166,6 @@ export default {
       customOverlays: [],
       polyline: null,
       planList: [],
-
     };
   },
   props: {
@@ -184,12 +179,11 @@ export default {
   watch: {
     travelMarkers() {
       this.custonOverlay();
-    }
+    },
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
       this.initMap();
-      
     } else {
       this.loadScript();
     }
@@ -243,7 +237,7 @@ export default {
     },
     writePlanMarker(planList) {
       // 연결선 초기화
-        if (this.polyline != null) {
+      if (this.polyline != null) {
         this.polyline.setMap(null);
       }
 
@@ -287,7 +281,7 @@ export default {
           });
           this.customOverlays.push(customOverlay);
           customOverlay.setMap(this.map);
-          
+
           // // // 마커 클릭 이벤트
           // kakao.maps.event.addListener(marker, "click", () => {
           //   this.getAttraction(position.contentId);
@@ -357,8 +351,6 @@ export default {
       // 연결선 표시
       this.polyline.setMap(this.map);
     },
-
-
   },
 };
 </script>

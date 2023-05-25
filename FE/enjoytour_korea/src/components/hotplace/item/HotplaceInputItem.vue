@@ -1,7 +1,7 @@
 <template>
-  <b-row class = "mt-3">
+  <b-row class="mt-3">
     <b-col>
-      <div id="map"></div>
+      <div id="kakaomap"></div>
     </b-col>
     <b-col>
       <form
@@ -14,9 +14,7 @@
         @reset="onReset"
       >
         <!-- <input type="hidden" name="action" value="write" /> -->
-        <div class="mt-3 text-danger fw-bold">
-          스마트폰으로 찍은 사진을 올려주세요
-        </div>
+        <div class="mt-3 text-danger fw-bold">스마트폰으로 찍은 사진을 올려주세요</div>
         <div class="mb-3 mt-1">
           <b-form-file
             multiple
@@ -31,12 +29,7 @@
           <div id="images_container"></div>
         </div>
         <div>
-          <b-img
-            id="previewImg"
-            :src="img"
-            v-for="(img, index) in previewImg"
-            :key="index"
-          ></b-img>
+          <b-img id="previewImg" :src="img" v-for="(img, index) in previewImg" :key="index"></b-img>
         </div>
 
         <div class="mb-3 mt-3">
@@ -74,14 +67,14 @@
           ></textarea>
         </div>
         <div class="col-auto text-center">
-          <b-button
+          <button
             type="submit"
             id="btn-inform-reg"
             class="btn mb-3 mr-3 btn-outline-success"
             v-if="this.type === 'write'"
           >
             등록
-          </b-button>
+          </button>
           <button
             type="submit"
             id="btn-inform-modify"
@@ -98,9 +91,7 @@
           >
             목록
           </button>
-          <b-button type="reset" variant="outline-danger" class="btn mb-3"
-            >초기화</b-button
-          >
+          <b-button type="reset" variant="outline-danger" class="btn mb-3">초기화</b-button>
         </div>
       </form>
     </b-col>
@@ -110,6 +101,9 @@
 <script>
 import { writeHotplace, getHotplace, getImageHotplace, modifyHotplace } from "@/api/hotplace";
 import { mapState } from "vuex";
+// import { getExif } from "@/assets/js/metadata.js";
+import moment from "moment";
+import EXIF from "exif-js";
 
 const memberStore = "memberStore";
 
@@ -121,6 +115,7 @@ export default {
   },
   data() {
     return {
+      map: null,
       hotplace: {
         hotplaceNo: 0,
         userId: "",
@@ -128,6 +123,8 @@ export default {
         title: "",
         date: "",
         content: "",
+        latitude: "",
+        longitude: "",
         fileInfos: [],
       },
       previewImg: [],
@@ -186,15 +183,118 @@ export default {
       );
     }
 
-    console.log("created:",this.hotplace);
+    console.log("created:", this.hotplace);
+  },
+  mounted() {
+    if (window.kakao && window.kakao.maps) {
+      this.initMap();
+    } else {
+      this.loadScript();
+    }
   },
   methods: {
+    initMap() {
+      const container = document.getElementById("kakaomap");
+      const options = {
+        center: new kakao.maps.LatLng(37.5013068, 127.0396597),
+        level: 5,
+      };
+
+      this.map = new kakao.maps.Map(container, options);
+      this.map.relayout();
+
+      // geolocation을 사용할 수 있는지 확인
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.hotplace.latitude = position.coords.latitude; // 위도, 경도
+          this.hotplace.longitude = position.coords.longitude;
+          this.map.panTo(new kakao.maps.LatLng(this.lat, this.lon));
+        });
+      }
+    },
+    loadScript() {
+      const script = document.createElement("script");
+      /* global kakao */
+      script.src =
+        "//dapi.kakao.com/v2/maps/sdk.js?appkey=" +
+        process.env.VUE_APP_KAKAO_MAP_API_KEY +
+        "&autoload=false&libraries=services";
+      document.head.appendChild(script);
+      script.onload = () => kakao.maps.load(this.initMap);
+    },
     setDetailImage(event) {
+      let check = false;
       for (var image of event.target.files) {
+        // console.log("image!!!!!!1", image);
+        // console.log("image!!!!!!1", this.dateFormat(image.lastModifiedDate));
+        this.hotplace.date = this.dateFormat(image.lastModifiedDate);
         let url = URL.createObjectURL(image);
         console.log(url);
         this.previewImg.push(url);
+        if (!check) {
+          this.findMetaData(image);
+          check = true;
+        }
       }
+      if (!check) {
+        if (confirm("사진의 위치가 없습니다. 현재 사용자의 위치로 저장할까요?")) {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+              this.hotplace.latitude = position.coords.latitude; // 위도, 경도
+              this.hotplace.longitude = position.coords.longitude;
+              this.map.panTo(
+                new kakao.maps.LatLng(this.hotplace.latitude, this.hotplace.longitude)
+              );
+            });
+          }
+        } else {
+          //todo -> 위치 입력 받기
+        }
+      }
+    },
+    findMetaData(img1) {
+      EXIF.getData(img1, () => {
+        var exifLong = EXIF.getTag(img1, "GPSLongitude");
+        var exifLat = EXIF.getTag(img1, "GPSLatitude");
+        var exifLongRef = EXIF.getTag(img1, "GPSLongitudeRef");
+        var exifLatRef = EXIF.getTag(img1, "GPSLatitudeRef");
+        //계산식 적용이유는 해당라이브러리가 위도경도를 도분초 단위로 출력하기 때문
+        var latitude;
+        var longitude;
+        if (exifLatRef == "S") {
+          latitude = exifLat[0] * -1 + (exifLat[1] * -60 + exifLat[2] * -1) / 3600;
+        } else {
+          latitude = exifLat[0] + (exifLat[1] * 60 + exifLat[2]) / 3600;
+        }
+        if (exifLongRef == "W") {
+          longitude = exifLong[0] * -1 + (exifLong[1] * -60 + exifLong[2] * -1) / 3600;
+        } else {
+          longitude = exifLong[0] + (exifLong[1] * 60 + exifLong[2]) / 3600;
+        }
+        console.log(latitude, longitude);
+        this.hotplace.latitude = latitude;
+        this.hotplace.longitude = longitude;
+        // console.log(latitude, longitude);
+
+        var container = document.getElementById("kakaomap");
+        var options = {
+          center: new kakao.maps.LatLng(this.hotplace.latitude, this.hotplace.longitude), //wtmX, wtmY 받아옴
+          level: 5,
+        };
+
+        var map = new kakao.maps.Map(container, options);
+
+        // 마커가 표시될 위치입니다
+        var markerPosition = new kakao.maps.LatLng(this.hotplace.latitude, this.hotplace.longitude);
+
+        // 마커를 생성합니다
+        var marker = new kakao.maps.Marker({
+          position: markerPosition,
+        });
+
+        // 마커가 지도 위에 표시되도록 설정합니다
+        marker.setMap(map);
+      });
     },
     onSubmit(event) {
       event.preventDefault();
@@ -202,24 +302,17 @@ export default {
       let err = true;
       let msg = "";
       !this.hotplace.title &&
-        ((msg = "제목 입력해주세요"),
-        (err = false),
-        this.$refs["title"].focus());
+        ((msg = "제목 입력해주세요"), (err = false), this.$refs["title"].focus());
       err &&
         !this.hotplace.content &&
-        ((msg = "내용 입력해주세요"),
-        (err = false),
-        this.$refs["content"].focus());
+        ((msg = "내용 입력해주세요"), (err = false), this.$refs["content"].focus());
       err &&
         !this.hotplace.date &&
-        ((msg = "날짜 입력해주세요"),
-        (err = false),
-        this.$refs["date"].focus());
+        ((msg = "날짜 입력해주세요"), (err = false), this.$refs["date"].focus());
 
       console.log("onSubmit - type:", this.type);
       if (!err) alert(msg);
-      else
-        this.type === "write" ? this.registHotplace() : this.modifyHotplace();
+      else this.type === "write" ? this.registHotplace() : this.modifyHotplace();
     },
     onReset(event) {
       event.preventDefault();
@@ -229,6 +322,8 @@ export default {
       // this.hotplace.img = "";
       this.hotplace.date = "";
       this.hotplace.fileInfos = [];
+      this.hotplace.latitude = null;
+      this.hotplace.longitude = null;
       this.moveListHotplace();
     },
     registHotplace() {
@@ -237,7 +332,8 @@ export default {
       formData.append("userId", this.hotplace.userId);
       formData.append("title", this.hotplace.title);
       formData.append("content", this.hotplace.content);
-      formData.append("date", this.hotplace.date);
+      formData.append("latitude", this.hotplace.latitude);
+      formData.append("longitude", this.hotplace.longitude);
 
       for (let i = 0; i < this.hotplace.fileInfos.length; i += 1) {
         const file = this.hotplace.fileInfos[i];
@@ -270,6 +366,8 @@ export default {
       formData.append("title", this.hotplace.title);
       formData.append("content", this.hotplace.content);
       formData.append("date", this.hotplace.date);
+      formData.append("latitude", this.hotplace.latitude);
+      formData.append("longitude", this.hotplace.longitude);
 
       for (let i = 0; i < this.hotplace.fileInfos.length; i += 1) {
         const file = this.hotplace.fileInfos[i];
@@ -298,8 +396,11 @@ export default {
       this.$router.push({ name: "hotplaceList" });
     },
     formatNames(files) {
-        return files.length === 1 ? files[0].name : `${files.length} files selected`
-      }
+      return files.length === 1 ? files[0].name : `${files.length} files selected`;
+    },
+    dateFormat(regtime) {
+      return moment(new Date(regtime)).format("yyyy-MM-DD");
+    },
   },
 };
 </script>

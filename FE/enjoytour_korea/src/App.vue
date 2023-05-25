@@ -8,7 +8,6 @@
 </template>
 
 <script>
-
 import TheHeader from "./components/include/TheHeader.vue";
 import TheFooter from "./components/include/TheFooter.vue";
 import TheNav from "./components/include/TheNav.vue";
@@ -18,6 +17,6 @@ export default {
     TheHeader,
     TheNav,
     TheFooter,
-  }
+  },
 };
 </script>

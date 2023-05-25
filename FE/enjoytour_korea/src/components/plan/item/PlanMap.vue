@@ -54,13 +54,13 @@
                           {{ atr.title }}
                         </td>
                         <td>
-                          <b-button
-                            class ="btn btn-outline-danger"
+                          <button
+                            class="btn btn-outline-danger mt-3 mb-3 mr-3"
                             id="delete-btn"
                             @click="deleteItem(atr.contentId)"
                           >
                             삭제
-                          </b-button>
+                          </button>
                         </td>
                       </tr>
                     </table>
@@ -158,7 +158,7 @@ export default {
     },
     writePlanMarker(planList) {
       // 연결선 초기화
-        if (this.polyline != null) {
+      if (this.polyline != null) {
         this.polyline.setMap(null);
       }
 
@@ -202,7 +202,7 @@ export default {
           });
           this.customOverlays.push(customOverlay);
           customOverlay.setMap(this.map);
-          
+
           // // 마커 클릭 이벤트
           kakao.maps.event.addListener(marker, "click", () => {
             this.getAttraction(position.contentId);
@@ -286,7 +286,7 @@ export default {
             content: contents,
             position: pos,
           });
-          
+
           // 마커 mouseover 이벤트
           kakao.maps.event.addListener(marker, "mouseover", () => {
             infowindow.open(this.map, marker);
@@ -403,16 +403,16 @@ export default {
   height: 40rem;
 }
 
-#overlaylabel{
+#overlaylabel {
   display: flex;
-    justify-content: center;
-    margin-left: -25px;
-    margin-right: -15px;
-    margin-top: -px;
-    max-width: 1170px;
+  justify-content: center;
+  margin-left: -25px;
+  margin-right: -15px;
+  margin-top: -px;
+  max-width: 1170px;
 }
 
-#circle{
+#circle {
   border-radius: 50%;
   display: flex;
   justify-content: center;
