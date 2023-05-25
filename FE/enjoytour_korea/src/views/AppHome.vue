@@ -4,7 +4,7 @@
       <!-- 여백 -->
       <section class="col-lg-1 d-none d-lg-inline-block bg-dark"></section>
       <!-- 슬라이드 -->
-      <section class="col-lg-9 col-sm-12 p-0">
+      <section class="col-lg-10 col-sm-12 p-0">
         <b-carousel
           id="carousel-1"
           v-model="slide"
@@ -20,47 +20,64 @@
           <b-carousel-slide
             caption="South Korea Tour"
             text="지금 여행 계획을 세우고 다녀온 핫플을 자랑해보세요!!"
-            :img-src="require('../assets/img/korea5.jpg')"
+            :img-src="require('../assets/img/korea0.png')"
           >
           </b-carousel-slide>
 
           <b-carousel-slide
             caption="한국 여행지"
             text="지역과 관광지 유형에 따라 여행지를 검색해보세요"
-            :img-src="require('../assets/img/korea4.jpg')"
+            :img-src="require('../assets/img/korea1.png')"
+          ><b-button
+                variant="outline-light"
+                @click="moveAttraction"
+                >더보기</b-button
+              ></b-carousel-slide>
+            <!-- :img-src="require('../assets/img/korea4.jpg')"
             ><b-button
               variant="outline-secondary"
               class="btn-outline-secondary"
               @click="moveAttraction"
               >더보기</b-button
             ></b-carousel-slide
-          >
+          > -->
 
           <b-carousel-slide
             caption="모두의 여행계획"
             text="여행 계획을 세우고 다른 사람들과 공유해보세요"
-            :img-src="require('../assets/img/korea3.jpg')"
+            :img-src="require('../assets/img/korea2.png')"
+          ><b-button
+                variant="outline-light"
+                @click="movePlan"
+                >더보기</b-button
+              ></b-carousel-slide>
+            <!-- :img-src="require('../assets/img/korea3.jpg')"
             ><b-button variant="outline-secondary" class="btn-outline-secondary" @click="movePlan"
               >더보기</b-button
             ></b-carousel-slide
-          >
-
+          > -->
           <b-carousel-slide
             caption="핫플 자랑하기"
             text="자신이 다녀온 핫플레이스의 경험을 나누어주세요"
-            :img-src="require('../assets/img/korea3.jpg')"
+            :img-src="require('../assets/img/korea3.png')"
+          ><b-button
+                variant="outline-light"
+                @click="moveHotplace"
+                >더보기</b-button
+              ></b-carousel-slide>
+            <!-- :img-src="require('../assets/img/korea3.jpg')"
             ><b-button
               variant="outline-secondary"
               class="btn-outline-secondary"
               @click="moveHotplace"
               >더보기</b-button
             ></b-carousel-slide
-          >
+          > -->
         </b-carousel>
       </section>
 
       <!-- 여백 -->
-      <section class="col-lg-2 d-none d-lg-inline-block bg-dark"></section>
+      <section class="col-lg-1 d-none d-lg-inline-block bg-dark"></section>
     </div>
     <div class="p-1 container-fluid" id="attraction">
       <b-row class="row align-items-center">
@@ -96,7 +113,7 @@
                 <div
                   class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
                   style="
-                    background-image: url('https://images.squarespace-cdn.com/content/v1/586ebc34d482e9c69268b69a/1624387036637-3HYG08Z0XZEG4KALHROR/image-asset.png?format=750w');
+                    background-image: url('https://picsum.photos/1024/480/?image=12');
                   "
                 >
                   <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
@@ -108,7 +125,7 @@
                 <div
                   class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
                   style="
-                    background-image: url('https://images.squarespace-cdn.com/content/v1/586ebc34d482e9c69268b69a/1624387216622-W0X3QWQKO4N7J3PPSLIR/20201230201102636_L212Z69O.png?format=750w');
+                    background-image: url('https://picsum.photos/1024/480/?image=12');
                   "
                 >
                   <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
@@ -120,7 +137,7 @@
                 <div
                   class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
                   style="
-                    background-image: url('https://images.squarespace-cdn.com/content/v1/586ebc34d482e9c69268b69a/1624387234961-KJSQY04HPHDG9OGZJWVJ/20201230201238973_JSETFUI7.png?format=750w');
+                    background-image: url('https://picsum.photos/1024/480/?image=12');
                   "
                 >
                   <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
@@ -167,6 +184,10 @@ export default {
 <style>
 @import "@/assets/css/bootstrapHorizon.css";
 
+.carousel-item {
+  width: 750px;
+  height: 460px;
+}
 .row {
   display: flex;
   flex-wrap: wrap;
