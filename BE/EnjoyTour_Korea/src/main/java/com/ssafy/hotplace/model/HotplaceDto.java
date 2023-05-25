@@ -20,8 +20,6 @@ public class HotplaceDto {
 	private int like;
 	@ApiModelProperty(value = "다녀온 날짜")
 	private String date;
-	@ApiModelProperty(value = "이미지")
-	private String img;
 	@ApiModelProperty(value = "파일 정보")
 	private List<FileInfoDto> fileInfos;
 	
@@ -76,13 +74,6 @@ public class HotplaceDto {
 	public void setDate(String date) {
 		this.date = date;
 	}
-	public String getImg() {
-		return img;
-	}
-	public void setImg(String img) {
-		this.img = img;
-	}
-	
 	public List<FileInfoDto> getFileInfos() {
 		return fileInfos;
 	}
@@ -93,7 +84,7 @@ public class HotplaceDto {
 	@Override
 	public String toString() {
 		return "HotplaceDto [hotplaceNo=" + hotplaceNo + ", userId=" + userId + ", title=" + title + ", content="
-				+ content + ", like=" + like + ", date=" + date + ", img=" + img + ", fileInfos=" + fileInfos + "]";
+				+ content + ", like=" + like + ", date=" + date + ", fileInfos=" + fileInfos + "]";
 	}
 	
 	

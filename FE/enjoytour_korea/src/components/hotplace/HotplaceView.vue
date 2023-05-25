@@ -20,42 +20,6 @@
         ></hotplace-img-item-vue>
       </b-row>
       <b-row>
-        <b-col>
-          <b-button
-            type="button"
-            variant="outline-primary"
-            id="btn-move-list"
-            class="btn mt-3 mb-3 mr-3"
-            @click="moveListHotplace"
-          >
-            목록
-          </b-button>
-          <span v-if="userInfo != null && userInfo.userid === hotplace.userId">
-            <b-button
-              type="button"
-              id="btn-move-list"
-              variant="outline-success"
-              class="btn mt-3 mb-3 mr-3"
-              @click="modifyHotplace"
-            >
-              글수정
-            </b-button>
-            <b-button
-              type="button"
-              id="btn-move-list"
-              variant="outline-danger"
-              class="btn mt-3 mb-3 mr-auto"
-              @click="deleteHotplace"
-            >
-              글삭제
-            </b-button>
-          </span>
-        </b-col>
-      </b-row>
-    </b-col>
-    <!-- 핫플 정보, 위치 -->
-    <b-col>
-      <b-row>
         <form id="form-view" method="" action="" style="width: 100%">
           <div class="mb-3 mt-3">
             <label for="title" class="form-label">핫플이름</label>
@@ -95,6 +59,42 @@
         </form>
       </b-row>
       <b-row>
+        <b-col>
+          <b-button
+            type="button"
+            variant="outline-primary"
+            id="btn-move-list"
+            class="btn mt-3 mb-3 mr-3"
+            @click="moveListHotplace"
+          >
+            목록
+          </b-button>
+          <span v-if="userInfo != null && userInfo.userid === hotplace.userId">
+            <b-button
+              type="button"
+              id="btn-move-list"
+              variant="outline-success"
+              class="btn mt-3 mb-3 mr-3"
+              @click="modifyHotplace"
+            >
+              글수정
+            </b-button>
+            <b-button
+              type="button"
+              id="btn-move-list"
+              variant="outline-danger"
+              class="btn mt-3 mb-3 mr-auto"
+              @click="deleteHotplace"
+            >
+              글삭제
+            </b-button>
+          </span>
+        </b-col>
+      </b-row>
+    </b-col>
+    <!-- 핫플 정보, 위치 -->
+    <b-col>
+      <b-row>
         <!-- map start -->
         <div class="col-lg-12 col-md-10 col-sm-12 mt-3 rounded">
           <div id="kakaomap"></div>
@@ -133,6 +133,7 @@ export default {
       ({ data }) => {
         this.hotplace = data;
         console.log("HotplaceView:data -", data);
+        this.marker();
       },
       (error) => {
         console.log(error);
@@ -145,7 +146,6 @@ export default {
     } else {
       this.loadScript();
     }
-    this.marker();
   },
   methods: {
     moveListHotplace() {
@@ -234,7 +234,7 @@ export default {
 </script>
 
 <style scoped>
-#map {
+#kakaomap {
   width: 100%;
   height: 30rem;
   background-color: lightgray;

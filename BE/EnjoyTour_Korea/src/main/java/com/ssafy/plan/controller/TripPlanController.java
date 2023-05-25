@@ -109,6 +109,15 @@ public class TripPlanController{
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	}
 
+	@ApiResponses({@ApiResponse(code = 200, message ="공지 등록 OK"), @ApiResponse(code = 500, message ="서버 에러")})
+	@PostMapping("/addAuth")
+	public ResponseEntity<?> authAdd(
+			@RequestBody TripPlanDto tripPlanDto
+			) throws Exception {
+		logger.debug("authAdd tripPlanDto :", tripPlanDto.getPlanNo(), tripPlanDto.getUserId());
+		tripPlanService.authAdd(tripPlanDto);
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+	}
 	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();

@@ -70,6 +70,16 @@
               >
                 글삭제
               </button>
+              <button
+                type="button"
+                id="btn-move-list"
+                class="btn btn-outline-success mt-3 mb-3 mr-3"
+                href="#"
+                v-b-modal.modal-auth
+              >
+                친구와 수정
+                <plan-add-auth :planNo="planNo"></plan-add-auth>
+              </button>
             </span>
           </b-col>
         </b-row>
@@ -127,24 +137,6 @@
       </b-col>
     </b-row>
   </div>
-  <!-- <table class="table table-hover">
-        <tr
-          v-for="(trm, index) in travelMarkers"
-          :key="index"
-          @click="movePan(trm[0], trm[1])"
-        >
-          <td>
-            <strong>{{ index + 1 }}번</strong>
-          </td>
-          <td v-if="trm[4].length > 25">
-            <strong>{{ trm[4].substr(0, 25) }}</strong
-            >...
-          </td>
-          <td v-if="trm[4].length <= 25">
-            <strong>{{ trm[4] }}</strong>
-          </td>
-        </tr>
-      </table> -->
 </template>
 
 <script>
@@ -152,10 +144,11 @@ import { mapState, mapActions } from "vuex";
 import { deletePlan } from "@/api/plan";
 const attractionStore = "attractionStore";
 const memberStore = "memberStore";
+import PlanAddAuth from "./item/PlanAddAuth.vue";
 
 export default {
   name: "PlanView",
-  components: {},
+  components: { PlanAddAuth },
   data() {
     return {
       map: null,
@@ -166,6 +159,7 @@ export default {
       customOverlays: [],
       polyline: null,
       planList: [],
+      planNo: this.$route.params.planNo,
     };
   },
   props: {
@@ -249,6 +243,7 @@ export default {
       const positions = planList.map(
         (position) => new kakao.maps.LatLng(position.latitude, position.longitude)
       );
+      console.log("writePlanMarker", positions);
       if (planList.length > 0) {
         let index = 1;
 
@@ -295,8 +290,8 @@ export default {
           (bounds, latlng) => bounds.extend(latlng),
           new kakao.maps.LatLngBounds()
         );
-        this.map.setBounds(bounds);
         this.makeLine(positions);
+        this.map.setBounds(bounds);
       }
     },
 
@@ -311,18 +306,17 @@ export default {
       this.map.relayout();
 
       // geolocation을 사용할 수 있는지 확인
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          // GeoLocation을 이용해서 접속 위치 획득
-          this.lat = position.coords.latitude; // 위도, 경도
-          this.lon = position.coords.longitude;
-          this.getPosition({
-            latitude: this.lat,
-            longitude: this.lon,
-          });
-          this.map.panTo(new kakao.maps.LatLng(this.lat, this.lon));
-        });
-      }
+      // if (navigator.geolocation) {
+      //   navigator.geolocation.getCurrentPosition((position) => {
+      //     this.lat = position.coords.latitude; // 위도, 경도
+      //     this.lon = position.coords.longitude;
+      //     this.getPosition({
+      //       latitude: this.lat,
+      //       longitude: this.lon,
+      //     });
+      //     this.map.panTo(new kakao.maps.LatLng(this.lat, this.lon));
+      //   });
+      // }
       // makeOption(); -> search-area 생성
     },
     loadScript() {

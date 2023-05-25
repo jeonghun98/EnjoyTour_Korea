@@ -4,7 +4,7 @@
       <!-- 여백 -->
       <!-- <section class="col-lg-1 d-none d-lg-inline-block bg-dark"></section> -->
       <!-- 슬라이드 -->
-      <section class="col-lg-12 col-sm-12 p-0">
+      <section class="col-lg-12 col-sm-12 p-0 mt-3">
         <b-carousel
           id="carousel-1"
           v-model="slide"

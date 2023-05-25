@@ -103,16 +103,13 @@ export default {
     AttractionModal,
   },
   props: {
-    opt: Boolean,
+    type: { type: String },
   },
   computed: {
     // ...mapGetters(itemStore, ["getSidoText", "getGugunText", "getContentText"]),
     ...mapState(attractionStore, ["latitude", "longitude", "attractions", "planMarkers"]),
   },
   watch: {
-    opt() {
-      console.log(this.opt);
-    },
     planList() {
       this.custonOverlay();
     },
@@ -131,7 +128,6 @@ export default {
     } else {
       this.loadScript();
     }
-    this.custonOverlay();
   },
   methods: {
     ...mapMutations(attractionStore, [
@@ -142,19 +138,8 @@ export default {
     ...mapActions(attractionStore, ["getPosition", "getAttraction"]),
 
     custonOverlay() {
-      // 오버레이 초기화
-      // this.customOverlays.forEach((overlay) => {
-      //   overlay.setMap(null);
-      // });
-      // this.customOverlays = [];
       console.log("custonOverlay planmap", this.planList);
       this.writePlanMarker(this.planList);
-
-      // const positions = this.planList.map(
-      //   (position) => new kakao.maps.LatLng(position.latitude, position.longitude)
-      // );
-      // if (this.planList.length > 0) this.makeLine(positions);
-      // this.setPlanMarker();
     },
     writePlanMarker(planList) {
       // 연결선 초기화
@@ -212,12 +197,17 @@ export default {
           });
           return marker;
         });
-        const bounds = positions.reduce(
-          (bounds, latlng) => bounds.extend(latlng),
-          new kakao.maps.LatLngBounds()
-        );
-        this.map.setBounds(bounds);
-        this.makeLine(positions);
+
+        if (this.type === "modify") {
+          const bounds = positions.reduce(
+            (bounds, latlng) => bounds.extend(latlng),
+            new kakao.maps.LatLngBounds()
+          );
+          this.makeLine(positions);
+          this.map.setBounds(bounds);
+        } else {
+          this.makeLine(positions);
+        }
       }
     },
     writeMarker(attractions) {
@@ -236,7 +226,7 @@ export default {
             imageSrc = require(`@/assets/img/icon_${position.contenttypeid}.png`);
           else imageSrc = require("@/assets/img/ssafy_logo.png");
 
-          const ssafyImageSrc = require("@/assets/img/ssafy_logo.png");
+          // const ssafyImageSrc = require("@/assets/img/ssafy_logo.png");
 
           var imageSize = new kakao.maps.Size(30, 30); // 기본 마커 이미지의 크기
           var imageOption = { offset: new kakao.maps.Point(25, 20) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
@@ -258,43 +248,43 @@ export default {
             image: markerImage,
           });
 
-          let contents =
-            '<div class = "wrap">' +
-            '   <div class="info">' +
-            '    <div class="title" style="background-color:3685f5;">' +
-            position.title +
-            '   <div id="close"></div>' +
-            "   </div>" +
-            '    <div class="body">' +
-            '     <div class="img">' +
-            `        <img src="${position.image1}" width ="73" height="70" onerror="this.src='${ssafyImageSrc}'">` +
-            "     </div>" +
-            '      <div class="desc">' +
-            '       <div class="ellipsis"> ' +
-            position.addr1 +
-            "</div>" +
-            '       <div class="desc_marker"> ' +
-            "마커 클릭시 경로추가" +
-            "</div>" +
-            // '       <div class="jibun"> ' + position[5] + '</div>' +
-            // '       <div><a href=" "target="_blank" class="link">홈페이지</a></div>' +
-            "      </div>" +
-            "     </div>" +
-            "    </div>" +
-            "   </div>";
-          let infowindow = new kakao.maps.InfoWindow({
-            content: contents,
-            position: pos,
-          });
+          // let contents =
+          //   '<div class = "wrap">' +
+          //   '   <div class="info">' +
+          //   '    <div class="title" style="background-color:3685f5;">' +
+          //   position.title +
+          //   '   <div id="close"></div>' +
+          //   "   </div>" +
+          //   '    <div class="body">' +
+          //   '     <div class="img">' +
+          //   `        <img src="${position.image1}" width ="73" height="70" onerror="this.src='${ssafyImageSrc}'">` +
+          //   "     </div>" +
+          //   '      <div class="desc">' +
+          //   '       <div class="ellipsis"> ' +
+          //   position.addr1 +
+          //   "</div>" +
+          //   '       <div class="desc_marker"> ' +
+          //   "마커 클릭시 경로추가" +
+          //   "</div>" +
+          //   // '       <div class="jibun"> ' + position[5] + '</div>' +
+          //   // '       <div><a href=" "target="_blank" class="link">홈페이지</a></div>' +
+          //   "      </div>" +
+          //   "     </div>" +
+          //   "    </div>" +
+          //   "   </div>";
+          // let infowindow = new kakao.maps.InfoWindow({
+          //   content: contents,
+          //   position: pos,
+          // });
 
-          // 마커 mouseover 이벤트
-          kakao.maps.event.addListener(marker, "mouseover", () => {
-            infowindow.open(this.map, marker);
-          });
+          // // 마커 mouseover 이벤트
+          // kakao.maps.event.addListener(marker, "mouseover", () => {
+          //   infowindow.open(this.map, marker);
+          // });
 
-          kakao.maps.event.addListener(marker, "mouseout", () => {
-            infowindow.close();
-          });
+          // kakao.maps.event.addListener(marker, "mouseout", () => {
+          //   infowindow.close();
+          // });
 
           // // 마커 클릭 이벤트
           kakao.maps.event.addListener(marker, "click", () => {
@@ -323,17 +313,19 @@ export default {
       this.map.relayout();
 
       // geolocation을 사용할 수 있는지 확인
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          // GeoLocation을 이용해서 접속 위치 획득
-          this.lat = position.coords.latitude; // 위도, 경도
-          this.lon = position.coords.longitude;
-          this.getPosition({
-            latitude: this.lat,
-            longitude: this.lon,
+      if (this.type === "write") {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            // GeoLocation을 이용해서 접속 위치 획득
+            this.lat = position.coords.latitude; // 위도, 경도
+            this.lon = position.coords.longitude;
+            this.getPosition({
+              latitude: this.lat,
+              longitude: this.lon,
+            });
+            this.map.panTo(new kakao.maps.LatLng(this.lat, this.lon));
           });
-          this.map.panTo(new kakao.maps.LatLng(this.lat, this.lon));
-        });
+        }
       }
       // makeOption(); -> search-area 생성
     },

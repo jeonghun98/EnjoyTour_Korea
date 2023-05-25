@@ -86,7 +86,6 @@ export default {
       fields: [
         { key: "planNo", label: "글번호", tdClass: "tdClass" },
         { key: "title", label: "제목", tdClass: "tdTitle" },
-        { key: "userId", label: "작성자", tdClass: "tdClass" },
         { key: "startDate", label: "출발일", tdClass: "tdClass" },
         { key: "endDate", label: "도착일", tdClass: "tdClass" },
         { key: "grade", label: "평점", tdClass: "tdClass" },

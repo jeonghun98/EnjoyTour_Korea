@@ -139,7 +139,6 @@ export default {
 
     if (this.type === "modify") {
       let param = this.$route.params.hotplaceNo;
-
       getHotplace(
         param,
         ({ data }) => {
@@ -208,7 +207,7 @@ export default {
         navigator.geolocation.getCurrentPosition((position) => {
           this.hotplace.latitude = position.coords.latitude; // 위도, 경도
           this.hotplace.longitude = position.coords.longitude;
-          this.map.panTo(new kakao.maps.LatLng(this.lat, this.lon));
+          this.map.panTo(new kakao.maps.LatLng(this.hotplace.latitude, this.hotplace.longitude));
         });
       }
     },
@@ -332,6 +331,7 @@ export default {
       formData.append("userId", this.hotplace.userId);
       formData.append("title", this.hotplace.title);
       formData.append("content", this.hotplace.content);
+      formData.append("date", this.hotplace.date);
       formData.append("latitude", this.hotplace.latitude);
       formData.append("longitude", this.hotplace.longitude);
 
