@@ -10,7 +10,7 @@
           </b-navbar>
         </b-row>
 
-        <b-row class = "mr-2">
+        <b-row class="mr-2">
           <div id="travel-info-item">
             <table class="table table-hover">
               <tr>
@@ -38,39 +38,38 @@
         </b-row>
 
         <b-row>
-        <b-col>
-          <b-button
-            type="button"
-            variant="outline-primary"
-            id="btn-move-list"
-            class="btn mt-3 mb-3 mr-3"
-            @click="moveListPlan"
-          >
-            목록
-          </b-button>
-          <span v-if="userInfo != null && userInfo.userid === travelPlanContent.userId">
+          <b-col>
             <b-button
               type="button"
+              variant="outline-primary"
               id="btn-move-list"
-              variant="outline-success"
               class="btn mt-3 mb-3 mr-3"
-              @click="moveModifyPlan"
+              @click="moveListPlan"
             >
-              글수정
+              목록
             </b-button>
-            <b-button
-              type="button"
-              id="btn-move-list"
-              variant="outline-danger"
-              class="btn mt-3 mb-3 mr-auto"
-              @click="deletePlan"
-            >
-              글삭제
-            </b-button>
-          </span>
-        </b-col>
-      </b-row>
-
+            <span v-if="userInfo != null && userInfo.userid === travelPlanContent.userId">
+              <b-button
+                type="button"
+                id="btn-move-list"
+                variant="outline-success"
+                class="btn mt-3 mb-3 mr-3"
+                @click="moveModifyPlan"
+              >
+                글수정
+              </b-button>
+              <b-button
+                type="button"
+                id="btn-move-list"
+                variant="outline-danger"
+                class="btn mt-3 mb-3 mr-auto"
+                @click="deletePlan"
+              >
+                글삭제
+              </b-button>
+            </span>
+          </b-col>
+        </b-row>
       </b-col>
       <b-col>
         <b-row>
@@ -86,20 +85,20 @@
               class="list-group-item"
               v-for="(trm, index) in travelMarkers"
               :key="index"
-              @click="movePan(trm[0], trm[1])"
+              @click="movePan(trm.latitude, trm.longitude)"
             >
               <b-card no-body class="attraction-item overflow-hidden">
                 <b-row no-gutters>
                   <b-col md="4" class="m-auto">
                     <b-card-img
                       class="img align-middle"
-                      v-if="trm[6] != ''"
-                      :src="trm[6]"
-                      :alt="trm[4]"
+                      v-if="trm.image1 != ''"
+                      :src="trm.image1"
+                      :alt="trm.title"
                     />
                     <b-card-img
                       class="img align-middle"
-                      v-if="trm[6] == ''"
+                      v-if="trm.image1 == ''"
                       :src="require('@/assets/img/ssafy_logo.png')"
                       alt="no image"
                     />
@@ -107,12 +106,12 @@
                   <b-col md="8" class="m-auto pl-3">
                     <table>
                       <tr>
-                        <td v-if="trm[4].length > 15" class="item-title">
-                          <strong>{{ index + 1 }}번</strong><br />{{ trm[4].substr(0, 15) }}...
+                        <td v-if="trm.title.length > 15" class="item-title">
+                          <strong>{{ index + 1 }}번</strong><br />{{ trm.title.substr(0, 15) }}...
                         </td>
-                        <td v-if="trm[4].length <= 15" class="item-title">
+                        <td v-if="trm.title.length <= 15" class="item-title">
                           <strong>{{ index + 1 }}번</strong><br />
-                          {{ trm[4] }}
+                          {{ trm.title }}
                         </td>
                       </tr>
                     </table>
@@ -155,8 +154,7 @@ export default {
   name: "PlanView",
   components: {},
   data() {
-    return {
-    };
+    return {};
   },
   props: {
     type: { type: String },
@@ -166,8 +164,7 @@ export default {
     ...mapState(memberStore, ["userInfo"]),
   },
   watch: {},
-  mounted() {
-  },
+  mounted() {},
   methods: {
     ...mapActions(attractionStore, ["getPosition"]),
 
@@ -178,15 +175,13 @@ export default {
       });
     },
     moveListPlan() {
-      if(this.$route.params.type === "plan")
-        this.$router.push({ name: "planList" });
-      if(this.$route.params.type === "myplan")
-        this.$router.push({ name: "myplanList" });
+      if (this.$route.params.type === "plan") this.$router.push({ name: "planList" });
+      if (this.$route.params.type === "myplan") this.$router.push({ name: "myplanList" });
     },
     moveModifyPlan() {
       this.$router.replace({
         name: "planModify",
-        params: { planNo: this.travelPlanNo },
+        params: { planNo: this.$route.params.planNo },
       });
     },
 

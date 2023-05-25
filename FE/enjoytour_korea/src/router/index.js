@@ -139,6 +139,7 @@ const routes = [
       {
         path: "write",
         name: "planWrite",
+        beforeEnter: onlyAuthUser,
         component: PlanWrite,
       },
       {
@@ -149,6 +150,7 @@ const routes = [
       {
         path: "modify/:planNo",
         name: "planModify",
+        beforeEnter: onlyAuthUser,
         component: PlanModify,
       },
     ],
@@ -167,6 +169,7 @@ const routes = [
       {
         path: "write",
         name: "planWrite",
+        beforeEnter: onlyAuthUser,
         component: PlanWrite,
       },
       {
@@ -177,6 +180,7 @@ const routes = [
       {
         path: "modify/:planNo",
         name: "planModify",
+        beforeEnter: onlyAuthUser,
         component: PlanModify,
       },
     ],

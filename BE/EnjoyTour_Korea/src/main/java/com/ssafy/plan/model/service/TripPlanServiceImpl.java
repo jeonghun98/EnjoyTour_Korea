@@ -27,7 +27,7 @@ public class TripPlanServiceImpl implements TripPlanService {
 		System.out.println("글입력 전 dto : " + tripPlanDto);
 		tripPlanMapper.writePlan(tripPlanDto);
 		System.out.println("글입력 후 dto : " + tripPlanDto);
-		tripPlanMapper.writeContent(tripPlanDto);
+		tripPlanMapper.writePlanAttraction(tripPlanDto);
 //		tripPlanMapper.authPlan(tripPlanDto); -> 친구 추가 할때 넣을 예정
 
 	}
@@ -43,8 +43,10 @@ public class TripPlanServiceImpl implements TripPlanService {
 	}
 
 	@Override
-	public void modifyPlan(TripPlanDto planNo) throws Exception {
-		// TODO Auto-generated method stub
+	public void modifyPlan(TripPlanDto tripPlanDto) throws Exception {
+		tripPlanMapper.modifyPlan(tripPlanDto);
+		tripPlanMapper.deletePlanAttraction(tripPlanDto.getPlanNo());
+		tripPlanMapper.writePlanAttraction(tripPlanDto);
 
 	}
 
