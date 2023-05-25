@@ -55,8 +55,8 @@
                         </td>
                         <td>
                           <b-button
-                            class="delete-btn"
-                            variant="danger"
+                            class ="btn btn-outline-danger"
+                            id="delete-btn"
                             @click="deleteItem(atr.contentId)"
                           >
                             삭제
@@ -114,19 +114,113 @@ export default {
       console.log(this.opt);
     },
     planList() {
+      this.custonOverlay();
+    },
+    attractions: function (attractions) {
+      this.writeMarker(attractions, false);
+    },
+  },
+  created() {
+    this.modalShow = false;
+    this.planList = this.planMarkers;
+    console.log();
+  },
+  mounted() {
+    if (window.kakao && window.kakao.maps) {
+      this.initMap();
+    } else {
+      this.loadScript();
+    }
+    this.custonOverlay();
+  },
+  methods: {
+    ...mapMutations(attractionStore, [
+      "CLEAR_ATTRACTION",
+      "SET_PLAN_MARKERS",
+      "CLEAR_PLAN_MARKERS",
+    ]),
+    ...mapActions(attractionStore, ["getPosition", "getAttraction"]),
+
+    custonOverlay() {
       // 오버레이 초기화
+      // this.customOverlays.forEach((overlay) => {
+      //   overlay.setMap(null);
+      // });
+      // this.customOverlays = [];
+      console.log("custonOverlay planmap", this.planList);
+      this.writePlanMarker(this.planList);
+
+      // const positions = this.planList.map(
+      //   (position) => new kakao.maps.LatLng(position.latitude, position.longitude)
+      // );
+      // if (this.planList.length > 0) this.makeLine(positions);
+      // this.setPlanMarker();
+    },
+    writePlanMarker(planList) {
+      // 연결선 초기화
+        if (this.polyline != null) {
+        this.polyline.setMap(null);
+      }
+
       this.customOverlays.forEach((overlay) => {
         overlay.setMap(null);
       });
       this.customOverlays = [];
 
-      const positions = this.planList.map(
+      const positions = planList.map(
         (position) => new kakao.maps.LatLng(position.latitude, position.longitude)
       );
-      if (this.planList.length > 0) this.makeLine(positions);
-      this.setPlanMarker();
+      if (planList.length > 0) {
+        let index = 1;
+
+        this.markers = planList.map((position) => {
+          var pos = new kakao.maps.LatLng(position.latitude, position.longitude);
+
+          var imageSrc;
+          if (position.contenttypeid != null)
+            imageSrc = require(`@/assets/img/icon_${position.contenttypeid}.png`);
+          else imageSrc = require("@/assets/img/ssafy_logo.png");
+
+          // const ssafyImageSrc = require("@/assets/img/ssafy_logo.png");
+
+          var imageSize = new kakao.maps.Size(30, 30); // 기본 마커 이미지의 크기
+          var imageOption = { offset: new kakao.maps.Point(25, 20) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+          var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+          var marker = new kakao.maps.Marker({
+            map: this.map,
+            position: pos,
+            clickable: true, // 마커 클릭 가능
+            image: markerImage,
+          });
+
+          var content = `<div id = "overlaylabel" class ="label" style="padding: 5px; background-color: #3685f5;"><strong id="circle">${index++}</strong></div>`;
+          var customOverlay = new kakao.maps.CustomOverlay({
+            position: pos,
+            content: content,
+          });
+          this.customOverlays.push(customOverlay);
+          customOverlay.setMap(this.map);
+          
+          // // 마커 클릭 이벤트
+          kakao.maps.event.addListener(marker, "click", () => {
+            this.getAttraction(position.contentId);
+            this.map.panTo(new kakao.maps.LatLng(position.latitude, position.longitude));
+            this.planList.push(position);
+            // console.log("push", this.planList);
+          });
+          return marker;
+        });
+        const bounds = positions.reduce(
+          (bounds, latlng) => bounds.extend(latlng),
+          new kakao.maps.LatLngBounds()
+        );
+        this.map.setBounds(bounds);
+        this.makeLine(positions);
+      }
     },
-    attractions: function (attractions) {
+    writeMarker(attractions) {
       if (this.markers.length > 0) {
         this.markers.forEach((marker) => marker.setMap(null));
       }
@@ -149,6 +243,14 @@ export default {
 
           var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
+          let find = false;
+          for (let i = 0; i < this.planList.length; i++) {
+            if (this.planList[i].contentId == position.contentId) {
+              find = true;
+            }
+          }
+          if (find) return;
+
           var marker = new kakao.maps.Marker({
             map: this.map,
             position: pos,
@@ -159,7 +261,7 @@ export default {
           let contents =
             '<div class = "wrap">' +
             '   <div class="info">' +
-            '    <div class="title" style="background-color:1BB1FF;">' +
+            '    <div class="title" style="background-color:3685f5;">' +
             position.title +
             '   <div id="close"></div>' +
             "   </div>" +
@@ -172,7 +274,7 @@ export default {
             position.addr1 +
             "</div>" +
             '       <div class="desc_marker"> ' +
-            "마커 클릭시 상세보기" +
+            "마커 클릭시 경로추가" +
             "</div>" +
             // '       <div class="jibun"> ' + position[5] + '</div>' +
             // '       <div><a href=" "target="_blank" class="link">홈페이지</a></div>' +
@@ -180,29 +282,11 @@ export default {
             "     </div>" +
             "    </div>" +
             "   </div>";
-
           let infowindow = new kakao.maps.InfoWindow({
             content: contents,
             position: pos,
           });
-
-          // let check = false;
-          // kakao.maps.event.addListener(marker, "click", () => {
-          //   if (!check) {
-          //     infowindow.open(this.map, marker);
-          //     check = true;
-          //   }
-          //   else {
-          //     infowindow.close();
-          //     check = false;
-          //   }
-          // });
-
-          // // let check = false;
-          // kakao.maps.event.addListener(marker, "click", () => {
-          //   infowindow.open(this.map, marker);
-          // });
-
+          
           // 마커 mouseover 이벤트
           kakao.maps.event.addListener(marker, "mouseover", () => {
             infowindow.open(this.map, marker);
@@ -228,27 +312,6 @@ export default {
         this.map.setBounds(bounds);
       }
     },
-  },
-  created() {
-    this.modalShow = false;
-    this.planList = this.planMarkers;
-    console.log();
-  },
-  mounted() {
-    if (window.kakao && window.kakao.maps) {
-      this.initMap();
-    } else {
-      this.loadScript();
-    }
-  },
-  methods: {
-    ...mapMutations(attractionStore, [
-      "CLEAR_ATTRACTION",
-      "SET_PLAN_MARKERS",
-      "CLEAR_PLAN_MARKERS",
-    ]),
-    ...mapActions(attractionStore, ["getPosition", "getAttraction"]),
-
     initMap() {
       const container = document.getElementById("kakaomap");
       const options = {
@@ -295,6 +358,7 @@ export default {
       }
     },
     makeLine(positions) {
+      console.log("makeLine", positions);
       if (this.polyline != null) {
         this.polyline.setMap(null);
       }
@@ -302,7 +366,7 @@ export default {
         map: this.map,
         path: positions, // 선을 구성하는 좌표배열
         strokeWeight: 3, // 두께
-        strokeColor: "#1BB1FF", // 색깔
+        strokeColor: "#214ec2", // 색깔
         strokeOpacity: 0.9, // 불투명도(1에서 0 사이의 값, 0: 투명)
         strokeStyle: "solid", // 스타일
       });
@@ -339,6 +403,27 @@ export default {
   height: 40rem;
 }
 
+#overlaylabel{
+  display: flex;
+    justify-content: center;
+    margin-left: -25px;
+    margin-right: -15px;
+    margin-top: -px;
+    max-width: 1170px;
+}
+
+#circle{
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #3685f5;
+  font-size: 20px;
+  color: rgb(255 255 255);
+  padding: 6px;
+  width: calc(1em / 0.7);
+  height: calc(1em / 0.7);
+}
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -346,6 +431,7 @@ export default {
 
 .item-title {
   font-weight: bold;
+  font-size: 16px;
 }
 
 .list-group {
@@ -382,7 +468,7 @@ tr {
   text-overflow: ellipsis;
 }
 
-.delete-btn {
+#delete-btn {
   width: 25%;
   width: 60px;
   margin-right: 5px;

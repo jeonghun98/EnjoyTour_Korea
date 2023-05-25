@@ -1,5 +1,12 @@
 <template>
   <div id="travel-info" v-if="travelPlanContent">
+    
+    <b-col class ="mt-3">
+      <div id="attraction-map">
+        <div id="kakaomap" style="width: 100%; height: 40rem"></div>
+      </div>
+    </b-col>
+
     <b-row class="mt-3">
       <b-col>
         <b-row>
@@ -154,7 +161,17 @@ export default {
   name: "PlanView",
   components: {},
   data() {
-    return {};
+    return {
+      map: null,
+      markers: [], // 마커를 담는 배열
+      lat: null,
+      lon: null,
+
+      customOverlays: [],
+      polyline: null,
+      planList: [],
+
+    };
   },
   props: {
     type: { type: String },
@@ -162,9 +179,24 @@ export default {
   computed: {
     ...mapState(attractionStore, ["travelPlanContent", "travelPlan", "travelMarkers"]),
     ...mapState(memberStore, ["userInfo"]),
+    ...mapState(attractionStore, ["latitude", "longitude"]),
   },
-  watch: {},
-  mounted() {},
+  watch: {
+    travelMarkers() {
+      this.custonOverlay();
+    }
+  },
+  mounted() {
+    if (window.kakao && window.kakao.maps) {
+      this.initMap();
+      
+    } else {
+      this.loadScript();
+    }
+  },
+  async created() {
+    this.planList = this.travelMarkers;
+  },
   methods: {
     ...mapActions(attractionStore, ["getPosition"]),
 
@@ -204,6 +236,129 @@ export default {
         );
       }
     },
+
+    custonOverlay() {
+      this.writePlanMarker(this.travelMarkers);
+      console.log("custonOverlay travelMarkers", this.travelMarkers);
+    },
+    writePlanMarker(planList) {
+      // 연결선 초기화
+        if (this.polyline != null) {
+        this.polyline.setMap(null);
+      }
+
+      this.customOverlays.forEach((overlay) => {
+        overlay.setMap(null);
+      });
+      this.customOverlays = [];
+
+      const positions = planList.map(
+        (position) => new kakao.maps.LatLng(position.latitude, position.longitude)
+      );
+      if (planList.length > 0) {
+        let index = 1;
+
+        this.markers = planList.map((position) => {
+          var pos = new kakao.maps.LatLng(position.latitude, position.longitude);
+
+          var imageSrc;
+          if (position.contenttypeid != null)
+            imageSrc = require(`@/assets/img/icon_${position.contenttypeid}.png`);
+          else imageSrc = require("@/assets/img/ssafy_logo.png");
+
+          // const ssafyImageSrc = require("@/assets/img/ssafy_logo.png");
+
+          var imageSize = new kakao.maps.Size(30, 30); // 기본 마커 이미지의 크기
+          var imageOption = { offset: new kakao.maps.Point(25, 20) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+          var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+          var marker = new kakao.maps.Marker({
+            map: this.map,
+            position: pos,
+            clickable: true, // 마커 클릭 가능
+            image: markerImage,
+          });
+
+          var content = `<div id = "overlaylabel" class ="label" style="padding: 5px; background-color: #3685f5;"><strong id="circle">${index++}</strong></div>`;
+          var customOverlay = new kakao.maps.CustomOverlay({
+            position: pos,
+            content: content,
+          });
+          this.customOverlays.push(customOverlay);
+          customOverlay.setMap(this.map);
+          
+          // // // 마커 클릭 이벤트
+          // kakao.maps.event.addListener(marker, "click", () => {
+          //   this.getAttraction(position.contentId);
+          //   this.map.panTo(new kakao.maps.LatLng(position.latitude, position.longitude));
+          //   this.planList.push(position);
+          //   // console.log("push", this.planList);
+          // });
+          return marker;
+        });
+        const bounds = positions.reduce(
+          (bounds, latlng) => bounds.extend(latlng),
+          new kakao.maps.LatLngBounds()
+        );
+        this.map.setBounds(bounds);
+        this.makeLine(positions);
+      }
+    },
+
+    initMap() {
+      const container = document.getElementById("kakaomap");
+      const options = {
+        center: new kakao.maps.LatLng(37.5013068, 127.0396597),
+        level: 4,
+      };
+
+      this.map = new kakao.maps.Map(container, options);
+      this.map.relayout();
+
+      // geolocation을 사용할 수 있는지 확인
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          // GeoLocation을 이용해서 접속 위치 획득
+          this.lat = position.coords.latitude; // 위도, 경도
+          this.lon = position.coords.longitude;
+          this.getPosition({
+            latitude: this.lat,
+            longitude: this.lon,
+          });
+          this.map.panTo(new kakao.maps.LatLng(this.lat, this.lon));
+        });
+      }
+      // makeOption(); -> search-area 생성
+    },
+    loadScript() {
+      const script = document.createElement("script");
+      /* global kakao */
+      script.src =
+        "//dapi.kakao.com/v2/maps/sdk.js?appkey=" +
+        process.env.VUE_APP_KAKAO_MAP_API_KEY +
+        "&autoload=false&libraries=services";
+      document.head.appendChild(script);
+      script.onload = () => kakao.maps.load(this.initMap);
+    },
+    makeLine(positions) {
+      console.log("makeLine", positions);
+      if (this.polyline != null) {
+        this.polyline.setMap(null);
+      }
+      this.polyline = new kakao.maps.Polyline({
+        map: this.map,
+        path: positions, // 선을 구성하는 좌표배열
+        strokeWeight: 3, // 두께
+        strokeColor: "#214ec2", // 색깔
+        strokeOpacity: 0.9, // 불투명도(1에서 0 사이의 값, 0: 투명)
+        strokeStyle: "solid", // 스타일
+      });
+      // 연결선 표시
+      this.polyline.setMap(this.map);
+    },
+
+
   },
 };
 </script>

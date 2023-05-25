@@ -264,9 +264,9 @@ export default {
 .my-3 {
   margin-bottom: 1rem !important;
 }
-.text-secondary {
+/* .text-secondary {
   color: #6c757d !important;
-}
+} */
 .mb-2,
 .my-2 {
   margin-bottom: 0.5rem !important;
