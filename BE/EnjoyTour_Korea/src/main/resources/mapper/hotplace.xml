@@ -11,7 +11,8 @@
 		<result column="hotplace_content" property="content"/>
 		<result column="hotplace_like" property="like"/>
 		<result column="hotplace_date" property="date"/>
-		<result column="hotplace_image" property="img"/>
+		<result column="hotplace_latitude" property="latitude"/>
+		<result column="hotplace_longitude" property="longitude"/>
 	</resultMap>
 	
 	<resultMap type="hotplaceDto" id="viewHotplace" extends="hotplace">
@@ -25,24 +26,24 @@
 	</resultMap>
 	
 	<insert id="writeHotplace" parameterType="HotplaceDto">
-		insert into hotplace (hotplace_no, user_id, hotplace_title, hotplace_content, hotplace_like, hotplace_date, hotplace_image)
-		values (#{hotplaceNo}, #{userId}, #{title}, #{content}, #{like}, #{date}, #{img})
+		insert into hotplace (hotplace_no, user_id, hotplace_title, hotplace_content, hotplace_like, hotplace_date, hotplace_latitude, hotplace_longitude)
+		values (#{hotplaceNo}, #{userId}, #{title}, #{content}, #{like}, #{date}, #{latitude}, #{longitude})
 	</insert>
 	
 	<select id="listHotplace" resultMap="hotplace">
-		select hotplace_no, user_id, hotplace_title, hotplace_content, hotplace_like, hotplace_date, hotplace_image
+		select hotplace_no, user_id, hotplace_title, hotplace_content, hotplace_like, hotplace_date, hotplace_latitude, hotplace_longitude
 		from hotplace
 		order by hotplace_no desc
 	</select>
 	
 	<select id="getHotplace" parameterType="int" resultMap="viewHotplace">
-		select hotplace_no, user_id, hotplace_title, hotplace_content, hotplace_like, hotplace_date, hotplace_image
+		select hotplace_no, user_id, hotplace_title, hotplace_content, hotplace_like, hotplace_date, hotplace_latitude, hotplace_longitude
 		from hotplace
 		where hotplace_no = #{hotplaceNo}
 	</select>
 	
 	<select id="getHotplaceNo" parameterType="HotplaceDto" resultMap="hotplace">
-		select hotplace_no, user_id, hotplace_title, hotplace_content, hotplace_like, hotplace_date, hotplace_image
+		select hotplace_no, user_id, hotplace_title, hotplace_content, hotplace_like, hotplace_date, hotplace_latitude, hotplace_longitude
 		from hotplace
 		where user_id = #{userId} and hotplace_title = #{title} and hotplace_content = #{content}
 	</select>
@@ -55,7 +56,8 @@
 	
 	<update id="modifyHotplace" parameterType="HotplaceDto">
 		update hotplace
-		set hotplace_title = #{title}, hotplace_content = #{content}, hotplace_like = #{like}, hotplace_date = #{date}, hotplace_image =#{img} 
+		set hotplace_title = #{title}, hotplace_content = #{content}, hotplace_like = #{like}, hotplace_date = #{date},
+		hotplace_latitude = #{latitude}, hotplace_longitude = #{longitude}
 		where hotplace_no = #{hotplaceNo}
 	</update>
 	

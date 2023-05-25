@@ -20,42 +20,6 @@
         ></hotplace-img-item-vue>
       </b-row>
       <b-row>
-        <b-col>
-          <b-button
-            type="button"
-            variant="outline-primary"
-            id="btn-move-list"
-            class="btn mt-3 mb-3 mr-3"
-            @click="moveListHotplace"
-          >
-            목록
-          </b-button>
-          <span v-if="userInfo != null && userInfo.userid === hotplace.userId">
-            <b-button
-              type="button"
-              id="btn-move-list"
-              variant="outline-success"
-              class="btn mt-3 mb-3 mr-3"
-              @click="modifyHotplace"
-            >
-              글수정
-            </b-button>
-            <b-button
-              type="button"
-              id="btn-move-list"
-              variant="outline-danger"
-              class="btn mt-3 mb-3 mr-auto"
-              @click="deleteHotplace"
-            >
-              글삭제
-            </b-button>
-          </span>
-        </b-col>
-      </b-row>
-    </b-col>
-    <!-- 핫플 정보, 위치 -->
-    <b-col>
-      <b-row>
         <form id="form-view" method="" action="" style="width: 100%">
           <div class="mb-3 mt-3">
             <label for="title" class="form-label">핫플이름</label>
@@ -95,9 +59,45 @@
         </form>
       </b-row>
       <b-row>
+        <b-col>
+          <b-button
+            type="button"
+            variant="outline-primary"
+            id="btn-move-list"
+            class="btn mt-3 mb-3 mr-3"
+            @click="moveListHotplace"
+          >
+            목록
+          </b-button>
+          <span v-if="userInfo != null && userInfo.userid === hotplace.userId">
+            <b-button
+              type="button"
+              id="btn-move-list"
+              variant="outline-success"
+              class="btn mt-3 mb-3 mr-3"
+              @click="modifyHotplace"
+            >
+              글수정
+            </b-button>
+            <b-button
+              type="button"
+              id="btn-move-list"
+              variant="outline-danger"
+              class="btn mt-3 mb-3 mr-auto"
+              @click="deleteHotplace"
+            >
+              글삭제
+            </b-button>
+          </span>
+        </b-col>
+      </b-row>
+    </b-col>
+    <!-- 핫플 정보, 위치 -->
+    <b-col>
+      <b-row>
         <!-- map start -->
         <div class="col-lg-12 col-md-10 col-sm-12 mt-3 rounded">
-          <div id="map"></div>
+          <div id="kakaomap"></div>
         </div>
         <!-- map end -->
       </b-row>
@@ -133,11 +133,19 @@ export default {
       ({ data }) => {
         this.hotplace = data;
         console.log("HotplaceView:data -", data);
+        this.marker();
       },
       (error) => {
         console.log(error);
       }
     );
+  },
+  mounted() {
+    if (window.kakao && window.kakao.maps) {
+      this.initMap();
+    } else {
+      this.loadScript();
+    }
   },
   methods: {
     moveListHotplace() {
@@ -172,12 +180,61 @@ export default {
         );
       }
     },
+    initMap() {
+      const container = document.getElementById("kakaomap");
+      const options = {
+        center: new kakao.maps.LatLng(37.5013068, 127.0396597),
+        level: 5,
+      };
+
+      this.map = new kakao.maps.Map(container, options);
+      this.map.relayout();
+
+      // geolocation을 사용할 수 있는지 확인
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.hotplace.latitude = position.coords.latitude; // 위도, 경도
+          this.hotplace.longitude = position.coords.longitude;
+          this.map.panTo(new kakao.maps.LatLng(this.hotplace.latitude, this.hotplace.longitude));
+        });
+      }
+    },
+    loadScript() {
+      const script = document.createElement("script");
+      /* global kakao */
+      script.src =
+        "//dapi.kakao.com/v2/maps/sdk.js?appkey=" +
+        process.env.VUE_APP_KAKAO_MAP_API_KEY +
+        "&autoload=false&libraries=services";
+      document.head.appendChild(script);
+      script.onload = () => kakao.maps.load(this.initMap);
+    },
+    marker() {
+      var container = document.getElementById("kakaomap");
+      var options = {
+        center: new kakao.maps.LatLng(this.hotplace.latitude, this.hotplace.longitude), //wtmX, wtmY 받아옴
+        level: 5,
+      };
+
+      var map = new kakao.maps.Map(container, options);
+
+      // 마커가 표시될 위치입니다
+      var markerPosition = new kakao.maps.LatLng(this.hotplace.latitude, this.hotplace.longitude);
+
+      // 마커를 생성합니다
+      var marker = new kakao.maps.Marker({
+        position: markerPosition,
+      });
+
+      // 마커가 지도 위에 표시되도록 설정합니다
+      marker.setMap(map);
+    },
   },
 };
 </script>
 
 <style scoped>
-#map {
+#kakaomap {
   width: 100%;
   height: 30rem;
   background-color: lightgray;

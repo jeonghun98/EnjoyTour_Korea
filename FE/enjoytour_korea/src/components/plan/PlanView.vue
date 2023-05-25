@@ -1,7 +1,6 @@
 <template>
   <div id="travel-info" v-if="travelPlanContent">
-    
-    <b-col class ="mt-3">
+    <b-col class="mt-3">
       <div id="attraction-map">
         <div id="kakaomap" style="width: 100%; height: 40rem"></div>
       </div>
@@ -46,34 +45,41 @@
 
         <b-row>
           <b-col>
-            <b-button
+            <button
               type="button"
-              variant="outline-primary"
               id="btn-move-list"
-              class="btn mt-3 mb-3 mr-3"
+              class="btn btn-outline-primary mt-3 mb-3 mr-3"
               @click="moveListPlan"
             >
               목록
-            </b-button>
+            </button>
             <span v-if="userInfo != null && userInfo.userid === travelPlanContent.userId">
-              <b-button
+              <button
                 type="button"
                 id="btn-move-list"
-                variant="outline-success"
-                class="btn mt-3 mb-3 mr-3"
+                class="btn btn-outline-success mt-3 mb-3 mr-3"
                 @click="moveModifyPlan"
               >
                 글수정
-              </b-button>
-              <b-button
+              </button>
+              <button
                 type="button"
                 id="btn-move-list"
-                variant="outline-danger"
-                class="btn mt-3 mb-3 mr-auto"
+                class="btn btn-outline-danger mt-3 mb-3 mr-3"
                 @click="deletePlan"
               >
                 글삭제
-              </b-button>
+              </button>
+              <button
+                type="button"
+                id="btn-move-list"
+                class="btn btn-outline-success mt-3 mb-3 mr-3"
+                href="#"
+                v-b-modal.modal-auth
+              >
+                친구와 수정
+                <plan-add-auth :planNo="planNo"></plan-add-auth>
+              </button>
             </span>
           </b-col>
         </b-row>
@@ -131,24 +137,6 @@
       </b-col>
     </b-row>
   </div>
-  <!-- <table class="table table-hover">
-        <tr
-          v-for="(trm, index) in travelMarkers"
-          :key="index"
-          @click="movePan(trm[0], trm[1])"
-        >
-          <td>
-            <strong>{{ index + 1 }}번</strong>
-          </td>
-          <td v-if="trm[4].length > 25">
-            <strong>{{ trm[4].substr(0, 25) }}</strong
-            >...
-          </td>
-          <td v-if="trm[4].length <= 25">
-            <strong>{{ trm[4] }}</strong>
-          </td>
-        </tr>
-      </table> -->
 </template>
 
 <script>
@@ -156,10 +144,11 @@ import { mapState, mapActions } from "vuex";
 import { deletePlan } from "@/api/plan";
 const attractionStore = "attractionStore";
 const memberStore = "memberStore";
+import PlanAddAuth from "./item/PlanAddAuth.vue";
 
 export default {
   name: "PlanView",
-  components: {},
+  components: { PlanAddAuth },
   data() {
     return {
       map: null,
@@ -170,7 +159,7 @@ export default {
       customOverlays: [],
       polyline: null,
       planList: [],
-
+      planNo: this.$route.params.planNo,
     };
   },
   props: {
@@ -184,12 +173,11 @@ export default {
   watch: {
     travelMarkers() {
       this.custonOverlay();
-    }
+    },
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
       this.initMap();
-      
     } else {
       this.loadScript();
     }
@@ -243,7 +231,7 @@ export default {
     },
     writePlanMarker(planList) {
       // 연결선 초기화
-        if (this.polyline != null) {
+      if (this.polyline != null) {
         this.polyline.setMap(null);
       }
 
@@ -255,6 +243,7 @@ export default {
       const positions = planList.map(
         (position) => new kakao.maps.LatLng(position.latitude, position.longitude)
       );
+      console.log("writePlanMarker", positions);
       if (planList.length > 0) {
         let index = 1;
 
@@ -287,7 +276,7 @@ export default {
           });
           this.customOverlays.push(customOverlay);
           customOverlay.setMap(this.map);
-          
+
           // // // 마커 클릭 이벤트
           // kakao.maps.event.addListener(marker, "click", () => {
           //   this.getAttraction(position.contentId);
@@ -301,8 +290,8 @@ export default {
           (bounds, latlng) => bounds.extend(latlng),
           new kakao.maps.LatLngBounds()
         );
-        this.map.setBounds(bounds);
         this.makeLine(positions);
+        this.map.setBounds(bounds);
       }
     },
 
@@ -317,18 +306,17 @@ export default {
       this.map.relayout();
 
       // geolocation을 사용할 수 있는지 확인
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          // GeoLocation을 이용해서 접속 위치 획득
-          this.lat = position.coords.latitude; // 위도, 경도
-          this.lon = position.coords.longitude;
-          this.getPosition({
-            latitude: this.lat,
-            longitude: this.lon,
-          });
-          this.map.panTo(new kakao.maps.LatLng(this.lat, this.lon));
-        });
-      }
+      // if (navigator.geolocation) {
+      //   navigator.geolocation.getCurrentPosition((position) => {
+      //     this.lat = position.coords.latitude; // 위도, 경도
+      //     this.lon = position.coords.longitude;
+      //     this.getPosition({
+      //       latitude: this.lat,
+      //       longitude: this.lon,
+      //     });
+      //     this.map.panTo(new kakao.maps.LatLng(this.lat, this.lon));
+      //   });
+      // }
       // makeOption(); -> search-area 생성
     },
     loadScript() {
@@ -357,8 +345,6 @@ export default {
       // 연결선 표시
       this.polyline.setMap(this.map);
     },
-
-
   },
 };
 </script>

@@ -1,6 +1,12 @@
 <template>
   <div>
-    <plan-attraction></plan-attraction>
+    <div v-if="type === 'write'">
+      <plan-attraction type="write"></plan-attraction>
+    </div>
+    <div v-else>
+      <plan-attraction type="modify"></plan-attraction>
+    </div>
+
     <b-row v-if="type === 'write'">
       <b-col class="col-3 p-1">
         <b-button type="button" variant="primary" @click="openModal">여행계획 작성</b-button>
@@ -111,6 +117,7 @@ export default {
     } else {
       this.CLEAR_PLAN_MARKERS();
     }
+    console.log("inputItem", this.type);
   },
   methods: {
     ...mapActions(attractionStore, ["postPlan"]),

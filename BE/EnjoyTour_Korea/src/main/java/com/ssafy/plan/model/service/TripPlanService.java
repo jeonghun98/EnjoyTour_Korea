@@ -9,6 +9,8 @@ import com.ssafy.plan.model.TripPlanDto;
 
 public interface TripPlanService {
 	void writePlan(TripPlanDto tripPlanDto) throws Exception;
+	
+	void authAdd(TripPlanDto tripPlanDto) throws Exception;
 	List<TripPlanDto> listPlan(NoticeParameterDto noticeParameterDto) throws Exception;
 	List<TripPlanDto> mylistPlan(String userId) throws Exception;
 	List<AttractionDto> getPlan(int planNo) throws Exception;
