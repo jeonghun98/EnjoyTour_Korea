@@ -70,9 +70,7 @@ const attractionStore = {
     SET_PLAN_MARKERS_MODIFY(state, planList) {
       if (planList.length != 0) {
         planList.forEach((planItem) => {
-          state.planMarkers.push(
-            planItem
-          );
+          state.planMarkers.push(planItem);
         });
       }
     },
@@ -284,8 +282,8 @@ const attractionStore = {
         );
       }
     },
-    getTravelPlan({ commit }, planNo) {
-      getPlan(
+    async getTravelPlan({ commit }, planNo) {
+      await getPlan(
         planNo,
         ({ data }) => {
           // console.log("getTravelPlan", data);

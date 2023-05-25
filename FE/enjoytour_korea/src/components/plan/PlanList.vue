@@ -143,7 +143,7 @@ export default {
       this.$router.push({ name: "planWrite" });
     },
 
-    viewPlan(plan) {
+    async viewPlan(plan) {
       console.log("planView전 세팅");
       this.CLEAR_TRAVEL_MARKERS();
 
@@ -152,10 +152,10 @@ export default {
 
       // console.log(plan.planNo);
       this.SET_TRAVEL_PLAN_CONTENT(plan.planNo);
-      this.getTravelPlan(plan.planNo);
+      await this.getTravelPlan(plan.planNo);
 
       // todo
-      this.$router.push({
+      await this.$router.push({
         name: "planView",
         params: { planNo: plan.planNo, type: "plan" },
       });
