@@ -1,35 +1,27 @@
 <template>
-  <b-row class = "mt-3">
-    <div class="row align-self-center mb-2" >
-        <div class="text-start">
-          <button
-            type="button"
-        id="btn-mv-register"
-        variant="outline-primary"
-        @click="moveWrite"
-      >
-        핫플 등록하기
-      </button>
-        </div>
-    <b-row>
+  <div class="row p-1">
+    <div>
+    <button type="button" id="btn-mv-register" class="btn btn-outline-primary btn-sm mr-1"
+          @click="moveWrite">
+                핫플 등록하기
+          </button>
+    </div>
+    <div>
       <div class="album">
-        <div class="p-0 py-2">
-          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            <hotplace-list-item
-              v-for="hotplace in hotplaces"
-              :key="hotplace.hotplaceNo"
-              v-bind="hotplace"
-            ></hotplace-list-item>
-          </div>
+      <div class="container p-0 py-2">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <hotplace-list-item v-for="hotplace in hotplaces" :key="hotplace.hotplaceNo" v-bind="hotplace"></hotplace-list-item> 
         </div>
       </div>
-    </b-row>
-  </b-row>
+    </div>
+    </div>      
+    
+  </div>
 </template>
 
 <script>
 import { listHotplace } from "@/api/hotplace";
-import HotplaceListItem from "./item/HotplaceListItem.vue";
+import HotplaceListItem from './item/HotplaceListItem.vue';
 import { mapState } from "vuex";
 
 const memberStore = "memberStore";
@@ -60,8 +52,8 @@ export default {
   },
   methods: {
     moveWrite() {
-      // alert("핫플 write 이동");
-      this.$router.push({ name: "hotplaceWrite" });
+        // alert("핫플 write 이동");
+        this.$router.push({ name: "hotplaceWrite" });
     },
   },
 };
