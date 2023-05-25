@@ -76,19 +76,17 @@
         <div class="col-auto text-center">
           <b-button
             type="submit"
-            id="btn-inform-register"
-            variant="outline-success"
-            class="mb-3 mr-3"
+            id="btn-inform-reg"
+            class="btn mb-3 mr-3 btn-outline-success"
             v-if="this.type === 'write'"
           >
             등록
           </b-button>
           <button
             type="submit"
-            id="btn-inform-register"
-            variant="outline-success"
-            class="mb-3 mr-3"
-            v-else
+            id="btn-inform-modify"
+            class="btn mb-3 mr-3 btn-outline-success"
+            v-if="this.type === 'modify'"
           >
             수정
           </button>
