@@ -146,7 +146,11 @@ export default {
           // this.previewImg = this.hotplace.fileInfos;
           console.log("HotplaceInputItemdata -", data);
           // console.log(this.hotplace.fileInfos);
+<<<<<<< HEAD
           this.marker();
+=======
+
+>>>>>>> ec0aea43b86eeca68388aa394bd15bb5ea757797
           if (this.hotplace.fileInfos != null) {
             // console.log("HotplaceListItem - 이미지 파일 있음");
 
