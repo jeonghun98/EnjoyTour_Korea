@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.attraction.model.mapper.AttractionMapper">
+
+	<resultMap type="attractionDto" id="getAttractionDto">
+		<result column="content_id" property="contentId"/>
+		<result column="content_type_id" property="contenttypeid"/>
+		<result column="title" property="title"/>
+		<result column="addr1" property="addr1"/>
+		<result column="addr2" property="addr2"/>
+		<result column="first_image" property="image1"/>
+		<result column="first_image2" property="image2"/>
+		<result column="latitude" property="latitude"/>
+		<result column="longitude" property="longitude"/>
+		<result column="overview" property="overview"/>
+		<result column="tel" property="tel"/>
+	</resultMap>
+	
+	<resultMap type="sidoGugunCodeDto" id="getsidoGugunCodeDto">
+		<result column="sido_code" property="sidoCode"/>
+		<result column="sido_name" property="sidoName"/>
+		<result column="gugun_code" property="gugunCode"/>
+		<result column="gugun_name" property="gugunName"/>
+	</resultMap>
+
+<!-- 	<insert id="insertAttraction" parameterType="attractionDto">
+		INSERT INTO attraction_info (content_id, content_type_id, title, addr1, addr2, first_image, first_image2, latitude, longitude)
+		values (#{contentid}, #{contenttypeid}, #{title}, #{addr1}, #{addr2}, #{first_image}, #{first_image2}, #{latitude}, #{longitude})
+	</insert> -->
+	
+<!-- 	<insert id="insertAttractionIntoDescription" parameterType="attractionDto">
+		INSERT INTO attraction_description (content_id, overview)
+		values (#{contentid}, #{overview})
+	</insert>
+ -->
+<!-- 	<select id="searchAttractionByLatLon" parameterType="map" resultMap="getAttractionDto">
+		SELECT * FROM attraction_info ai, attraction_description ad
+		WHERE ai.content_id = ad.content_id 
+		and ST_Distance_Sphere(POINT(longitude, latitude), POINT(#{longitude}, #{latitude})) <![CDATA[ <= ]]> #{meter}
+	</select> -->
+	
+	<select id="searchAttractionList" parameterType="map" resultMap="getAttractionDto">
+		SELECT * FROM attraction_info ai, attraction_description ad
+		WHERE ai.content_id = ad.content_id
+		AND ai.sido_code = #{sido}
+		AND ai.gugun_code = #{gugun}
+		<if test="content != null and content != ''">
+			AND ai.content_type_id = #{content}
+		</if>
+	</select>
+	
+	<select id="searchAttractionWordList" parameterType="map" resultMap="getAttractionDto">
+		SELECT * FROM attraction_info ai, attraction_description ad
+		WHERE ai.content_id = ad.content_id
+		<if test="sido != null and sido != ''">
+			AND ai.sido_code = #{sido}
+		</if>
+		<if test="gugun != null and gugun != ''">
+			AND ai.gugun_code = #{gugun}
+		</if>
+		<if test="word != null and word != ''">
+			AND ai.addr1 like concat('%', #{word}, '%')
+		</if>
+	</select>
+	
+	
+	<select id="searchAttraction" parameterType="string" resultMap="getAttractionDto">
+		SELECT * FROM attraction_info ai, attraction_description ad
+		WHERE ai.content_id = ad.content_id
+		AND ai.content_id = #{contentId}
+	</select>
+	
+		<select id="getSido" resultMap="getsidoGugunCodeDto">
+		select sido_code, sido_name
+		from sido
+		order by sido_code
+	</select>
+	
+	<select id="getGugunInSido" parameterType="string" resultType="sidoGugunCodeDto">
+		select gugun_code, gugun_name
+		from gugun
+		where sido_code = #{sido}
+		order by gugun_code
+	</select>
+	
+<!-- 	<select id="getAttractionInGugun" parameterType="string" resultType="attractionDto">
+		select h.aptCode, h.aptName, h.buildyear, h.dongCode, h.dongName, h.jibun, h.lat, h.lng, si.sidoname, gu.gugunname,
+				(select dealAmount from housedeal where aptCode = h.aptCode and no = (select max(no) from housedeal where aptCode = h.aptCode)) recentPrice
+		from houseinfo h
+		left join sidocode si
+		on left(h.dongcode,2) = left(si.sidocode,2)
+		left join guguncode gu
+		on left(h.dongcode,5) = left(gu.guguncode,5)
+		where dongCode = #{dong} 
+		order by aptName
+	</select> -->
+	
+	<select id="searchRandomAttractionList" resultMap="getAttractionDto">
+		SELECT * FROM enjoytrip.attraction_info 
+		WHERE first_image 
+		LIKE CONCAT('%', 'http:', '%') 
+		ORDER BY RAND() 
+		LIMIT 3;
+	</select>
+	
+</mapper>
