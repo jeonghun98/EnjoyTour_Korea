@@ -14,4 +14,8 @@ function Attraction(param, success, fail) {
   api.get(`/attraction`, { params: param }).then(success).catch(fail);
 }
 
-export { AttractionList, AttractionSearchList, Attraction};
+function AttractionRandomList(success, fail) {
+  api.get(`/attraction/attractionRandomList`).then(success).catch(fail);
+}
+
+export { AttractionList, AttractionSearchList, Attraction, AttractionRandomList};

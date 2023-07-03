@@ -97,4 +97,12 @@
 		order by aptName
 	</select> -->
 	
+	<select id="searchRandomAttractionList" resultMap="getAttractionDto">
+		SELECT * FROM enjoytrip.attraction_info 
+		WHERE first_image 
+		LIKE CONCAT('%', 'http:', '%') 
+		ORDER BY RAND() 
+		LIMIT 3;
+	</select>
+	
 </mapper>

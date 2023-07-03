@@ -28,8 +28,7 @@ public class TripPlanServiceImpl implements TripPlanService {
 		tripPlanMapper.writePlan(tripPlanDto);
 		System.out.println("글입력 후 dto : " + tripPlanDto);
 		tripPlanMapper.writePlanAttraction(tripPlanDto);
-//		tripPlanMapper.authPlan(tripPlanDto); -> 친구 추가 할때 넣을 예정
-
+		tripPlanMapper.authAdd(tripPlanDto);
 	}
 
 	@Override
@@ -60,6 +59,11 @@ public class TripPlanServiceImpl implements TripPlanService {
 	@Override
 	public List<TripPlanDto> mylistPlan(String userId) throws Exception {
 		return tripPlanMapper.mylistPlan(userId);
+	}
+
+	@Override
+	public void authAdd(TripPlanDto tripPlanDto) throws Exception {
+		tripPlanMapper.authAdd(tripPlanDto);
 	}
 
 }
