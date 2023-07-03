@@ -1,406 +1,67 @@
-# EnjoyTrip_springboot_김정훈_손효민
+# South Korea Tour (EnjoyTrip)
 
-**생성 일시**: May 1, 2023 2:22 PM
+**개발자**: 김정훈, 손효민
 
-**생성자**: 김정훈
+**생성 일시**: May 1, 2023
 
-**최종 편집 일시**: May 2, 2023 11:57 PM
+**최종 편집 일시**: Jul 3, 2023
 
-**최종 편집자**: 손효민
-
-**태그**: 백엔드
 
 ## ✅ 사용한 기술 스택
 
-**개발 언어** : Java, MySQL
+**개발 언어 / 프로그램** : Java, STS, Apache Tomcat, MySQL, VSCode
 
-**프로그램** : STS, Apache Tomcat
+**라이브러리 / 오픈 소스** : Spring Boot, myBatis Framework, Vue.js, JavaScript, Bootstrap-vue
 
-**라이브러리 / 오픈 소스** : Spring Boot, myBatis Framework, Swagger
+**사용 데이터** : 전국관광지 정보, 관광지 사진정보(한국관광공사_국문관광정보 서비스_GW)
 
-## 1. EnjoyTrip 개선된 요구사항 목록
+## 1. South Korea Tour 요구사항
 
-- 패키지 명 - package : com.ssafy.enjoytrip
-- 여행 계획 권한 부여 외에도 친구(follow) 추가 기능을 고려중이다
-- **이외에 요구사항은 전과 동일하다**
+- 사용자에게 한국의 다양한 관광지, 먹거리, 축제, 행사 등을 소개하여 지역 관광 활성화를 위한 지역 관광 소개 페이지를 구축하려고 한다. 한국관광공사에서 제공하는 국문관광정보서비스_GW의 다양한 상세기능정보 API를 활용하여 지역별 관광지 데이터를 분석하고 화면에 표시한다. 또한, 여행계획을 위한 스케줄과 여행경로 공유 등 사용자 편의 기능을 구현하고 나만의 숨은 관광지를 소개하는 페이지와 공지사항 게시판을 구현한다.
+
+
+## 2. South Korea Tour 실행화면
+
+### 1) 메인페이지
+
+1. 네비게이션 바로 한국 여행지, 여행계획 등의 다른 페이지로 넘어간다.
+2. 소개글과 한국 여행지의 사진을 넣은 carousel이 있다. 이 곳의 버튼을 통해서도 다른 페이지로 넘어갈 수 있다.
+3. 랜덤으로 3개의 여행지들의 사진과 명소의 이름을 나타내준다.
     
-    ![Untitled](https://user-images.githubusercontent.com/68097374/235706485-a5707628-761b-42fb-916b-39ebda1f4c26.png)
-    
-
-## 2. EnjoyTrip Spring & Mybatis Framework로 변경한 Class-Diagram
-
-<img width="881" alt="Untitled 1" src="https://user-images.githubusercontent.com/68097374/235706490-45077e85-a166-4310-a1b6-5ba8852548f7.png">
-
-- `notice`
-
-```java
-▶ NoticeController.java 공지사항 (com.ssafy.notice.controller)
-	 └─ RestAPI 활용
-			└─ @Controller
-				 @RequestMapping("/notice")
-				public class NoticeController {
-						...
-						@ResponseBody
-						@PostMapping(value = "/")
-						public ResponseEntity<?> noticeWrite(@RequestBody NoticeDto noticeDto){...}
-
-						@ResponseBody
-						@GetMapping(value = "/")
-						public ResponseEntity<?> noticeList(@RequestParam Map<String, String> map) {...}
-				
-						@GetMapping("/view")
-						public String view(@RequestParam("noticeno") int noticeNo, @RequestParam Map<String, String> map, Model model)
-						throws Exception {...}
-
-						@ResponseBody
-						@PutMapping(value = "/")
-						public ResponseEntity<?> noticeModify(@RequestBody NoticeDto noticeDto, @RequestParam Map<String, String> map) {...}
-
-						@ResponseBody
-						@DeleteMapping(value = "/{noticeno}")
-						public ResponseEntity<?> noticeDelete(@PathVariable("noticeno") int noticeNo, @RequestParam Map<String, String> map) {...}
-						...
-						}
-
-▶ NoticeService.java (com.ssafy.notice.model.service)
-
-▶ NoticeMapper.java (com.ssafy.notice.model.mapper)
-		└─ notice.xml (src.main.resources.mapper)
-				└─ myBatis 활용
-▶ NoticeDto.java (com.ssafy.notice.model)
-```
-
-- `attraction`
-
-```java
-▶ AttractionController.java 관광지 정보 (com.ssafy.attraction.controller)
-	 └─ RestAPI 활용
-			└─ @Controller
-				 @RequestMapping("/attraction")
-				 public class AttractionController extends HttpServlet {
-						...
-						@GetMapping("/view")
-						public String view(Model model) throws Exception {...}
-
-						@ResponseBody
-						@GetMapping("/searchByLoc")
-						public ResponseEntity<?> searchByLoc(@RequestParam Float mapX, @RequestParam Float mapY,
-																								 @RequestParam Float radius, Model model) {...}
-						...
-						}
-
-▶ AttractionService.java (com.ssafy.attraction.model.service)
-
-▶ AttractionMapper.java (com.ssafy.attraction.model.mapper)
-		└─ attraction.xml (src.main.resources.mapper)
-				└─ myBatis 활용
-▶ AttractionDto.java (com.ssafy.attraction.model)
-```
-
-- `member`
-
-```java
-▶ MemberController.java 관광지 정보 (com.ssafy.member.controller)
-	 └─ @ResponseBody 활용
-			└─ @Controller
-				 @RequestMapping("/user")
-				 public class MemberController {
-						...
-						@GetMapping("/{userid}")
-						@ResponseBody
-						public int idCheck(@PathVariable("userid") String userId) throws Exception {...}
-
-						@GetMapping("/pwdfind")
-						@ResponseBody
-						public String pwdfind(@RequestParam(name = "userid") String userId, @RequestParam(name = "email") String email)
-						throws Exception {...}
-
-						@PostMapping("/join")
-						public String join(MemberDto memberDto) throws Exception{...}
-						
-						@PostMapping("/login")
-						public String login(@RequestParam(name = "login_id") String userId, @RequestParam(name = "login_pwd") String userPwd,
-																@RequestParam(name = "saveid", required = false) String idsave,
-																HttpServletRequest request, HttpServletResponse response) throws Exception{...}
-						
-						@GetMapping("/logout")
-						public String logout(HttpServletRequest request, HttpServletResponse response) throws Exception{...}
-						
-						@PostMapping("/update")
-						public String update(@RequestParam(name = "mypage_pwd") String pwd, @RequestParam(name = "mypage_email") String email,
-																 HttpServletRequest request, HttpServletResponse response) throws Exception{...}
-						
-						@GetMapping("/delete")
-						public String delete(HttpServletRequest request, HttpServletResponse response) throws Exception{...}
-						...
-						}
-
-▶ MemberService.java (com.ssafy.member.model.service)
-
-▶ MemberMapper.java (com.ssafy.member.model.mapper)
-		└─ member.xml (src.main.resources.mapper)
-				└─ myBatis 활용
-▶ MemberDto.java (com.ssafy.member.model)
-```
-
-## 3. EnjoyTrip 실행화면
-
-### 1) 메인페이지 및 메뉴구성
-
-- **네비게이션 바** - 홈, 공지사항, 관광지 정보, 여행정보 공유, 나만의 여행경로, HotPlace
-- **로그인 / 회원가입**
-    
-    ![Untitled 2](https://user-images.githubusercontent.com/68097374/235706493-ccd2a062-216c-4373-bcbe-d552bc62284f.png)
+    ![image](https://github.com/jeonghun98/South_Korea_Tour/assets/52409864/d31f8dbf-6716-44f8-9be7-5d143153c506)
     
 
-### 2) 관광지 정보 조회
+### 2) 한국 여행지
+1. 시도, 구군 별로 공공 데이터 포털에서 가져온 관광지 정보를 지도에 나타낸다.
+2. 관광지 유형별로 공공 데이터 포털에서 가져온 관광지 정보를 지도에 나타낸다.
 
-- **지역별 관광지 정보 수집**
-    - 지역을 선택하면 지역 별 관광지 정보를 관광지 유형에 따라 검색해 지역별 관광지 정보를 지도에 나타낼 수 있다
-        
-        ![Untitled 3](https://user-images.githubusercontent.com/68097374/235706496-d6ef810d-9b53-49e2-9886-63206c90df20.png)
-        
-        ![Untitled 4](https://user-images.githubusercontent.com/68097374/235706498-3d90c551-b9d2-4748-9d47-1bcacdf1b956.png)
-        
-    - 시도 명과 구군 명이 정해지면 지도의 중심이 옮겨지고 관광지들이 지도에 표시된다
-        
-        ![Untitled 5](https://user-images.githubusercontent.com/68097374/235706500-098d67d2-41eb-4c24-8ad5-25b0aceca961.png)
-        
-- **관광지, 숙박, 음식점, 문화시설, 공연, 여행코스, 쇼핑 조회**
-    - 지도에서 관광지, 숙박, 음식점, 문화시설, 공연, 여행코스, 쇼핑 정보가 지도에 나타난다
-        
-        ![Untitled 6](https://user-images.githubusercontent.com/68097374/235706501-437de12c-ef17-440d-bc46-26ef65d4208d.png)
-        
-    - 관광지 유형을 선택하면 원하는 관광지 유형에 해당하는 관광지만 표시된다
-        
-        ![Untitled 7](https://user-images.githubusercontent.com/68097374/235706503-da4c3abe-99c6-45e8-a48d-b79848ae2457.png)
-        
+   ![image](https://github.com/jeonghun98/South_Korea_Tour/assets/52409864/6a70a67b-68b5-42af-ac79-346285839ef3)
 
-### 3) 회원관리 페이지 - 회원정보 등록, 수정, 삭제, 조회 화면
+### 3) 회원 관리, 로그인 관리
 
-- **회원정보 등록 (회원가입)**
-    - 로그인을 하지 않은 상태에서 회원가입 탭을 누르면 회원가입 modal창이 뜬다
-    - 회원 정보를 입력하고 회원 가입 버튼을 누르면 회원가입이 된다
-        
-        ![Untitled 8](https://user-images.githubusercontent.com/68097374/235706431-1651587b-268d-4a54-8a47-4c73e0a8e91f.png)
-        
-    - 아이디를 입력하게 되면 DB의 정보와 비교하여 사용할 수 있는 ID인지 체크한다
-        
-        ![Untitled 9](https://user-images.githubusercontent.com/68097374/235706439-30676945-7304-4dbb-86df-32ae131edfa4.png)
-        
-    - 회원 가입 전 DB
-        
-        ![Untitled 10](https://user-images.githubusercontent.com/68097374/235706445-b621d889-9af8-4694-b5d2-900494c7a12d.png)
-        
-    - 회원 가입 후 DB
-        
-        ![Untitled 11](https://user-images.githubusercontent.com/68097374/235706448-0d9a4bde-ee22-4550-9bbe-0734770b4a80.png)
-        
-- **회원정보 수정**
-    - 로그인 한 상태에서 마이페이지 탭을 누른다
-    - 회원정보를 조회하는 창에서 변경할 비밀번호나 이메일을 입력하고 수정하기 버튼을 누른다
-        
-        ![Untitled 12](https://user-images.githubusercontent.com/68097374/235706449-28f7c90a-3363-4718-bbea-37b08e908958.png)
-        
-    - 수정 전 DB
-        
-        ![Untitled 11](https://user-images.githubusercontent.com/68097374/235706448-0d9a4bde-ee22-4550-9bbe-0734770b4a80.png)
-        
-    - 수정 후 DB
-        
-        ![Untitled 13](https://user-images.githubusercontent.com/68097374/235710562-3a1d44fd-2591-4dce-ac4d-b2ccbc2765a1.png)
-        
-- **회원 삭제(탈퇴)**
-    - 로그인 한 상태에서 마이페이지 탭을 누른다
-    - 회원정보를 조회하는 창에서 탈퇴 버튼을 누르면 회원 정보가 삭제된다
-        
-        ![Untitled 14](https://user-images.githubusercontent.com/68097374/235706457-84f6e191-febf-4456-8fab-ba534c9dd258.png)
-        
-    - 탈퇴 여부를 묻는 confirm창이 뜬고 확인 버튼을 누르면 회원 정보가 삭제된다
-        
-        ![Untitled 15](https://user-images.githubusercontent.com/68097374/235706461-5f3aa8a6-e4e8-4b35-81b4-1c6d24d6854b.png)
-        
-    - 회원 삭제 전 DB
-        
-        ![Untitled 13](https://user-images.githubusercontent.com/68097374/235710562-3a1d44fd-2591-4dce-ac4d-b2ccbc2765a1.png)
-        
-    - 회원 삭제 후 DB
-        
-        ![Untitled 16](https://user-images.githubusercontent.com/68097374/235706465-b102c5de-d654-4e13-8ae6-987aaa8f3c90.png)
-        
-- **회원정보 조회**
-    - 로그인 한 상태에서 마이페이지 탭을 누른다
-    - 회원 정보를 조회할 수 있는 modal 창이 열린다
-        
-        ![Untitled 17](https://user-images.githubusercontent.com/68097374/235706466-1d6b8dd9-9083-4ad2-8610-e305a6344440.png)
-        
+1. 모달창을 이용해서 회원 가입을 한다. 회원 가입시 아이디 중복체크를 한다.
+2. 로그인을 할 수 있다.
+3. 비밀번호 찾기 버튼을 클릭한 후 아이디와 이메일 정보를 이용해 임시 비밀번호를 발급받을 수 있다.
+   
+   ![image](https://github.com/jeonghun98/South_Korea_Tour/assets/52409864/a8c115cc-3b6a-4e2e-8643-ee9e5031b8ca)
+   ![image](https://github.com/jeonghun98/South_Korea_Tour/assets/52409864/259dbaf1-0aa4-422e-afc1-d10c4a5b8212)
 
-### 4) 로그인/로그아웃 페이지
 
-- **로그인**
-    - 로그인 탭을 누르면 로그인 modal 창이 뜬다
-    - 회원가입 했던 사용자라면 아이디와 비밀번호를 입력하고 로그인 modal 창에서 로그인하기 버튼을 누른다
-    
-    ![Untitled 18](https://user-images.githubusercontent.com/68097374/235706468-53a0b78a-2aeb-44bb-adfe-24faa7f0febf.png)
-    
-- **로그아웃**
-    - 로그인 한 상태에서 로그아웃 탭을 누르면 바로 로그아웃이 된다
-    
-    ![Untitled 19](https://user-images.githubusercontent.com/68097374/235706469-51a42160-8872-4b69-b4b5-8a00011adc18.png)
+### 4) 공지사항
+1. 관리자가 작성한 글을 볼 수 있다.
+2. 관리자의 경우에만 글을 수정하거나 삭제할 수 있다.
+
     
 
-### 5) 공지사항 관리
+### 5) 핫플 자랑하기
+1. 사용자들이 작성한 핫플레이스 게시글들의 목록을 볼 수 있다.
+2. 사진을 이용해 핫플레이스를 소개하는 게시글을 작성할 수 있다.
+3. 사진의 위도, 경도 정보를 이용해 핫플레이스의 좌표를 지도에 나타내도록 등록할 수 있다.
 
-- **URL** : http://localhost/swagger-ui/index.html
-- **Models** : NoticeDto (공지사항 정보)
-    
-    ![Untitled 20](https://user-images.githubusercontent.com/68097374/235706476-0a974455-c475-45bd-ad33-9c64a2017f12.png)
-    
-- **Notice Controller (공지사항 관리)**
-    
-    
-    | noticeList | GET | /notice/ |
-    | --- | --- | --- |
-    | noticeWrite | POST | /notice/ |
-    | noticeModify | PUT | /notice/ |
-    | noticeDelete | DELETE | /notice/{noticeno} |
-    - **noticeList** : 공지사항의 **전체 목록**을 리턴합니다
-        
-        ```java
-        [
-          {
-            "noticeNo": 2,
-            "userId": "ssafy",
-            "title": "공지사항1",
-            "content": "공지사항1입니다.",
-            "hit": 0,
-            "registerTime": "2023-04-14 21:09:06"
-          },
-          {
-            "noticeNo": 1,
-            "userId": "ssafy",
-            "title": "공지사항",
-            "content": "공지사항입니다.",
-            "hit": 0,
-            "registerTime": "2023-04-14 20:42:24"
-          }
-        ]
-        ```
-        
-    - **noticeWrite** :  공지사항을 **등록**합니다
-        
-        ```java
-        //Edit Value | Model
-        {
-          "content": "스프링 프로젝트 입니다",
-          "title": "스프링 프로젝트",
-          "userId": "ssafy"
-        }
-        
-        // ResponseBody
-        [
-          {
-            "noticeNo": 3,
-            "userId": "ssafy",
-            "title": "스프링 프로젝트",
-            "content": "스프링 프로젝트 입니다",
-            "hit": 0,
-            "registerTime": "2023-05-02 17:07:29"
-          },
-          {
-            "noticeNo": 2,
-            "userId": "ssafy",
-            "title": "공지사항1",
-            "content": "공지사항1입니다.",
-            "hit": 0,
-            "registerTime": "2023-04-14 21:09:06"
-          },
-          {
-            "noticeNo": 1,
-            "userId": "ssafy",
-            "title": "공지사항",
-            "content": "공지사항입니다.",
-            "hit": 0,
-            "registerTime": "2023-04-14 20:42:24"
-          }
-        ]
-        ```
-        
-    - **noticeModify** : 공지사항의 **수정**합니다
-        
-        ```java
-        //Edit Value | Model
-        {
-          "content": "공지사항 수정했습니다",
-          "noticeNo": 1,
-          "title": "공지사항 수정"
-        }
-        
-        // ResponseBody
-        [
-          {
-            "noticeNo": 3,
-            "userId": "ssafy",
-            "title": "스프링 프로젝트",
-            "content": "스프링 프로젝트 입니다",
-            "hit": 0,
-            "registerTime": "2023-05-02 17:07:29"
-          },
-          {
-            "noticeNo": 2,
-            "userId": "ssafy",
-            "title": "공지사항1",
-            "content": "공지사항1입니다.",
-            "hit": 0,
-            "registerTime": "2023-04-14 21:09:06"
-          },
-          {
-            "noticeNo": 1,
-            "userId": "ssafy",
-            "title": "공지사항 수정",
-            "content": "공지사항 수정했습니다",
-            "hit": 0,
-            "registerTime": "2023-04-14 20:42:24"
-          }
-        ]
-        ```
-        
-    - **noticeDelete** : 공지사항의 **삭제**합니다
-        
-        ```java
-        //Edit Value | noticeno //삭제 번호
-        3
-        
-        // ResponseBody
-        [
-          {
-            "noticeNo": 2,
-            "userId": "ssafy",
-            "title": "공지사항1",
-            "content": "공지사항1입니다.",
-            "hit": 0,
-            "registerTime": "2023-04-14 21:09:06"
-          },
-          {
-            "noticeNo": 1,
-            "userId": "ssafy",
-            "title": "공지사항 수정",
-            "content": "공지사항 수정했습니다",
-            "hit": 0,
-            "registerTime": "2023-04-14 20:42:24"
-          }
-        ]
-        ```
-        
-    
 
-### 6)  여행계획 관리
 
-- **여행 계획 경로 설정**
-    - 나만의 여행 경로 탭을 누르면 여행 계획을 관리하는 페이지로 이동한다
-    - 시도 명과 지역 명을 누르면 관광지들이 지도에 표시된다
-    - 원하는 관광지들을 선택하면 관광지 정보 창이 뜬다. 이때, 여행 경로 추가하기를 누르면 경로가 설정되고 왼쪽에 관광지들이 나열된다
-    - 관광지 정보 창의 사진 액박 처리를 했다
-    - **페이지 이동 controller 만 구현했고, 추후에 마무리 할 예정이다**
-    
-    <img width="909" alt="Untitled 21" src="https://user-images.githubusercontent.com/68097374/235706479-b9f3a32f-307c-4b46-a4ea-403b929d3128.png">
+### 6) 여행 계획 관리
+1. 모두의 여행계획 페이지에서 여행 계획을 public(공개)한 게시글들을 볼 수 있다.
+2. 시도, 구군, 관광지 유형 별 관광지를 지도에서 여행 예정지로 선택할 수 있다.
+3. 선택하는 동시에 여행 코스 부분에 실시간으로 추가된다.
+4. 출발일과 도착일, 상세 내용을 작성할 수 있다.
