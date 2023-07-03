@@ -58,5 +58,10 @@ public class AttractionServiceImpl implements AttractionService
 	public List<AttractionDto> getAttractionInGugun(String gugun) throws Exception {
 		return attractionmapper.getAttractionInGugun(gugun);
 	}
+	
+	@Override
+	public List<AttractionDto> searchRandomAttractionList() throws Exception {
+		return attractionmapper.searchRandomAttractionList();
+	}
 
 }

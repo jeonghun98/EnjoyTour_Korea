@@ -5,12 +5,12 @@
       <div id="map"></div>
     </div> -->
     <!-- map end -->
-    <hotplace-input-item type= "write"/>
+    <hotplace-input-item type="write" />
   </div>
 </template>
 
 <script>
-import HotplaceInputItem from './item/HotplaceInputItem.vue';
+import HotplaceInputItem from "./item/HotplaceInputItem.vue";
 
 export default {
   name: "HotplaceWrite",
@@ -23,9 +23,7 @@ export default {
     };
   },
   created() {},
-  methods: {
-    
-  },
+  methods: {},
 };
 </script>
 

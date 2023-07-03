@@ -36,13 +36,13 @@ body {
     -webkit-overflow-scrolling: touch;
   }
   
-  .nav-underline .nav-link {
+  /* .nav-underline .nav-link {
     padding-top: .5rem;
     padding-bottom: .75rem;
     font-size: .875rem;
     color: #6c757d;
     font-weight: bold;
-  }
+  } */
 
 /* underline https://www.youtube.com/watch?v=0uZ_ZnlEJ68 */
   .nav-underline .nav-link:hover {

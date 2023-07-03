@@ -25,6 +25,11 @@ function getPlan(planNo, success, fail) {
   api.get(`/plan/${planNo}`).then(success).catch(fail);
 }
 
+function authAdd(planList, success, fail) {
+  console.log("authAdd",planList)
+  api.post(`/plan/addAuth`, JSON.stringify(planList)).then(success).catch(fail);
+}
+
 function modifyPlan(planList, success, fail) {
   api.put(`/plan`, JSON.stringify(planList)).then(success).catch(fail);
 }
@@ -33,4 +38,4 @@ function deletePlan(planNo, success, fail) {
   api.delete(`/plan/${planNo}`).then(success).catch(fail);
 }
 
-export { mylistPlan, writePlan, listPlan, getPlan, modifyPlan, deletePlan };
+export { mylistPlan, writePlan, listPlan, getPlan, modifyPlan, deletePlan, authAdd};

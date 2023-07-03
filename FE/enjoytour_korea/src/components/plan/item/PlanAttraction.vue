@@ -24,7 +24,12 @@
         <b-button type="button" variant="primary" @click="optimization">최적화</b-button>
       </b-col>
     </b-row>
-    <plan-map :opt="opt"></plan-map>
+    <div v-if="type === 'write'">
+      <plan-map type="write"></plan-map>
+    </div>
+    <div v-else>
+      <plan-map type="modify"></plan-map>
+    </div>
   </div>
 </template>
 

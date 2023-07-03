@@ -2,9 +2,9 @@
   <div class="container" id="home-contents">
     <div class="row p-1">
       <!-- 여백 -->
-      <section class="col-lg-1 d-none d-lg-inline-block bg-dark"></section>
+      <!-- <section class="col-lg-1 d-none d-lg-inline-block bg-dark"></section> -->
       <!-- 슬라이드 -->
-      <section class="col-lg-10 col-sm-12 p-0">
+      <section class="col-lg-12 col-sm-12 p-0 mt-3">
         <b-carousel
           id="carousel-1"
           v-model="slide"
@@ -28,57 +28,32 @@
             caption="한국 여행지"
             text="지역과 관광지 유형에 따라 여행지를 검색해보세요"
             :img-src="require('../assets/img/korea1.png')"
-          ><b-button
-                variant="outline-light"
-                @click="moveAttraction"
-                >더보기</b-button
-              ></b-carousel-slide>
-            <!-- :img-src="require('../assets/img/korea4.jpg')"
-            ><b-button
-              variant="outline-secondary"
-              class="btn-outline-secondary"
-              @click="moveAttraction"
+            ><b-button variant="outline-light" @click="moveAttraction"
               >더보기</b-button
             ></b-carousel-slide
-          > -->
+          >
 
           <b-carousel-slide
             caption="모두의 여행계획"
             text="여행 계획을 세우고 다른 사람들과 공유해보세요"
             :img-src="require('../assets/img/korea2.png')"
-          ><b-button
-                variant="outline-light"
-                @click="movePlan"
-                >더보기</b-button
-              ></b-carousel-slide>
-            <!-- :img-src="require('../assets/img/korea3.jpg')"
-            ><b-button variant="outline-secondary" class="btn-outline-secondary" @click="movePlan"
-              >더보기</b-button
-            ></b-carousel-slide
-          > -->
+            ><b-button variant="outline-light" @click="movePlan">더보기</b-button></b-carousel-slide
+          >
           <b-carousel-slide
             caption="핫플 자랑하기"
             text="자신이 다녀온 핫플레이스의 경험을 나누어주세요"
             :img-src="require('../assets/img/korea3.png')"
-          ><b-button
-                variant="outline-light"
-                @click="moveHotplace"
-                >더보기</b-button
-              ></b-carousel-slide>
-            <!-- :img-src="require('../assets/img/korea3.jpg')"
-            ><b-button
-              variant="outline-secondary"
-              class="btn-outline-secondary"
-              @click="moveHotplace"
+            ><b-button variant="outline-light" @click="moveHotplace"
               >더보기</b-button
             ></b-carousel-slide
-          > -->
+          >
         </b-carousel>
       </section>
 
       <!-- 여백 -->
-      <section class="col-lg-1 d-none d-lg-inline-block bg-dark"></section>
+      <!-- <section class="col-lg-1 d-none d-lg-inline-block bg-dark"></section> -->
     </div>
+
     <div class="p-1 container-fluid" id="attraction">
       <b-row class="row align-items-center">
         <b-col class="col-lg-3 col-12">
@@ -105,61 +80,116 @@
             </b-row>
           </div>
         </b-col>
-        <b-col class="col-lg-9 col-12">
-          <!-- 카드 -->
-          <div class="container" id="custom-cards">
-            <div class="row row-cols-3 row-cols-lg-3 align-items-stretch g-4 py-5">
-              <div class="col mb-1">
-                <div
-                  class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
-                  style="
-                    background-image: url('https://picsum.photos/1024/480/?image=12');
-                  "
-                >
-                  <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-                    <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">서울</h2>
-                  </div>
-                </div>
-              </div>
-              <div class="col mb-1">
-                <div
-                  class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
-                  style="
-                    background-image: url('https://picsum.photos/1024/480/?image=12');
-                  "
-                >
-                  <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-                    <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">제주</h2>
-                  </div>
-                </div>
-              </div>
-              <div class="col mb-1">
-                <div
-                  class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
-                  style="
-                    background-image: url('https://picsum.photos/1024/480/?image=12');
-                  "
-                >
-                  <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
-                    <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">보성</h2>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </b-col>
+        <template v-if="attractions.length !== 0">
+          <b-col class="col-lg-9 col-12">
+            <b-card-group deck>
+              <b-col>
+                <b-row>
+                  <b-card
+                    no-body
+                    class="overflow-hidden"
+                    style="max-width: 300px; height: 200px; object-fit: cover"
+                  >
+                    <b-card-img
+                      :src="attractions[0].image1"
+                      alt="Image"
+                      class="rounded-0"
+                      style="object-fit: cover; height: 100%"
+                    ></b-card-img>
+                  </b-card>
+                </b-row>
+                <b-row class="overflow-hidden mt-2">
+                  <b-col class="col-lg-1"></b-col>
+                  <b-col class="col-lg-10">
+                    <h5
+                      class="pt-1 display-6 lh-1 fw-bold text-secondary"
+                      style="text-align: center"
+                    >
+                      {{ attractions[0].title }}
+                    </h5>
+                  </b-col>
+                  <b-col class="col-lg-1"></b-col>
+                </b-row>
+              </b-col>
+
+              <b-col>
+                <b-row>
+                  <b-card
+                    no-body
+                    class="overflow-hidden"
+                    style="max-width: 300px; height: 200px; object-fit: cover"
+                  >
+                    <b-card-img
+                      :src="attractions[1].image1"
+                      alt="Image"
+                      class="rounded-0"
+                      style="object-fit: cover; height: 100%"
+                    ></b-card-img>
+                  </b-card>
+                </b-row>
+                <b-row class="overflow-hidden mt-2">
+                  <b-col class="col-lg-1"></b-col>
+                  <b-col class="col-lg-10">
+                    <h5
+                      class="pt-1 display-6 lh-1 fw-bold text-secondary"
+                      style="text-align: center"
+                    >
+                      {{ attractions[2].title }}
+                    </h5>
+                  </b-col>
+                  <b-col class="col-lg-1"></b-col>
+                </b-row>
+              </b-col>
+
+              <b-col>
+                <b-row>
+                  <b-card
+                    no-body
+                    class="overflow-hidden"
+                    style="max-width: 300px; height: 200px; object-fit: cover"
+                  >
+                    <b-card-img
+                      :src="attractions[2].image1"
+                      alt="Image"
+                      class="rounded-0"
+                      style="object-fit: cover; height: 100%"
+                    ></b-card-img>
+                  </b-card>
+                </b-row>
+                <b-row class="overflow-hidden mt-2">
+                  <b-col class="col-lg-1"></b-col>
+                  <b-col class="col-lg-10">
+                    <h5
+                      class="pt-1 display-6 lh-1 fw-bold text-secondary"
+                      style="text-align: center"
+                    >
+                      {{ attractions[1].title }}
+                    </h5>
+                  </b-col>
+                  <b-col class="col-lg-1"></b-col>
+                </b-row>
+              </b-col>
+            </b-card-group>
+          </b-col>
+        </template>
       </b-row>
     </div>
   </div>
 </template>
 
 <script>
+import { AttractionRandomList } from "@/api/attraction";
+
 export default {
   name: "AppHome",
   data() {
     return {
       slide: 0,
+      attractions: [],
     };
+  },
+  mounted() {
+    this.selectAttractionRandomList();
   },
   methods: {
     moveAttraction() {
@@ -176,6 +206,21 @@ export default {
       this.$router.replace({
         name: "hotplace",
       });
+    },
+    selectAttractionRandomList() {
+      AttractionRandomList(
+        ({ data }) => {
+          console.log("data", data);
+          this.attractions = data;
+          console.log(this.attractions[0].image1);
+          console.log(this.attractions[0]);
+          console.log(this.attractions[1]);
+          console.log(this.attractions[2]);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
   },
 };
@@ -213,9 +258,9 @@ export default {
 .my-3 {
   margin-bottom: 1rem !important;
 }
-.text-secondary {
+/* .text-secondary {
   color: #6c757d !important;
-}
+} */
 .mb-2,
 .my-2 {
   margin-bottom: 0.5rem !important;
@@ -237,5 +282,9 @@ export default {
 .col-lg-9 {
   flex: 0 0 75%;
   max-width: 75%;
+}
+#custom-cards {
+  color: white;
+  font-size: x-small;
 }
 </style>

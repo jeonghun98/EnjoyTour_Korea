@@ -14,7 +14,8 @@ import com.ssafy.plan.model.TripPlanDto;
 public interface TripPlanMapper {
 	void writePlan(TripPlanDto tripPlanDto) throws SQLException;
 	void writePlanAttraction(TripPlanDto tripPlanDto) throws Exception;
-	void authPlan(TripPlanDto tripPlanDto) throws Exception;
+//	void authPlan(TripPlanDto tripPlanDto) throws Exception;
+	void authAdd(TripPlanDto tripPlanDto) throws SQLException;
 	
 	List<TripPlanDto> listPlan(NoticeParameterDto noticeParameterDto) throws SQLException;
 	List<TripPlanDto> mylistPlan(String userId) throws SQLException;
