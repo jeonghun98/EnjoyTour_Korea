@@ -36,8 +36,8 @@
 ### 2) 한국 여행지
 1. 시도, 구군 별로 공공 데이터 포털에서 가져온 관광지 정보를 지도에 나타낸다.
 2. 관광지 유형별로 공공 데이터 포털에서 가져온 관광지 정보를 지도에 나타낸다.
-
-   ![image](https://github.com/jeonghun98/South_Korea_Tour/assets/52409864/6a70a67b-68b5-42af-ac79-346285839ef3)
+   
+   <img src="./PICTURES/gif/attraction.gif" alt="GIF 이미지" width="80%">
 
 ### 3) 회원 관리, 로그인 관리
 
@@ -45,7 +45,7 @@
 2. 로그인을 할 수 있다.
 3. 비밀번호 찾기 버튼을 클릭한 후 아이디와 이메일 정보를 이용해 임시 비밀번호를 발급받을 수 있다.
 
-   ![이메일인증](https://github.com/jeonghun98/Planty/assets/52409864/d0931080-1d71-411e-969a-2a31b07b4e8b)
+   <img src="./PICTURES/gif/loginEmail.gif" alt="GIF 이미지" width="80%">
 
 ### 4) 핫플 자랑하기
 1. 사용자들이 작성한 핫플레이스 게시글들의 목록을 볼 수 있다.
@@ -53,8 +53,7 @@
 3. 사진의 위도, 경도 정보를 이용해 핫플레이스의 좌표를 지도에 자동으로 등록할 수 있다.
 4. 사진의 정보를 이용해 사진 찍은 날짜를 자동으로 등록할 수 있다.
 
-   ![핫플레이스](https://github.com/jeonghun98/Planty/assets/52409864/bbb122db-17ae-4a13-9b98-b04862bab58d)
-
+   <img src="./PICTURES/gif/hotplace.gif" alt="GIF 이미지" width="80%">
 
 ### 5) 여행 계획 관리
 1. 모두의 여행계획 페이지에서 여행 계획을 public(공개)한 게시글들을 볼 수 있다.
@@ -63,8 +62,8 @@
 4. 출발일과 도착일, 상세 내용을 작성할 수 있다.
 5. 친구 추가를 통해 친구와 함께 여행 계획을 관리할 수 있다.
    
-   ![여행경로](https://github.com/jeonghun98/Planty/assets/52409864/7fb8466c-d622-4820-b463-7f9851116295)
-   ![여행계획_친추](https://github.com/jeonghun98/Planty/assets/52409864/883b9d06-418d-4c6d-b4a9-1297c2637bac)
+   <img src="./PICTURES/gif/tripPlan.gif" alt="GIF 이미지" width="80%">
+
    
 
 ### 6) 공지사항
